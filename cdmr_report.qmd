@@ -9,4 +9,6 @@ format:
 
 # Aim
 
-The purpose of this document is to outline the methodology and guidelines used for conducting the capital delivery model project data analysis and developing a reproducible model for the upcoming Capital Delivery Model generation.
+The purpose of this document is to outline the methodology and guidelines for conducting the Capital Delivery Model project data analysis. This analysis aims to develop a reproducible framework that compares the current delivery model with past models, providing valuable insights to enhance future delivery models planned for years between 2026 to 2031.
+
+By systematically examining past and present performance, the aim is to identify key trends, strengths, and areas for improvement, ensuring that future projects are executed more efficiently and effectively.
