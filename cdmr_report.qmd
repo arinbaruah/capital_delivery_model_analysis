@@ -1,0 +1,12 @@
+---
+title: "Capital Delivery Model Data Analysis"
+format:
+  pdf:
+    toc: true
+    number-sections: true
+    colorlinks: true
+---
+
+# Aim
+
+The purpose of this document is to outline the methodology and guidelines used for conducting the capital delivery model project data analysis and developing a reproducible model for the upcoming Capital Delivery Model generation.
