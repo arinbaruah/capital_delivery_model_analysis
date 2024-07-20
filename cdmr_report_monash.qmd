@@ -1,19 +1,28 @@
 ---
 title: "Capital Delivery Model Data Analysis"
-format:
-  pdf:
-    toc: true
-    number-sections: true
-    colorlinks: true
-execute: 
-  echo: false
-  message: false
-  warning: false
+author:
+- name: Arindom Baruah
+  degrees: Master of Business Analytics, Monash University
+  email: abar0090@student.monash.edu
+  
+email: BusEco-Econometrics@monash.edu
+organization: Melbourne Water Corporation, Monash University
+bibliography: references.bib
+format: report-pdf
+toc: true
+header-includes:
+  - \usepackage{tcolorbox}
+  - \newtcolorbox{noteBox}{colback=yellow!5!white, colframe=yellow!50!black, title=Note}
+  - \newtcolorbox{warningBox}{colback=red!5!white, colframe=red!50!black, title=Warning}
+  - \newtcolorbox{tipBox}{colback=green!5!white, colframe=green!50!black, title=Tip}
+  - \newtcolorbox{confBox}{colback=red!5!white, colframe=red!5!black, title=Confidentiality statement}
 ---
+
 
 ```{r}
 #| echo: false
 library(tidyverse)
+library(kableExtra)
 ```
 # List of abbreviations and terminologies
 
@@ -47,19 +56,18 @@ For the purpose of the current analysis, Melbourne Water Corporation's project d
 4. Project approval duration distribution across different stages of approvals.
 5. Forecasted number of projects in the future delivery period from 2026 to 2031.
 
+\begin{confBox}
 
-:::{.callout-warning}
-# Confidentiality of data
+To comply with Melbourne Water Corporation’s confidentiality requirements, the data has been de-identified and includes only the relevant fields necessary for obtaining insights for the intended evaluation purpose.
 
-To comply with Melbourne Water Crporation’s confidentiality requirements, the data has been de-identified and includes only the relevant fields necessary for obtaining insights for the intended evaluation purpose.
-
-:::
-
-
-
+\end{confBox}
 
 ```{r}
+#| caption: tbl-data
+#| tbl-cap: "Project data"
 project_data <- read_csv("data/Capital_Deliver_Project_deidentified.csv")
+
+head(project_data) %>% kbl()
 ```
 
 
