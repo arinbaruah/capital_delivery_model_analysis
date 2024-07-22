@@ -1,5 +1,5 @@
 ---
-title: "Capital Delivery Model Data Analysis"
+title: "Enhancing Future Capital Delivery: A Comparative analysis of Melbourne Water Corporation's Project Models"
 author:
 - name: Arindom Baruah
   degrees: Master of Business Analytics, Monash University
@@ -37,7 +37,9 @@ The analysis report will use numerous abbreviations and terminologies at various
 7. __FFC__ : Final forecasted cost of project
 8. __ID__ : Unique identification for each individual project
 9. __Owner group__ : The division within Melbourne Water Corporation responsible for completing the particular project
-10. __Delivery Program__ : The subdivision within Melbourne Water Corporation reponsible for completing the particular project
+10. __Delivery Program__ : The subdivision within Melbourne Water Corporation responsible for completing the particular project
+11. __PS__ : Pricing submission period for Melbourne Water's business case to be submitted to Department of Treasury and Finance (DTF) 
+12. __CDM__: Capital Delivery Model
 
 
 \newpage
@@ -56,11 +58,7 @@ For the purpose of the current analysis, Melbourne Water Corporation's project d
 4. Project approval duration distribution across different stages of approvals.
 5. Forecasted number of projects in the future delivery period from 2026 to 2031.
 
-\begin{confBox}
 
-To comply with Melbourne Water Corporation’s confidentiality requirements, the data has been de-identified and includes only the relevant fields necessary for obtaining insights for the intended evaluation purpose.
-
-\end{confBox}
 
 ```{r}
 #| caption: tbl-data
@@ -73,7 +71,32 @@ head(project_data) %>% kbl()
 
 # Data Source
 
+The data for the current analysis has been sourced from the “Estimating & Scheduling” PowerBI dashboard in the MWC MPD workspace at Melbourne Water Corporation. The data was exported as a CSV file on 19th July, 2024 and as such, contains the latest updated project valuations up to that date. 
+
+\begin{confBox}
+
+To comply with Melbourne Water Corporation’s confidentiality requirements, the data has been de-identified and includes only the relevant fields necessary for obtaining insights for the intended evaluation purpose.
+
+\end{confBox}
+
 # Introduction
+
+The construction of large-scale infrastructure projects, commonly referred to as “CAPEX” projects, is highly resource-intensive and typically requires effective collaboration among multiple organizations for successful and timely completion. @no2013specification suggests that in a collaborative work environment, teams are required to generate information using standardized procedures and agreed-upon standards and methods. This ensures consistency in form and quality, allowing the information to be used and reused without the need for modification or interpretation. However, in practice, such high level collaboration is often challenging and needs well laid communication as well as contractual frameworks for effective 
+
+To initiate, monitor, and deliver these projects, a comprehensive framework is usually developed. This framework assesses the project’s valuation and associated risks, and then engages the appropriate service providers to ensure timely project delivery. This framework which governs the delivery route of a project is termed as the Capital Delivery Model.
+
+Each Capital Delivery Model presides over a period of 5 years, after the completion of which, a new Capital Delivery Model initiates. Before the creation of such a model,the host organisation (in this case, Melbourne Water Corporation) is required to submit a proposal of projects to be delivered over the next 5 years to the Department of Treasury and Finance, Government of Australia. Once the list of projects are approved or amended, a Capital Delivery Model is then designed, analysed, iterated and improved over a course of a year, after which, it is finally released to the market, where service providers may decide to get into a partnership with Melbourne Water for delivering the next set of infrastructures.   
+
+@garcia2021measuring states that a key underlying challenge in today’s model-driven approach to engineering is how progress and level of effort are being measured and reported. The goal of the current project is to quantify the key results of the past delivery models and obtain important insights which would allow for to design an improved capital delivery model for the upcoming pricing submission period between 2026-2031. In particular, the analysis would attempt to estimate the future number of projects and their expected valuations based on the distribution of projects in the current and past deliver models.
+
+The process of forecasting the mix of the type of projects expected in the new capital delivery model after the 2026 price submission is based on the analysis of the current delivery model (CDM 2021) and the previous delivery model (CDM 2016). The price submission for 2026 is expected to be of bigger value than the recent price submissions, making it challenging to be able to accurately forecast the number of projects and the value of the projects based on the historical. However, the analysis of the projects in CDM 2016 and CDM 2021 will provide a good baseline of the expected proportion of the major capital delivery projects based on valuation and duration expected in the future delivery model (CDM 2026).
+
+The current analysis is performed by studying the following key parameters in the project data: \
+      1.	Total final forecast cost (FFC) \
+      2.	CDM period (2016, 2021 and 2026) \
+      3.	Project duration across each stage \
+      4.	Delivery Program
+
 
 # Relevance of the current study
 
@@ -83,4 +106,6 @@ head(project_data) %>% kbl()
 
 # Conclusion
 
-# Key areas of imrprovement
+# Key areas of improvement
+
+# References
