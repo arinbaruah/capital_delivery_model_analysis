@@ -99,18 +99,28 @@ The current analysis is performed by studying the following key parameters in th
       3.	Project duration across each stage \
       4.	Delivery Program
 
+# Objectives
 
+The objectives and the scope of the analysis of the CDMs were defined through Melbourne Water fortnightly workshops and feedback as received from the project director and the steering group. These are delineated as follows:
+
+  1. The analysis must clearly indicate the performance level of project deliveries for both the current CDM-21 and the previous CDM-16. This should primarily focus on the duration of the projects and highlight any notable changes in this aspect.
+  2. Insights on the current and previous CDM must be able to provide a baseline for the estimated number of projects which can be expected in the future delivery model (CDM-26). These projections would allow for more informed decision making while building the contractual frameworks to engage service providers.
+  3. A detailed analysis of the historical project data should indicate the proportion of projects requiring approval by each governing body. This will provide an estimation of the duration of projects from the BNI stage to the BCA stage for the new delivery model, enabling better resource management.
+  
+  
 # Significance of the current study
 
-While the detailed data analysis of the CDMs initiated as an abstract idea with flexible scope, however after multiple workshops with the project director and the steering group at Major Capital Delivery division, the key objectives and the scope for the current CDM data analysis project was finalised. These have been delineated as follows:  
+While the detailed data analysis of the CDMs initiated as an abstract idea with flexible scope, however after multiple workshops with the project director and the steering group at Major Capital Delivery division, the the scope and significance for the current CDM data analysis project was finalised. These have been delineated as follows:  
 
   1.	The analysis must provide an estimate of the project breakdown for CDM-26 after the latest price submission in 2026 by analysing the current delivery model (CDM-21) and the previous delivery model (CDM-16). This can be used as a basis for obtaining an informed prior information to design the new capital delivery model (CDM-26).
   2.	The analysis would supplement the decision making on effective selection of service providers for projects in the future delivery model based on the current distribution of the delivery programs across various FFCs and past CDMs.
   3.	The breakdown of the projects must allow a conservative estimate of the number of projects that would require approval at each level of authority, thereby indicating the approval duration for the project to be approved and initiated.
   4.	The analysis should aid in understanding how the proportions of projects in the future delivery model would differ from the benchmarks created by past models upon additional inputs.
   5.	Insights obtained from the total project duration and the average duration for the critical stages of each project may allow for effective project team planning.
-  6.	The analysis must allow one to quickly detect outliers in the data and investigate these outliers further. (Eg: Projects whose total duration is significantly above other similar projects)
+  6.	The analysis must allow one to quickly detect outliers in the data and investigate these outliers further.
 
+
+  
 
 # Methodology
 
