@@ -6,7 +6,7 @@ author:
   email: abar0090@student.monash.edu
   
 email: BusEco-Econometrics@monash.edu
-organization: Melbourne Water Corporation, Monash University
+organization: Monash University, Melbourne Water Corporation
 bibliography: references.bib
 format: report-pdf
 toc: true
@@ -71,7 +71,7 @@ head(project_data) %>% kbl()
 
 # Data Source
 
-The data for the current analysis has been sourced from the “Estimating & Scheduling” PowerBI dashboard in the MWC MPD workspace at Melbourne Water Corporation. The data was exported as a CSV file on 19th July, 2024 and as such, contains the latest updated project valuations up to that date. 
+The data for the current analysis has been sourced from the “Estimating & Scheduling” PowerBI dashboard in the Major Program Delivery workspace at Melbourne Water Corporation. The data was exported as a CSV file on 19th July, 2024 and as such, contains the latest updated project valuations up to that date. Due to the sensitive nature of the data, there is no public access to this data. 
 
 \begin{confBox}
 
@@ -89,7 +89,7 @@ Each Capital Delivery Model presides over a period of 5 years, after the complet
 
 @garcia2021measuring states that a key underlying challenge in today’s model-driven approach to engineering is how progress and level of effort are being measured and reported. The goal of the current project is to quantify the key results of the past delivery models and obtain important insights which would allow for to design an improved capital delivery model for the upcoming pricing submission period between 2026-2031. In particular, the analysis would attempt to estimate the future number of projects and their expected valuations based on the distribution of projects in the current and past deliver models.
 
-The process of forecasting the mix of the type of projects expected in the new capital delivery model after the 2026 price submission is based on the analysis of the current delivery model (CDM 2021) and the previous delivery model (CDM 2016). The price submission for 2026 is expected to be of bigger value than the recent price submissions, making it challenging to be able to accurately forecast the number of projects and the value of the projects based on the historical. However, the analysis of the projects in CDM 2016 and CDM 2021 will provide a good baseline of the expected proportion of the major capital delivery projects based on valuation and duration expected in the future delivery model (CDM 2026).
+The process of forecasting the mix of the type of projects expected in the new capital delivery model after the 2026 price submission is based on the analysis of the current delivery model (CDM 2021) and the previous delivery model (CDM 2016). The price submission for 2026 is expected to be of bigger value than the recent price submissions, making it challenging to be able to accurately forecast the number of projects and the value of the projects based on the historical data. However, the analysis of the projects in CDM 2016 and CDM 2021 will provide a good baseline of the expected proportion of the major capital delivery projects based on valuation and duration expected in the future delivery model (CDM 2026).
 
 The current analysis is performed by studying the following key parameters in the project data: \
       1.	Total final forecast cost (FFC) \
@@ -98,7 +98,17 @@ The current analysis is performed by studying the following key parameters in th
       4.	Delivery Program
 
 
-# Relevance of the current study
+# Motivation of the current study
+
+While the detailed data analysis of the CDMs initiated as an abstract idea with flexible scope, however after multiple workshops with the project director and the steering group at Major Capital Delivery division, the key objectives and the scope for the current CDM data analysis project was finalised. These have been delineated as follows:  
+
+  1.	The analysis must provide an estimate of the project breakdown for CDM-26 after the latest price submission in 2026 by analysing the current delivery model (CDM-21) and the previous delivery model (CDM-16). This can be used as a basis for obtaining an informed prior information to design the new capital delivery model (CDM-26).
+  2.	The analysis would supplement the decision making on effective selection of service providers for projects in the future delivery model based on the current distribution of the delivery programs across various FFCs and past CDMs.
+  3.	The breakdown of the projects must allow a conservative estimate of the number of projects that would require approval at each level of authority, thereby indicating the approval duration for the project to be approved and initiated.
+  4.	The analysis should aid in understanding how the proportions of projects in the future delivery model would differ from the benchmarks created by past models upon additional inputs.
+  5.	Insights obtained from the total project duration and the average duration for the critical stages of each project may allow for effective project team planning.
+  6.	The analysis must allow one to quickly detect outliers in the data and investigate these outliers further. (Eg: Projects whose total duration is significantly above other similar projects)
+
 
 # Methodology
 
