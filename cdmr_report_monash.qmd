@@ -23,6 +23,7 @@ header-includes:
 #| echo: false
 library(tidyverse)
 library(kableExtra)
+library(tibble)
 ```
 # List of abbreviations and terminologies
 
@@ -46,7 +47,7 @@ The analysis report will use numerous abbreviations and terminologies at various
 
 # Executive Summary
 
-The purpose of this study is to outline the methodology and guidelines for conducting the Capital Delivery Model project data analysis. This analysis aims to develop a reproducible framework that compares the current delivery model with past models, providing valuable insights to enhance future delivery models planned for years between 2026 to 2031, and use these learnings for future pricing submission periods.
+The purpose of this study is to outline the methodology and guidelines for conducting the Capital Delivery Model project data analysis. This analysis aims to develop a reproducible framework that compares the current delivery model with past models, providing valuable insights to enhance future delivery models planned for years between 2026 to 2031, and potentially use these learnings for future pricing submission periods.
 
 By systematically examining past and present performance, the aim is to identify key trends, strengths, and areas for improvement, ensuring that future projects are executed more efficiently and effectively. 
 
@@ -61,17 +62,14 @@ For the purpose of the current analysis, Melbourne Water Corporation's project d
 
 
 ```{r}
-#| caption: tbl-data
-#| tbl-cap: "Project data"
 project_data <- read_csv("data/Capital_Deliver_Project_deidentified.csv")
 
-head(project_data) %>% kbl()
 ```
 
 
 # Data Source
 
-The data for the current analysis has been sourced from the “Estimating & Scheduling” PowerBI dashboard in the Major Program Delivery workspace at Melbourne Water Corporation. The data was exported as a CSV file on 19th July, 2024 and as such, contains the latest updated project valuations up to that date. Due to the sensitive nature of the data, there is no public access to this data. 
+The data for the current analysis has been sourced from the “Estimating & Scheduling” PowerBI dashboard in the Major Program Delivery workspace at Melbourne Water Corporation. This dashboard draws this data from the Microsoft Project Online software which logs individual project data based on the inputs of the assigned project managers. The data was exported as a CSV file on 19th July, 2024 and as such, contains the latest updated project valuations up to that date. Due to the sensitive nature of the data, there is no public access to this data. 
 
 \begin{confBox}
 
@@ -110,7 +108,7 @@ The objectives and the scope of the analysis of the CDMs were defined through Me
   
 # Significance of the current study
 
-While the detailed data analysis of the CDMs initiated as an abstract idea with flexible scope, however after multiple workshops with the project director and the steering group at Major Capital Delivery division, the the scope and significance for the current CDM data analysis project was finalised. These have been delineated as follows:  
+Based on the numerous inputs from the project director and the steering group at Major Capital Delivery division in Melbourne Water, the the scope and significance for the current CDM data analysis project was finalised. These have been delineated as follows:  
 
   1.	The analysis must provide an estimate of the project breakdown for CDM-26 after the latest price submission in 2026 by analysing the current delivery model (CDM-21) and the previous delivery model (CDM-16). This can be used as a basis for obtaining an informed prior information to design the new capital delivery model (CDM-26).
   2.	The analysis would supplement the decision making on effective selection of service providers for projects in the future delivery model based on the current distribution of the delivery programs across various FFCs and past CDMs.
@@ -120,11 +118,49 @@ While the detailed data analysis of the CDMs initiated as an abstract idea with 
   6.	The analysis must allow one to quickly detect outliers in the data and investigate these outliers further.
 
 
-  
-
 # Methodology
 
-# Results and Discussion
+This section is dedicated for the purpose of explaining the detailed methodology of the data analysis performed to obtain the actionable insights that will be delineated later in @sec-results.
+
+## Assigning project to each capital delivery model
+
+While the data contains key dates such as the BNI, PBC, BCA and stages 1-3, however, it is essential to assign each project into its respective capital delivery model. Although this data is not readily captured at the source, however, through a deeper understanding of the critical project dates, a logic can be devised that assigns each project to a categorical variable indicating the version of CDM this model was a part of.
+
+The hierarchy of a project approval flowchart is illustrated through @fig-flowchart. This is a sequential process where the concept of a project is first identified and reported into the Project Online system on the BNI date. Once a project has been identified, a business case is prepared which undergoes an iterative process. The date of the first submitted business case is termed as the PBC. Once a project has been approved by the relevant Melbourne Water authority, the date is recorded as BCA. Stage 1 is the date on which the service provider claims that the project is now effectively "delivered". Special provisions within the contract as invoked by Melbourne Water with the service provider requires these two parties to collaborate together in order to repair any defects during the operation of the delivered infrastructure. This period typically ranges between 6 months to 1 year, post which, the project reaches its Stage 3 date and is now delivered in its entirety.
+
+While selected projects may bypass some of the approval gates, however, this flowchart is generally true for all of Melbourne Water projects.
+
+::: {#fig-flowchart fig-cap="Project approval gate flowchart"}
+```{mermaid}
+flowchart LR
+  A(BNI) --> B(PBC)
+  B --> C{BCA} --> D(Stage 1) --> E(Stage 2) --> F(Stage 3)
+```
+:::
+
+For the purpose of assigning the delivery model to each of the projects, the BCA date is utilised as this is effectively the date when the project went live. On the other hand, the completion status of the project is determined based on whether the Stage 1 date is before or after the data export date. (19th July, 2024). @tbl-cdm tabulates the criteria utilised for assigning each project to a relevant CDM.
+
+```{r}
+#| label: tbl-cdm
+#| tbl-cap: "Capital Delivery Model assignment criteria"
+#| tbl-pos: H
+
+tibble(
+  "BCA Year" = c("2016 <= BCA < 2021", "2021 <= BCA < 2026"),
+  "Capital Delivery Model" = c("C-16", "C-21")
+) %>%
+  kable("latex") %>%
+  kable_styling(latex_options = c("striped"), 
+                full_width = FALSE, 
+                position = "center") %>%
+  column_spec(1, bold = TRUE, color = "blue") %>%
+  column_spec(2, bold = TRUE, color = "red") 
+```
+
+
+
+
+# Results and Discussion {#sec-results}
 
 # Conclusion
 
