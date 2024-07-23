@@ -46,11 +46,11 @@ The analysis report will use numerous abbreviations and terminologies at various
 
 # Executive Summary
 
-The purpose of this study is to outline the methodology and guidelines for conducting the Capital Delivery Model project data analysis. This analysis aims to develop a reproducible framework that compares the current delivery model with past models, providing valuable insights to enhance future delivery models planned for years between 2026 to 2031.
+The purpose of this study is to outline the methodology and guidelines for conducting the Capital Delivery Model project data analysis. This analysis aims to develop a reproducible framework that compares the current delivery model with past models, providing valuable insights to enhance future delivery models planned for years between 2026 to 2031, and use these learnings for future pricing submission periods.
 
 By systematically examining past and present performance, the aim is to identify key trends, strengths, and areas for improvement, ensuring that future projects are executed more efficiently and effectively. 
 
-For the purpose of the current analysis, Melbourne Water Corporation's project data with business need identifier (BNI) dates between 2008 to 2024 were analysed. The major areas of focus for the current analysis are delineated as follows:
+For the purpose of the current analysis, Melbourne Water Corporation's project data with business need identifier (BNI) dates between 2008 to 2024 were analysed. The major areas of study for the current analysis are delineated as follows:
 
 1. Distribution of the projects in each delivery model based on the overall valuation of the projects as determined by the final forecast cost (FFC).
 2. Distribution of the projects in numbers for each delivery model.
@@ -89,7 +89,9 @@ Each Capital Delivery Model presides over a period of 5 years, after the complet
 
 @garcia2021measuring states that a key underlying challenge in today’s model-driven approach to engineering is how progress and level of effort are being measured and reported. The goal of the current project is to quantify the key results of the past delivery models and obtain important insights which would allow for to design an improved capital delivery model for the upcoming pricing submission period between 2026-2031. In particular, the analysis would attempt to estimate the future number of projects and their expected valuations based on the distribution of projects in the current and past deliver models.
 
-The process of forecasting the mix of the type of projects expected in the new capital delivery model after the 2026 price submission is based on the analysis of the current delivery model (CDM 2021) and the previous delivery model (CDM 2016). The price submission for 2026 is expected to be of bigger value than the recent price submissions, making it challenging to be able to accurately forecast the number of projects and the value of the projects based on the historical data. However, the analysis of the projects in CDM 2016 and CDM 2021 will provide a good baseline of the expected proportion of the major capital delivery projects based on valuation and duration expected in the future delivery model (CDM 2026).
+# Motivation of the current study
+
+The process of estimating the mix of the type of projects expected in the new capital delivery model after the 2026 price submission is based on the analysis of the current delivery model (CDM 2021) and the previous delivery model (CDM 2016). The forthcoming 2026 price submission is projected to surpass recent submissions in value, presenting significant challenges in project management. This includes the engagement of service providers for construction, efficient management of key crew resources, and rigorous monitoring to ensure timely infrastructure delivery. The current data analysis review of the projects in CDM 2016 and CDM 2021 will provide an adequate baseline of the expected proportion of the major capital delivery projects based on valuation and duration expected in the future delivery model (CDM 2026), thereby providing insights and eventually aiding in the key decision making for creation of the frameworks.
 
 The current analysis is performed by studying the following key parameters in the project data: \
       1.	Total final forecast cost (FFC) \
@@ -98,7 +100,7 @@ The current analysis is performed by studying the following key parameters in th
       4.	Delivery Program
 
 
-# Significances of the current study
+# Significance of the current study
 
 While the detailed data analysis of the CDMs initiated as an abstract idea with flexible scope, however after multiple workshops with the project director and the steering group at Major Capital Delivery division, the key objectives and the scope for the current CDM data analysis project was finalised. These have been delineated as follows:  
 
