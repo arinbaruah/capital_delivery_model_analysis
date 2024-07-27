@@ -122,6 +122,31 @@ Based on the numerous inputs from the project director and the steering group at
 
 This section is dedicated for the purpose of explaining the detailed methodology of the data analysis performed to obtain the actionable insights that will be delineated later in @sec-results.
 
+## Selection of projects for analysis
+
+While the dataset contains the details for projects undertaken by the various divisions of Melbourne Water Corporation, for the purpose of the current analysis, only those projects which are delivered or expected to be delivered by the Major Capital Delivery division are considered. In particular, these are those projects which are delivered through a contractual framework, called as the "Water and Sewerage Program", engineering maintenance projects to keep current assets running, or in certain instances, large projects which are tendered in the open market for service providers to bid.
+
+In the current dataset, these projects are those which come under the delivery programs as tabualated in @tbl-programs.
+
+```{r}
+#| label: tbl-programs
+#| tbl-cap: "Major Capital Delivery programs"
+#| tbl-pos: H
+tibble(
+  "Major Capital Delivery" = c("Major Works-Small scale", "Major Works-Framework",
+                                        "Contestable", "Major Works-Open Market")
+) %>%
+  kable("latex") %>%
+  kable_styling(latex_options = c("striped"), 
+                full_width = FALSE, 
+                position = "center") %>%
+  column_spec(1, bold = TRUE, color = "blue") %>%
+  row_spec(0, bold = TRUE) %>%  # Keep headers bold
+  row_spec(1:4, font_size = 8)
+```
+
+As a result, while analysing the current data, projects with delivery programs matching the above list of programs are filtered.
+
 ## Assigning project to each capital delivery model
 
 While the data contains key dates such as the BNI, PBC, BCA and stages 1-3, however, it is essential to assign each project into its respective capital delivery model. Although this data is not readily captured at the source, however, through a deeper understanding of the critical project dates, a logic can be devised that assigns each project to a categorical variable indicating the version of CDM this model was a part of.
@@ -157,7 +182,26 @@ tibble(
   column_spec(2, bold = TRUE, color = "red") 
 ```
 
+## Project completion status
 
+For the purpose of the current analysis, a project is considered to be "delivered" or "completed" if its Stage 1 date is prior to the date on which, the data was exported. The export date in this case is __19th July, 2024__. The completion criteria is further tabulated through @tbl-completion. 
+
+```{r}
+#| label: tbl-completion
+#| tbl-cap: "Capital project completion criteria"
+#| tbl-pos: H
+
+tibble(
+  "Condition" = c("Stage 1 date <= Data export date", "Stage 1 date > Data export date"),
+  "Status" = c("Completed", "Ongoing")
+) %>%
+  kable("latex") %>%
+  kable_styling(latex_options = c("striped"), 
+                full_width = FALSE, 
+                position = "center") %>%
+  column_spec(1, bold = TRUE, color = "blue") %>%
+  column_spec(2, bold = TRUE, color = "red") 
+```
 
 
 # Results and Discussion {#sec-results}
