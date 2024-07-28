@@ -63,7 +63,6 @@ For the purpose of the current analysis, Melbourne Water Corporation's project d
 
 ```{r}
 project_data <- read_csv("data/Capital_Deliver_Project_deidentified.csv")
-
 ```
 
 
@@ -202,6 +201,21 @@ tibble(
   column_spec(1, bold = TRUE, color = "blue") %>%
   column_spec(2, bold = TRUE, color = "red") 
 ```
+
+## Project labour hours analysis
+
+In the context of this analysis, labour hours refer to the total number of hours spent by both Melbourne Water personnel and the service provider’s personnel on each project. Examining labour hours across various delivery programs may provide insights into current crew resource management.
+
+The data for this analysis is sourced partly from Melbourne Water’s internal enterprise resource planning (ERP) platform and partly from the service provider’s quarterly data submissions. A single data frame is then created by performing an inner join based on the project ID number.
+
+\begin{noteBox}
+
+Due to the sensitive nature of the data related to service provider submissions, a reproducible version of the dataset is not included in this analysis. However, visualisations and results will be detailed in later sections.
+
+\end{noteBox}
+
+
+
 
 
 # Results and Discussion {#sec-results}
