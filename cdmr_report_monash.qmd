@@ -214,6 +214,31 @@ Due to the sensitive nature of the data related to service provider submissions,
 
 \end{noteBox}
 
+## Classifying projects based on approval authority
+
+Each capital project which is to be delivered within a CDM will require appropriate approvals from the relevant authority. The exact level of authorisation is generally based on the contract value of the project as well as the risk associated with each project. For the purpose of the current analysis, this decision is instead based on the FFC of the project. As a result, the total percentage of projects attributed to each authority is a conservative estimate of the actual expected projects. The FFC valuations that govern the authorisation level for a project is delineated in @tbl-approval.
+
+As the valuation of a project rises, it typically requires to go through multiple approval gates. This may extend the duration to obtain the BCA significantly, thereby causing delays in resource allocation, selection of the service provider for the project, and subsequent crew mobilisation. Through the analysis of the percentage of projects which fall under each approval authority, an informed decision can be made on the expected duration of approvals for a project. 
+
+```{r}
+#| label: tbl-approval
+#| tbl-cap: "Approval authority classification of projects based on FFC"
+#| tbl-pos: H
+
+tibble(
+  "FFC of project ($)" = c("0-2.5 mil", "2.5-5 mil","5-8 mil","8-40 mil","40-75 mil","75-125 mil","> 125 mil"),
+  "Approval authority" = c("People leadership group", "Senior leadership group","Executive leadership group","Managing director","Finance, audit and compliance"," Melbourne Water board","Department of Treasury and Finance")
+) %>%
+  kable("latex") %>%
+  kable_styling(latex_options = c("striped"), 
+                full_width = FALSE, 
+                position = "center") %>%
+  column_spec(1, bold = TRUE, color = "blue") %>%
+  column_spec(2, bold = TRUE, color = "red") %>%  
+  row_spec(0, bold = TRUE) %>%  # Keep headers bold
+  row_spec(1:7,font_size = 8)
+```
+
 
 
 
