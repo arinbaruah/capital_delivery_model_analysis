@@ -239,8 +239,13 @@ tibble(
   row_spec(1:7,font_size = 8)
 ```
 
+## Tracking service provider's performance through KPIs and KRAs
 
+The critical phase of a project initiates from the BCA to stage 3. As this is the period when the resources get allocated to projects, each day is expected to cost Melbourne Water. Hence, it is paramount to keep a track on the project completion and at the same time, ensure that the delivery of the project meets the quality requirements.
 
+@kunkcu2022using have studied various construction management projects utilizing key performance indicators (KPIs) and found them to be highly effective tools for evaluating project performance. In the context of Melbourne Water's projects, the focus is to engage a service provider who is able to deliver the project within the constrained time period, communicates progress regularly, minimises cost and time variations,reports and mitigates unsafe work conditions, engages a diverse group of employees, and undertakes sustainable initiatives. These are called the key result areas (KRAs) and are drawn into a legal agreement while employing a service provider. A high KRA score often attracts a monetary incentive for the service provider, thereby making this an area of interest for both the key parties.
+
+While the KRAs are subjective in nature and difficult to track, each of them are further quantified through the usage of KPIs. Based on the data provided by the service providers and through careful feature engineering, a framework to track and analyse project progress is delineated in @sec-results. The role of the KPIs and KRAs are two-fold. First, these indicators allow the team at Melbourne Water to gauge the progress of the project, secondly, it allows Melbourne Water to engineer the right behaviour on the part of the service provider who is responsible for the construction of the project.
 
 
 # Results and Discussion {#sec-results}
