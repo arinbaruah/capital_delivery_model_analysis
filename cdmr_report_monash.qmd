@@ -9,7 +9,6 @@ email: BusEco-Econometrics@monash.edu
 organization: Monash University, Melbourne Water Corporation
 bibliography: references.bib
 execute: 
-  output: false
   echo: false
 format: report-pdf
 toc: true
@@ -28,6 +27,7 @@ library(tidyverse)
 library(kableExtra)
 library(tibble)
 library(lubridate)
+library(fpp3)
 ```
 
 
@@ -114,6 +114,18 @@ project_data$Stage2 <- as.Date(project_data$Stage2, format = "%Y-%m-%d")
 project_data$Stage3 <- as.Date(project_data$Stage3, format = "%Y-%m-%d")
 
 ```
+
+```{r}
+project_subset_data <- project_data %>% filter(year(BCA)<=2024)
+
+project_tsibble <- project_data %>% mutate(BCA_year = yearmonth(BCA)) %>% # Tsibble created based on BCA year
+   as_tsibble(index = BCA_year,key = ID) # Convert data into a time series object
+```
+
+```{r}
+ggplot(data = project_subset_data %>% group_by(yearmonth(BCA),`Delivery Program`) %>% summarise(Total = n()),aes(x = `yearmonth(BCA)`,y = Total)) + geom_line() + facet_wrap(~`Delivery Program`)
+```
+
 
 
 # Data Source
