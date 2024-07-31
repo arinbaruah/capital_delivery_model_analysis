@@ -8,6 +8,9 @@ author:
 email: BusEco-Econometrics@monash.edu
 organization: Monash University, Melbourne Water Corporation
 bibliography: references.bib
+execute: 
+  output: false
+  echo: false
 format: report-pdf
 toc: true
 header-includes:
@@ -24,7 +27,12 @@ header-includes:
 library(tidyverse)
 library(kableExtra)
 library(tibble)
+library(lubridate)
 ```
+
+
+
+
 # List of abbreviations and terminologies
 
 The analysis report will use numerous abbreviations and terminologies at various stages. This section will serve as a reference for what do these abbreviations mean alongwith their definitions.
@@ -61,8 +69,50 @@ For the purpose of the current analysis, Melbourne Water Corporation's project d
 
 
 
-```{r}
+```{r read-data}
 project_data <- read_csv("data/Capital_Deliver_Project_deidentified.csv")
+```
+
+```{r date-format}
+
+project_data<- project_data %>%
+  mutate(BNI = sapply(strsplit(as.character(BNI), " "), `[`, 1)) # Cleaning BNI dates
+
+project_data<- project_data %>%
+  mutate(BNI = str_replace_all(BNI, "/", "-")) # Reformatting BNI dates
+
+project_data<- project_data %>% 
+  mutate(BCA = sapply(strsplit(as.character(BCA), " "), `[`, 1)) # Cleaning BCA dates
+
+project_data<- project_data %>% 
+  mutate(PBC = sapply(strsplit(as.character(PBC), " "), `[`, 1)) # Cleaning PBC dates
+
+project_data<- project_data %>%
+  mutate(PBC = str_replace_all(PBC, "/", "-")) # Reformatting PBC dates
+
+project_data<- project_data %>% 
+  mutate(Stage1 = sapply(strsplit(as.character(Stage1), " "), `[`, 1)) # Cleaning PBC dates
+
+project_data<- project_data %>% 
+  mutate(Stage2 = sapply(strsplit(as.character(Stage2), " "), `[`, 1)) # Cleaning PBC dates
+
+project_data<- project_data %>% 
+  mutate(Stage3 = sapply(strsplit(as.character(Stage3), " "), `[`, 1)) # Cleaning PBC dates
+  
+
+```
+
+
+```{r}
+# Reformatting the dates into machine-readable form
+
+project_data$PBC <- as.Date(project_data$PBC, format = "%d-%m-%Y")
+project_data$BNI <- as.Date(project_data$BNI, format = "%d-%m-%Y")
+project_data$BCA <- as.Date(project_data$BCA, format = "%Y-%m-%d") # Opposite to above format
+project_data$Stage1 <- as.Date(project_data$Stage1, format = "%Y-%m-%d") 
+project_data$Stage2 <- as.Date(project_data$Stage2, format = "%Y-%m-%d")
+project_data$Stage3 <- as.Date(project_data$Stage3, format = "%Y-%m-%d")
+
 ```
 
 
@@ -246,6 +296,8 @@ The critical phase of a project initiates from the BCA to stage 3. As this is th
 @kunkcu2022using have studied various construction management projects utilizing key performance indicators (KPIs) and found them to be highly effective tools for evaluating project performance. In the context of Melbourne Water's projects, the focus is to engage a service provider who is able to deliver the project within the constrained time period, communicates progress regularly, minimises cost and time variations,reports and mitigates unsafe work conditions, engages a diverse group of employees, and undertakes sustainable initiatives. These are called the key result areas (KRAs) and are drawn into a legal agreement while employing a service provider. A high KRA score often attracts a monetary incentive for the service provider, thereby making this an area of interest for both the key parties.
 
 While the KRAs are subjective in nature and difficult to track, each of them are further quantified through the usage of KPIs. Based on the data provided by the service providers and through careful feature engineering, a framework to track and analyse project progress is delineated in @sec-results. The role of the KPIs and KRAs are two-fold. First, these indicators allow the team at Melbourne Water to gauge the progress of the project, secondly, it allows Melbourne Water to engineer the right behaviour on the part of the service provider who is responsible for the construction of the project.
+
+
 
 
 # Results and Discussion {#sec-results}
