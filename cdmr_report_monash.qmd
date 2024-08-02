@@ -126,6 +126,26 @@ project_tsibble <- project_data %>% mutate(BCA_year = yearmonth(BCA)) %>% # Tsib
 ggplot(data = project_subset_data %>% group_by(yearmonth(BCA),`Delivery Program`) %>% summarise(Total = n()),aes(x = `yearmonth(BCA)`,y = Total)) + geom_line() + facet_wrap(~`Delivery Program`)
 ```
 
+```{r}
+project_numbers <- project_subset_data %>% group_by(`Delivery Program`,yearmonth(BCA)) %>% summarise(Total = n())
+
+project_tsibble <- project_numbers %>% # Tsibble created based on BCA year
+   as_tsibble(index = `yearmonth(BCA)`,key = `Delivery Program`) %>% fill_gaps(Total = 0L) # Fill NA with 0
+
+```
+
+```{r}
+gg_subseries(project_tsibble)
+
+gg_season(project_tsibble)
+
+ACF(project_tsibble) %>% autoplot()
+```
+```{r}
+dcmp <- project_tsibble |>
+  model(stl = STL(Total))
+components(dcmp) %>% autoplot()
+```
 
 
 # Data Source
