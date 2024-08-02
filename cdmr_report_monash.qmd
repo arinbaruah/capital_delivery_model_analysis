@@ -27,6 +27,7 @@ library(tidyverse)
 library(kableExtra)
 library(tibble)
 library(lubridate)
+library(janitor)
 library(fpp3)
 ```
 
@@ -71,33 +72,34 @@ For the purpose of the current analysis, Melbourne Water Corporation's project d
 
 ```{r read-data}
 project_data <- read_csv("data/Capital_Deliver_Project_deidentified.csv")
+project_data <- clean_names(project_data)
 ```
 
 ```{r date-format}
 
 project_data<- project_data %>%
-  mutate(BNI = sapply(strsplit(as.character(BNI), " "), `[`, 1)) # Cleaning BNI dates
+  mutate(bni = sapply(strsplit(as.character(bni), " "), `[`, 1)) # Cleaning BNI dates
 
 project_data<- project_data %>%
-  mutate(BNI = str_replace_all(BNI, "/", "-")) # Reformatting BNI dates
+  mutate(bni = str_replace_all(bni, "/", "-")) # Reformatting BNI dates
 
 project_data<- project_data %>% 
-  mutate(BCA = sapply(strsplit(as.character(BCA), " "), `[`, 1)) # Cleaning BCA dates
+  mutate(bca = sapply(strsplit(as.character(bca), " "), `[`, 1)) # Cleaning BCA dates
 
 project_data<- project_data %>% 
-  mutate(PBC = sapply(strsplit(as.character(PBC), " "), `[`, 1)) # Cleaning PBC dates
+  mutate(pbc = sapply(strsplit(as.character(pbc), " "), `[`, 1)) # Cleaning PBC dates
 
 project_data<- project_data %>%
-  mutate(PBC = str_replace_all(PBC, "/", "-")) # Reformatting PBC dates
+  mutate(pbc = str_replace_all(pbc, "/", "-")) # Reformatting PBC dates
 
 project_data<- project_data %>% 
-  mutate(Stage1 = sapply(strsplit(as.character(Stage1), " "), `[`, 1)) # Cleaning PBC dates
+  mutate(stage1 = sapply(strsplit(as.character(stage1), " "), `[`, 1)) # Cleaning PBC dates
 
 project_data<- project_data %>% 
-  mutate(Stage2 = sapply(strsplit(as.character(Stage2), " "), `[`, 1)) # Cleaning PBC dates
+  mutate(stage2 = sapply(strsplit(as.character(stage2), " "), `[`, 1)) # Cleaning PBC dates
 
 project_data<- project_data %>% 
-  mutate(Stage3 = sapply(strsplit(as.character(Stage3), " "), `[`, 1)) # Cleaning PBC dates
+  mutate(stage3 = sapply(strsplit(as.character(stage3), " "), `[`, 1)) # Cleaning PBC dates
   
 
 ```
@@ -106,31 +108,30 @@ project_data<- project_data %>%
 ```{r}
 # Reformatting the dates into machine-readable form
 
-project_data$PBC <- as.Date(project_data$PBC, format = "%d-%m-%Y")
-project_data$BNI <- as.Date(project_data$BNI, format = "%d-%m-%Y")
-project_data$BCA <- as.Date(project_data$BCA, format = "%Y-%m-%d") # Opposite to above format
-project_data$Stage1 <- as.Date(project_data$Stage1, format = "%Y-%m-%d") 
-project_data$Stage2 <- as.Date(project_data$Stage2, format = "%Y-%m-%d")
-project_data$Stage3 <- as.Date(project_data$Stage3, format = "%Y-%m-%d")
+project_data$pbc <- as.Date(project_data$pbc, format = "%d-%m-%Y")
+project_data$bni <- as.Date(project_data$bni, format = "%d-%m-%Y")
+project_data$bca <- as.Date(project_data$bca, format = "%Y-%m-%d") # Opposite to above format
+project_data$stage1 <- as.Date(project_data$stage1, format = "%Y-%m-%d") 
+project_data$stage2 <- as.Date(project_data$stage2, format = "%Y-%m-%d")
+project_data$stage3 <- as.Date(project_data$stage3, format = "%Y-%m-%d")
 
 ```
 
 ```{r}
-project_subset_data <- project_data %>% filter(year(BCA)<=2024)
+project_subset_data <- project_data %>% filter(year(bca)<=2024)
 
-project_tsibble <- project_data %>% mutate(BCA_year = yearmonth(BCA)) %>% # Tsibble created based on BCA year
-   as_tsibble(index = BCA_year,key = ID) # Convert data into a time series object
 ```
 
 ```{r}
-ggplot(data = project_subset_data %>% group_by(yearmonth(BCA),`Delivery Program`) %>% summarise(Total = n()),aes(x = `yearmonth(BCA)`,y = Total)) + geom_line() + facet_wrap(~`Delivery Program`)
+ggplot(data = project_subset_data %>% group_by(yearmonth(bca),delivery_program) %>% summarise(Total = n()),
+       aes(x = `yearmonth(bca)`,y = Total)) + geom_line() + facet_wrap(~delivery_program)
 ```
 
 ```{r}
-project_numbers <- project_subset_data %>% group_by(`Delivery Program`,yearmonth(BCA)) %>% summarise(Total = n())
+project_numbers <- project_subset_data %>% group_by(delivery_program,yearmonth(bca)) %>% summarise(Total = n())
 
 project_tsibble <- project_numbers %>% # Tsibble created based on BCA year
-   as_tsibble(index = `yearmonth(BCA)`,key = `Delivery Program`) %>% fill_gaps(Total = 0L) # Fill NA with 0
+   as_tsibble(index = `yearmonth(bca)`,key = delivery_program) %>% fill_gaps(Total = 0L) # Fill NA with 0
 
 ```
 
@@ -141,10 +142,44 @@ gg_season(project_tsibble)
 
 ACF(project_tsibble) %>% autoplot()
 ```
+
+
 ```{r}
 dcmp <- project_tsibble |>
   model(stl = STL(Total))
 components(dcmp) %>% autoplot()
+```
+
+
+```{r}
+naive_fit <- project_tsibble %>% filter(delivery_program == "Major Works - Small Scale") |> model(
+     Mean = MEAN(Total),
+    Naive = NAIVE(Total),
+    Season_Naive = SNAIVE(Total))
+
+
+naive_fc <- naive_fit |> forecast(h = 6)
+
+naive_fc |> autoplot() +
+   geom_line(
+    data = project_tsibble %>% filter(delivery_program == "Major Works - Small Scale"),
+    aes(x = `yearmonth(bca)`, y = Total, linetype = "Approved projects")
+  ) +
+  guides(
+    color = guide_legend(title = "Forecast model"),
+    fill = guide_legend(title = "Forecast model"),
+    linetype = guide_legend("Melbourne Water data")
+  ) +
+  labs(
+    x = "Timeline",
+    y = "Number of projects",
+  ) 
+
+
+```
+
+```{r}
+ggplot(project_data,aes(x = ffc,y = delivery_program)) + geom_col(position = "fill")
 ```
 
 
@@ -334,7 +369,30 @@ While the KRAs are subjective in nature and difficult to track, each of them are
 
 # Results and Discussion {#sec-results}
 
+## Labour utilisation analysis for each delivery program
+
+![Distribution of labour hours fo each delivery program](images/labour_hours.png){#fig-labour}
+
+
+@fig-labour depicts the distribution of the labour hours across each of the four delivery programs within MCD. The plot indicates that the current model is capable of delivering multiple small-scale and low risk contestable projects. The labour hours associated with Major Works-Framework and Major Works-Small Scale appear to be fairly similar, despite the fact that the __Small Scale projects account for about only 10% of the FFC in a delivery period__. The future CDM for PS-26 should consider __streamlining or bundling multiple small-scale projects together to generate higher efficiency in Project Management labour resource allocation.__ 
+
 # Conclusion
+
+# Limitations of the data
+
+The limitations within the source of the data which may have affected the analysis are delineated as follows:
+
+1. As the source file was exported from the Microsoft PowerBI organisational dashboard, certain fields such as the dates were not in their desirable format for the current analysis and were required to be converted into a machine-readable format.This was a critical step to perform the required exploratory data analysis and form the time-series data for forecasting purposes.
+
+2. While the original dataset contains project data from 2008 to 2024, a recent software migration to the Microsoft Project Online platform has rendered the data for the period between 2008 and 2016 potentially unrepresentative. As a result, the current analysis utilizes data from 2016 to 2024. This period encompasses the two recent delivery model periods.
+
+3. Multiple projects were observed to have empty PBC fields. This is likely due to the case where small scale projects tend to bypass one gate of approval to reduce approval duration. While this does not apply to all projects of similar nature, there is however no indicator in the data which allows for detection of such an event other than a missing date.
+
+4. The dataset here is an observational data and in particular, a census data. Some of the limitations that are prevalent in such datasets are as follows :
+
+   - Each row in the dataset is a project whose details are provided by an individual Project Manager. As a result, there may be non-uniformity in the data provided as each Project Manager may have their own interpretations of the data they may have provided.
+   - The current dataset obtained is a subset of an observational data. These types of data are often plagued with lack of randomisation during the selection of data. This may lead to biases in the dataset such as selection and systematic bias.
+   - The data maybe mis-classified or filled in non-uniform units by the various sources, leading to lack of accuracy of the overall dataset.
 
 # Key areas of improvement
 
