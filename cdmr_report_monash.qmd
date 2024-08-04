@@ -24,11 +24,13 @@ header-includes:
 ```{r}
 #| echo: false
 library(tidyverse)
+library(ggthemes)
 library(kableExtra)
 library(tibble)
 library(lubridate)
 library(janitor)
 library(fpp3)
+library(ggrepel)
 ```
 
 
@@ -203,8 +205,28 @@ project_tsibble %>% tail(52) |>
 
 
 ```{r}
-ggplot(project_data,aes(x = ffc,y = delivery_program)) + geom_col(position = "fill")
+
+# Create a variable for CDM
+project_data <- project_data %>% mutate(cdm = case_when(year(bca) >= 2016 & year(bca) <= 2021 ~ "CDM-16",
+                                                        year(bca) >= 2021 & year(bca) <= 2026 ~ "CDM-21",
+                                                        .default = "CDM-26"))
+
+# Create a variable for FFC bands
+project_data <- project_data %>% mutate(ffc_band = case_when(
+                                                             ffc >= 0 & ffc <= 5*10^6 ~ "< = 5",
+                                                             ffc >= 5* 10^6 & ffc <= 10 * 10^6 ~ "5-10",
+                                                             ffc >= 10* 10^6 & ffc <= 20 * 10^6 ~ "10-20",
+                                                             ffc >= 20* 10^6 & ffc <= 50 * 10^6 ~ "20-50",
+                                                             ffc >= 50* 10^6 & ffc <= 80 * 10^6 ~ "50-80",
+                                                             ffc >= 80* 10^6 & ffc <= 1 * 10^9 ~ "> 80",
+                                                        .default = NA))
+
+
 ```
+
+
+
+
 
 
 # Data Source
@@ -266,7 +288,7 @@ This section is dedicated for the purpose of explaining the detailed methodology
 
 While the dataset contains the details for projects undertaken by the various divisions of Melbourne Water Corporation, for the purpose of the current analysis, only those projects which are delivered or expected to be delivered by the Major Capital Delivery division are considered. In particular, these are those projects which are delivered through a contractual framework, called as the "Water and Sewerage Program", engineering maintenance projects to keep current assets running, or in certain instances, large projects which are tendered in the open market for service providers to bid.
 
-In the current dataset, these projects are those which come under the delivery programs as tabualated in @tbl-programs.
+In the current dataset, these projects are those which come under the delivery programs as tabulated in @tbl-programs.
 
 ```{r}
 #| label: tbl-programs
@@ -463,7 +485,131 @@ While the KRAs are subjective in nature and difficult to track, each of them are
 
 # Results and Discussion {#sec-results}
 
+## Distribution of delivery programs within each CDM
+
+Each CDM contains specific delivery programs under which a project is managed right from the concept stage to the delivery stage. This process is done in order to make the project delivery process more efficient and allow for better efficiency in allocating resources. Delivery programs differ from one another based on factors such as risk associated with the project, cost of the project and the tendering process to complete the project.
+
+@fig-comp illustrates the compositions of the current delivery model (CDM-21) and the past model (CDM-16). Some of the observations are delineated below:
+
+1. In each of the CDMs, the Open Market projects constitute the smallest proportion. This is usually the case because such projects tend to incur a large sum of FFC and are typically "green-field" projects which take a long time period for delivery.
+
+2. While the percentage of "Framework" projects reduced from CDM-16 to CDM-21, a subsequent rise in "Small-scale" and "Contestable" projects were observed within the same period. It is especially interesting to note that the current model delivers nearly half of all the projects through the "Small-Scale" program.
+
+3. Allocating more projects through the delivery programs of "Small-scale" and "Contestable" route in the current model was done to expedite the delivery period of projects as these programs typically require fewer approvals and consequently, lesser time to reach the BCA stage.
+
+4. In the future CDM, a similar strategy can be utilised to expedite projects by requiring fewer approval gates.
+
+```{r}
+#| label: fig-comp
+#| fig-cap: "Composition of the delivery programs within each CDM"
+#| fig-height: 3 
+#| fig-width: 8
+project_group_progam <- project_data %>%
+  group_by(delivery_program, cdm) %>%
+  summarise(Total = n()) %>%
+  ungroup() %>%
+  group_by(cdm) %>%
+  mutate(Percentage = Total / sum(Total))
+
+cc <- c("Contestable" = "#FF6F61" , 
+        "Major Works - Framework" = "#40E0D0" ,
+        "Major Works - Open Market" = "#FFD700",
+        "Major Works - Small Scale" = "#87CEFA")
+
+ggplot(project_group_progam %>% filter(cdm != "CDM-26"),aes(x = Percentage,
+                                y = cdm,
+                                fill = delivery_program)) + geom_col() +
+  geom_text(aes(label = scales::percent(Percentage, accuracy = 1)), 
+            position = position_fill(vjust = 0.5), size = 3) +
+  scale_x_continuous(expand = c(0, 0), labels = scales::percent) +
+  labs(title = "Distribution of delivery programs within each CDM",
+       y = "Capital Delivery Model",
+       caption = "Melbourne Water Corporation",
+       fill = "Delivery program") +
+  scale_fill_manual(values = cc) + theme_minimal()
+```
 ## Distribution of projects by FFC bands for each delivery model {#sec-prodist}
+
+@fig-ffcband illustrates the distribution of the project FFCs associated with each CDM. Key observations are delineated below:
+
+1. In each of the CDMs, projects that are worth 5 mil $ or lower tend to constitute more than 2/3rd of all the approved projects.
+
+2. On the other hand, projects which are worth 50 mil $ or higher remain to be the smallest category of projects in each of the CDMs.
+
+3. Analysis of the current and the previous CDMs suggest that the new delivery model (CDM-26) would be expected to constitute majority of the projects with FFCs below 5 mil $.
+
+4. Such projects are associated with works such as laying new pipelines, pipeline renewals, mechanical or electrical machinery maintainence and other works of similar nature. As a result, the demand for these projects in each year are expected to remain fairly consistent, and hence provides valuable insights what the new delivery model could shape up as.  
+
+
+```{r}
+#| label: fig-ffcband
+#| fig-cap: "Project FFC band distribution across different CDMs"
+#| fig-height: 3 
+#| fig-width: 8
+#| fig-pos: H
+
+project_group_progam <- project_data %>%
+  group_by(ffc_band, cdm) %>%
+  summarise(Total = n()) %>%
+  ungroup() %>%
+  group_by(cdm) %>%
+  mutate(Percentage = Total / sum(Total))
+
+dim_order <- c("> 80","50-80","20-50","10-20","5-10","< = 5")
+
+project_group_progam$ffc_band <- factor(project_group_progam$ffc_band, levels = dim_order)
+
+ggplot(project_group_progam %>% filter(cdm != "CDM-26"),aes(x = Percentage,
+                                y = cdm,
+                                fill = ffc_band)) + geom_col(position = "fill") +
+  labs(x = "Percentage of projects",y = "Capital Delivery Model",
+       title = "Distribution of project forecast costs across CDMs",
+       caption = "Source: Melbourne Water Corporation",
+       fill = "FFC (in mil $)") +
+  geom_label_repel(aes(label = scales::percent(Percentage, accuracy = 1)), 
+            position = position_fill(vjust = 0.5), size = 3,color = "white",fontface = "bold") +
+  scale_x_continuous(expand = c(0, 0), labels = scales::percent) +
+  scale_fill_tableau(palette = "Miller Stone") + theme_minimal() 
+
+
+```
+
+
+
+
+```{r}
+#| label: fig-ffcprop
+#| fig-cap: "Project FFC band distribution across different CDMs"
+#| fig-height: 4 
+#| fig-width: 8
+
+project_group_progam <- project_data %>%
+  group_by(ffc_band, cdm) %>%
+  summarise(Total = sum(ffc)) %>%
+  ungroup() %>%
+  group_by(cdm) %>%
+  mutate(Percentage = Total / sum(Total))
+
+dim_order <- c("> 80","50-80","20-50","10-20","5-10","< = 5")
+
+project_group_progam$ffc_band <- factor(project_group_progam$ffc_band, levels = dim_order)
+
+ggplot(project_group_progam %>% filter(cdm != "CDM-26"),aes(x = Percentage,
+                                y = cdm,
+                                fill = ffc_band)) + geom_col(position = "fill") +
+  labs(x = "Percentage of FFC",y = "Capital Delivery Model",
+       title = "Distribution of project forecast costs across CDMs",
+       caption = "Source: Melbourne Water Corporation",
+       fill = "FFC (in mil $)") +
+  geom_label_repel(aes(label = scales::percent(Percentage, accuracy = 1)), 
+            position = position_fill(vjust = 0.5), size = 3,color = "white",fontface = "bold") +
+  scale_x_continuous(expand = c(0, 0), labels = scales::percent) +
+  scale_fill_tableau(palette = "Miller Stone") + theme_minimal() 
+
+
+```
+
+
 
 ## Labour utilisation analysis for each delivery program
 
