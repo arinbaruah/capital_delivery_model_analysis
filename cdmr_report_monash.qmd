@@ -15,7 +15,7 @@ toc: true
 header-includes:
   - \usepackage{tcolorbox}
   - \newtcolorbox{noteBox}{colback=yellow!5!white, colframe=yellow!50!black, title=Note}
-  - \newtcolorbox{warningBox}{colback=red!5!white, colframe=red!50!black, title=Warning}
+  - \newtcolorbox{warningBox}{colback=red!5!white, colframe=red!50!black, title=Limitation}
   - \newtcolorbox{tipBox}{colback=green!5!white, colframe=green!50!black, title=Tip}
   - \newtcolorbox{confBox}{colback=red!5!white, colframe=red!5!black, title=Confidentiality statement}
 ---
@@ -145,14 +145,13 @@ ACF(project_tsibble) %>% autoplot()
 
 
 ```{r}
-dcmp <- project_tsibble |>
-  model(stl = STL(Total))
-components(dcmp) %>% autoplot()
+dcmp <- project_tsibble |> filter(delivery_program == "Major Works - Small Scale" & year(`yearmonth(bca)`) <= 2024) |>
+  model(stl = STL(Total ~ season(window = 11)))
 ```
 
 
 ```{r}
-model_fit <- project_tsibble %>% filter(delivery_program == "Major Works - Small Scale" & year(`yearmonth(bca)`) < 2024) |> model(
+model_fit <- project_tsibble %>% filter(delivery_program == "Major Works - Small Scale" & year(`yearmonth(bca)`) <= 2024) |> model(
      Mean = MEAN(Total),
     Naive = NAIVE(Total),
     Season_Naive = SNAIVE(Total),
@@ -160,11 +159,11 @@ model_fit <- project_tsibble %>% filter(delivery_program == "Major Works - Small
     arima_auto = ARIMA(Total))
 
 
-model_fc <- model_fit |> forecast(h = 24,bootstrap =TRUE) #%>%  mutate(Total = distributional::dist_truncated(Total, 0))
+model_fc <- model_fit |> forecast(h = 72,bootstrap =TRUE) %>%  mutate(Total = distributional::dist_truncated(Total, 0))
 
 model_fc |> autoplot() +
    geom_line(
-    data = project_tsibble %>% filter(delivery_program == "Major Works - Small Scale" & year(`yearmonth(bca)`) < 2024),
+    data = project_tsibble %>% filter(delivery_program == "Major Works - Small Scale" & year(`yearmonth(bca)`) <= 2024),
     aes(x = `yearmonth(bca)`, y = Total, linetype = "Approved projects")
   ) +
   guides(
@@ -405,7 +404,48 @@ tibble(
   row_spec(0, bold = TRUE) %>%  # Keep headers bold
   row_spec(1:5, font_size = 8)
 ```
+## Selecting an appropriate ETS forecast model
 
+The selection of the ETS model would require us to study the timeseries data of the Major Works-Small Scale delivery program projects in detail and outline any important timeseries characteristics that might be beneficial to obtain the appropriate ETS model for forecasting the projects in the upcoming delivery model. 
+
+@fig-decomp illustrates the additive decomposition of the time series data into its trend, seasonal, and remainder components. Analyzing the decomposed data enables us to select the most appropriate type of ETS model for forecasting the number of projects in the upcoming delivery period. The key characteristics of this time series are outlined below.
+
+1. There appears to be a cyclic trend in the data which repeats itself in approximately 3 years as observed through the sinusoidal trend line. This indicates that there is no clear additive or multiplicative trend in the data which can be replicated through the ETS model. The ETS model is however well suited to work with cyclic data.
+
+2. The seasonality of the current timeseries data indicates around 3 peaks when projects get approved in each year. Additionally, the seasonality appears to be fairly consistent throughout the years, indicating additive seasonality of the data.
+
+3. The scale of the remainder appears to be large, meaning that the model is unable to capture some important characteristics in the timeseries, possibly due to the limited availability of the current data.
+
+4. The remainder appears to have no distinct patterns in it and is centered around zero. This is an ideal outcome as it shows that information left over after accounting for the trend and seasonality in the data is unbiased and has a mean of zero over the entire timeseries. 
+
+5. Additionally, it can be observed through the autocorrelation function (ACF) plot in @fig-resid that the residuals are uncorrelated in nature, meaning no discernible patterns have leaked into the residuals.
+
+6. The distribution of the residuals has a __right skew__. While this may not affect the point forecasts directly, however, this is expected to __affect the prediction intervals which are assumed to be normally distributed in nature.__
+
+
+```{r}
+#| label: fig-decomp
+#| fig-cap: "Time series decomposition for Major Works-Small Scale projects"
+
+components(dcmp) %>% autoplot() + 
+  labs(title = "Time series decomposition plot",
+       subtitle = "Major Works-Small Scale",
+       x = "Timeline",
+       y = "Number of projects") + theme_minimal()
+```
+
+```{r}
+#| label: fig-resid
+#| fig-cap: "Residual diagnostic plots"
+gg_tsresiduals(dcmp) + labs(x = "Timeline",
+                            title = "Residual diagnostics for timeseries data",
+                            subtitle = "Major Works-Small Scale") 
+```
+\begin{warningBox}
+The current forecast models face limitations due to the unavailability of project data beyond the current and past CDM. As a result, the forecasts exhibit high uncertainty, characterized by large residuals and broad prediction intervals.
+
+Nevertheless, with the accumulation of additional data in the future, the model is anticipated to produce more accurate point forecasts and narrower, more informative prediction intervals. The primary objective of this study is to establish a reproducible pipeline for generating these forecasts.
+\end{warningBox}
 
 
 ## Tracking service provider's performance through KPIs and KRAs
