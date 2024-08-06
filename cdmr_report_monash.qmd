@@ -220,7 +220,9 @@ project_data <- project_data %>% mutate(ffc_band = case_when(
                                                              ffc >= 50* 10^6 & ffc <= 80 * 10^6 ~ "50-80",
                                                              ffc >= 80* 10^6 & ffc <= 1 * 10^9 ~ "> 80",
                                                         .default = NA))
+# Create a variable to indicate project completion status
 
+project_data <- project_data %>% mutate(status = if_else(stage1 <= today(),"Completed","Ongoing"))
 
 ```
 
@@ -334,7 +336,7 @@ For the purpose of assigning the delivery model to each of the projects, the BCA
 
 tibble(
   "BCA Year" = c("2016 <= BCA < 2021", "2021 <= BCA < 2026"),
-  "Capital Delivery Model" = c("C-16", "C-21")
+  "Capital Delivery Model" = c("CDM-16", "CDM-21")
 ) %>%
   kable("latex") %>%
   kable_styling(latex_options = c("striped"), 
@@ -681,6 +683,77 @@ ggplot(project_group_approval %>% filter(cdm != "CDM-26"),aes(x = Percentage,
 
 @fig-labour depicts the distribution of the labour hours across each of the four delivery programs within MCD. The plot indicates that the current model is capable of delivering multiple small-scale and low risk contestable projects. The labour hours associated with Major Works-Framework and Major Works-Small Scale appear to be fairly similar, despite the fact that the __Small Scale projects account for about only 10% of the FFC in a delivery period__. The future CDM for PS-26 should consider __streamlining or bundling multiple small-scale projects together to generate higher efficiency in Project Management labour resource allocation.__ 
 
+## Critical project stage duration analysis
+
+As explained previously through @fig-flowchart, a project typically undergoes several key critical stages from conceptualisation to completion. It is critical to study the duration in between these stages and also compare across CDMs to observe any changes and what it may mean for the future CDM.
+
+@fig-compduration compares the duration of time taken to submit a business case for further approval once a project has been conceptualised. The comparison was done only for the delivery programs under Major Works-Framework and Major Works-Open Market as the other programs are generally fast-tracked by bypassing the PBC stage. Some of the key observations are as follows:
+
+1. In each of the CDMs, the duration of time for project conceptualisation is higher for Major Works-Open Market as compared to Major Works-Framework. This is typically the case due to the fact that a business case for Frameworks projects are contracted to a list of already approved service providers and will be engaged through a specific working contract which was agreed between the parties previously. On the other hand, Open Market projects are those that need to be tendered in the market and may require to form a working partnership with a new service provider. This leads to the requirement of further due-diligence, risk and cost analysis, contractual deliverables review and liaising with other government bodies to finalise a business case. As a result, the median duration for project concept submission is typically longer for these projects.
+
+2. The median time taken between the BNI and PBC stages, referred to as the project conceptualization stage, has increased from CDM-16 to CDM-21. In CDM-21, the median duration for each delivery program exceeded 2 years, which is significantly longer than the durations observed in CDM-16. For future CDMs, it is advisable to consider these extended durations and explore strategies to reduce the time required for projects to progress from BNI to PBC, aiming to align with the shorter durations seen in CDM-16.
+
+```{r}
+#| label: fig-compduration
+#| fig-cap: "Comparison of concept submission duration across CDMs"
+#| fig-height: 4 
+#| fig-width: 8
+
+project_data <- project_data %>% mutate(conception_duration = days(pbc - bni))
+
+del_prg <- c("Major Works - Framework","Major Works - Open Market")
+
+ggplot(data = project_data %>% filter(delivery_program %in% del_prg  & cdm != "CDM-26"),aes(y = day(conception_duration),x = delivery_program,fill = delivery_program)) + geom_boxplot()  + facet_wrap(~cdm) + scale_fill_tableau(palette = "Tableau 10") + 
+  theme_minimal() + theme(legend.position = "none",axis.text.x = element_text(size = 8)) + 
+  labs(x = "Delivery program",
+       y = "Concept submission duration",
+       caption = "Source: Melbourne Water Corporation", 
+       title = "Distribution of duration for project concept submission",
+       subtitle = "Number of days between BNI and PBC")
+```
+The other critical stage of the projects is to monitor the duration between the project approval (BCA) to project delivery (Stage 1). @fig-delduration and @fig-medduration illustrate how the duration of projects from approval to delivery stage differ across various delivery programs. Key insights from this visualisation are as follows:
+
+1. The current sample of all completed projects indicate a right skewed distribution. This suggests that there are some projects which require unusually longer to complete across all delivery programs, possibly due to project cost variations, scope changes or other hurdles.
+
+2. The number of "Open Market" and "Contestable" projects are typically very low in number within any CDM. As a result, its distribution of completion duration is not expected to provide a representative figure for the future delivery model.
+
+3. On the other hand, both the "Small scale" and "Framework" projects together constitute more than 2/3rd of the total proportion of projects. As a result, the distribution of the project completion duration may provide a good prior information for the upcoming delivery model under vastly similar circumstances.
+
+4. The distribution of completion durations for “Framework” and “Small-scale” projects indicates that the majority of these projects are completed in approximately one year. This insight is crucial for estimating the expected duration for a significant portion of projects in the upcoming CDM. It can help optimize resource and crew allocation, ensuring more efficient project management and planning.
+
+```{r}
+#| label: fig-delduration
+#| fig-cap: "Distribution of project completion duration across delivery programs"
+#| fig-height: 4 
+#| fig-width: 8
+project_data <- project_data %>% mutate(completion_duration = days(stage1 - bca))
+
+ggplot(data = project_data %>% filter(status == "Completed"),aes(x = day(completion_duration),fill = delivery_program)) + geom_density()  + scale_fill_tableau(palette = "Tableau 10") + theme_minimal() + theme(legend.position = "none") + facet_wrap(~delivery_program,ncol = 1) +
+  labs(x = "Completion duration (days)",
+y = "Density",
+caption = "Source: Melbourne Water Corporation",
+title = "Distribution of project duration after completion",
+subtitle = "Number of days between BCA and Stage 1")
+```
+
+```{r}
+#| label: fig-medduration
+#| fig-cap: "Median project completion duration across delivery programs"
+#| fig-height: 3 
+#| fig-width: 8
+
+project_data %>% filter(status == "Completed") %>% 
+  group_by(delivery_program) %>%
+  summarise(Median_completion = median(day(completion_duration))) %>% 
+  ggplot(aes(y = reorder(delivery_program,-Median_completion), x = Median_completion, fill = delivery_program)) + 
+  geom_col() + scale_fill_tableau(palette = "Tableau 10") + 
+  geom_label(aes(label = Median_completion)) +  theme_minimal() + theme(legend.position = "none") + 
+  labs(x = "Duration (Days)",
+       y = "Delivery program",
+       title = "Median duration for project completion",
+       subtitle = "Duration between BCA and Stage 1",
+       caption = "Source: Melbourne Water Corporation")
+```
 
 
 
