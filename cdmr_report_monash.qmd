@@ -487,17 +487,17 @@ While the KRAs are subjective in nature and difficult to track, each of them are
 
 ## Distribution of delivery programs within each CDM
 
-Each CDM contains specific delivery programs under which a project is managed right from the concept stage to the delivery stage. This process is done in order to make the project delivery process more efficient and allow for better efficiency in allocating resources. Delivery programs differ from one another based on factors such as risk associated with the project, cost of the project and the tendering process to complete the project.
+Each CDM contains specific delivery programs under which a project is managed right from the concept stage to the delivery stage. Such a process is undertaken to make the project delivery process more efficient and allow for better efficiency in allocating resources. Delivery programs differ from one another based on factors such as risk associated with the project, cost of the project and the tendering process to complete the project.
 
 @fig-comp illustrates the compositions of the current delivery model (CDM-21) and the past model (CDM-16). Some of the observations are delineated below:
 
-1. In each of the CDMs, the Open Market projects constitute the smallest proportion. This is usually the case because such projects tend to incur a large sum of FFC and are typically "green-field" projects which take a long time period for delivery.
+1. In each of the CDMs, the Open Market projects constitute the smallest proportion. This is usually the case because such projects tend to incur a large sum of FFC and some of these projects could also be "green-field" projects that take a long time period for delivery.
 
 2. While the percentage of "Framework" projects reduced from CDM-16 to CDM-21, a subsequent rise in "Small-scale" and "Contestable" projects were observed within the same period. It is especially interesting to note that the current model delivers nearly half of all the projects through the "Small-Scale" program.
 
-3. Allocating more projects through the delivery programs of "Small-scale" and "Contestable" route in the current model was done to expedite the delivery period of projects as these programs typically require fewer approvals and consequently, lesser time to reach the BCA stage.
+3. Allocating more projects through the delivery programs of "Small-scale" and "Contestable" route in the current model was expected to expedite the delivery period of projects as these programs typically require fewer approvals and consequently, lesser time to reach the BCA stage.
 
-4. In the future CDM, a similar strategy can be utilised to expedite projects by requiring fewer approval gates.
+4. In the future CDM, a similar strategy may be utilised to expedite projects by requiring fewer approval gates and delivering projects quicker.
 
 ```{r}
 #| label: fig-comp
@@ -609,6 +609,69 @@ ggplot(project_group_progam %>% filter(cdm != "CDM-26"),aes(x = Percentage,
 
 ```
 
+## Estimating number of projects to be approved by each approval body
+
+Analysing the breakdown of the projects for the past and the current CDM could provide critical information on what would the future CDM distribution look like. This is especially true as there is a clear dependence on the duration of project approval depending upon the approval authority as illustrated by @fig-approvaltime. @tbl-approval shows the criteria of approval body allocation for a project based on the risk and the FFC valuation of these projects.
+
+Some of the key observations and recommendations based on the breakdown of the projects by approval body for CDM-16 and CDM-21 as illustrated by @fig-approval are as follows:
+
+1. More than half of the projects within a CDM are expected to be approved by the "People Leadership Group". Based on the past approval durations, these projects are those with smaller FFC valuations and may expect quicker approval. In the future delivery model, this trend is expected to continue. For projects which may exceed the approval limit and eventually take longer time to get approved, they can be further broken down into smaller projects of lower FFC valuations and bundled together to benefit from the quicker approval periods.
+
+2. The percentage of projects approved by the “Senior Leadership Group,” “Finance, Audit, and Compliance,” and “Managing Director (MD)” has remained consistent over the past two CDMs, suggesting a stable pattern in the composition of future approvals. Analyzing the approval durations, as shown in @fig-approvaltime, offers a benchmark for the time required in the approval process. This information can be used to plan effectively and address potential risks associated with approval delays in advance.
+
+3. With an anticipated increase in the number of projects for the upcoming delivery program, which will require approval from the DTF, it is important to address potential delays. Historically, these projects face prolonged approval times due to associated costs, risks, and the need for coordination with external government agencies. To streamline the approval process, it is advisable to negotiate special considerations or exemptions with the ministry and DTF. This approach could help mitigate barriers and facilitate a more timely approval for these complex, large-scale, high-risk projects.
+
+
+```{r}
+#| label: fig-approvaltime
+#| fig-cap: "Distribution of project approval duration for various approval bodies "
+#| fig-height: 4 
+#| fig-width: 8
+app_order <- c("People Leadership Group","Senior Leadership Group","Executive Leadership Group",
+               "MD","Finance, Audit and Compliance","MW Board","DTF")
+
+options(scipen = 1000)
+project_approval_duration <- project_data %>% filter(cdm != "CDM-26") %>% 
+  group_by(approval_body) %>% mutate(approval_duration = days(bca-pbc)) 
+
+project_approval_duration$approval_body <- factor(project_approval_duration$approval_body, levels = app_order)
+
+project_approval_duration %>%
+  ggplot(aes(y = approval_body,x = day(approval_duration))) + geom_boxplot() +
+  labs(x = "Approval duration (Days)",
+       y = "Approval body",
+       title = "Project approval duration for various authorities",
+       caption = "Source: Melbourne Water Corporation") +
+ facet_wrap(~cdm) + theme_minimal()
+```
+
+
+```{r}
+#| label: fig-approval
+#| fig-cap: "Distribution of projects across various approval bodies and CDMs"
+#| fig-height: 4 
+#| fig-width: 8
+
+project_group_approval <- project_data %>%
+  group_by(approval_body, cdm) %>%
+  summarise(Total = n()) %>%
+  ungroup() %>%
+  group_by(cdm) %>%
+  mutate(Percentage = Total / sum(Total))
+
+
+ggplot(project_group_approval %>% filter(cdm != "CDM-26"),aes(x = Percentage,
+                                y = cdm,
+                                fill = approval_body)) + geom_col(position = "fill") +
+  labs(x = "Percentage of projects",y = "Capital Delivery Model",
+       title = "Distribution of projects based on approval body across CDMs",
+       caption = "Source: Melbourne Water Corporation",
+       fill = "Approval body") +
+  geom_label_repel(aes(label = scales::percent(Percentage, accuracy = 1)), 
+            position = position_fill(vjust = 0.5), size = 3,color = "white",fontface = "bold") +
+  scale_x_continuous(expand = c(0, 0), labels = scales::percent) +
+  scale_fill_tableau(palette = "Tableau 10") + theme_minimal() 
+```
 
 
 ## Labour utilisation analysis for each delivery program
@@ -617,6 +680,9 @@ ggplot(project_group_progam %>% filter(cdm != "CDM-26"),aes(x = Percentage,
 
 
 @fig-labour depicts the distribution of the labour hours across each of the four delivery programs within MCD. The plot indicates that the current model is capable of delivering multiple small-scale and low risk contestable projects. The labour hours associated with Major Works-Framework and Major Works-Small Scale appear to be fairly similar, despite the fact that the __Small Scale projects account for about only 10% of the FFC in a delivery period__. The future CDM for PS-26 should consider __streamlining or bundling multiple small-scale projects together to generate higher efficiency in Project Management labour resource allocation.__ 
+
+
+
 
 ## Forecasting number of projects in CDM-26 {#sec-forecast}
 
