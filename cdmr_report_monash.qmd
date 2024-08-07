@@ -31,6 +31,7 @@ library(lubridate)
 library(janitor)
 library(fpp3)
 library(ggrepel)
+library(patchwork)
 ```
 
 
@@ -687,15 +688,17 @@ ggplot(project_group_approval %>% filter(cdm != "CDM-26"),aes(x = Percentage,
 
 As explained previously through @fig-flowchart, a project typically undergoes several key critical stages from conceptualisation to completion. It is critical to study the duration in between these stages and also compare across CDMs to observe any changes and what it may mean for the future CDM.
 
-@fig-compduration compares the duration of time taken to submit a business case for further approval once a project has been conceptualised. The comparison was done only for the delivery programs under Major Works-Framework and Major Works-Open Market as the other programs are generally fast-tracked by bypassing the PBC stage. Some of the key observations are as follows:
+@fig-compduration compares the duration of time taken to submit a business case for further approval once a project has been conceptualised. This is quantified by calculating the duration between the BNI stage and the PBC stage of the project lifecycle. The comparison was done only for the delivery programs under Major Works-Framework and Major Works-Open Market as the other programs are generally fast-tracked by bypassing the PBC stage. Some of the key observations are as follows:
 
 1. In each of the CDMs, the duration of time for project conceptualisation is higher for Major Works-Open Market as compared to Major Works-Framework. This is typically the case due to the fact that a business case for Frameworks projects are contracted to a list of already approved service providers and will be engaged through a specific working contract which was agreed between the parties previously. On the other hand, Open Market projects are those that need to be tendered in the market and may require to form a working partnership with a new service provider. This leads to the requirement of further due-diligence, risk and cost analysis, contractual deliverables review and liaising with other government bodies to finalise a business case. As a result, the median duration for project concept submission is typically longer for these projects.
 
 2. The median time taken between the BNI and PBC stages, referred to as the project conceptualization stage, has increased from CDM-16 to CDM-21. In CDM-21, the median duration for each delivery program exceeded 2 years, which is significantly longer than the durations observed in CDM-16. For future CDMs, it is advisable to consider these extended durations and explore strategies to reduce the time required for projects to progress from BNI to PBC, aiming to align with the shorter durations seen in CDM-16.
 
+3. Several outliers were observed in the business case submission duration for Major Works-Framework projects under CDM-16. These outliers were significantly higher than the median durations for both Framework projects and Open Market projects. Investigating the causes of these delays can provide valuable insights. Understanding these issues is expected to benefit the upcoming CDM by helping to streamline the business case submission process and minimize any inadvertent delays.
+
 ```{r}
 #| label: fig-compduration
-#| fig-cap: "Comparison of concept submission duration across CDMs"
+#| fig-cap: "Comparison of PBC duration across CDMs"
 #| fig-height: 4 
 #| fig-width: 8
 
@@ -706,12 +709,12 @@ del_prg <- c("Major Works - Framework","Major Works - Open Market")
 ggplot(data = project_data %>% filter(delivery_program %in% del_prg  & cdm != "CDM-26"),aes(y = day(conception_duration),x = delivery_program,fill = delivery_program)) + geom_boxplot()  + facet_wrap(~cdm) + scale_fill_tableau(palette = "Tableau 10") + 
   theme_minimal() + theme(legend.position = "none",axis.text.x = element_text(size = 8)) + 
   labs(x = "Delivery program",
-       y = "Concept submission duration",
+       y = "Duration (Days)",
        caption = "Source: Melbourne Water Corporation", 
-       title = "Distribution of duration for project concept submission",
+       title = "Distribution of duration for preliminary business case submission",
        subtitle = "Number of days between BNI and PBC")
 ```
-The other critical stage of the projects is to monitor the duration between the project approval (BCA) to project delivery (Stage 1). @fig-delduration and @fig-medduration illustrate how the duration of projects from approval to delivery stage differ across various delivery programs. Key insights from this visualisation are as follows:
+The other critical stage of the projects is to monitor the duration between the project approval (BCA) to project delivery (Stage 1). @fig-delduration illustrates how the duration of projects from approval to delivery stage differ across various delivery programs. Key insights from this visualisation are as follows:
 
 1. The current sample of all completed projects indicate a right skewed distribution. This suggests that there are some projects which require unusually longer to complete across all delivery programs, possibly due to project cost variations, scope changes or other hurdles.
 
@@ -722,37 +725,51 @@ The other critical stage of the projects is to monitor the duration between the 
 4. The distribution of completion durations for “Framework” and “Small-scale” projects indicates that the majority of these projects are completed in approximately one year. This insight is crucial for estimating the expected duration for a significant portion of projects in the upcoming CDM. It can help optimize resource and crew allocation, ensuring more efficient project management and planning.
 
 ```{r}
-#| label: fig-delduration
-#| fig-cap: "Distribution of project completion duration across delivery programs"
-#| fig-height: 4 
-#| fig-width: 8
 project_data <- project_data %>% mutate(completion_duration = days(stage1 - bca))
 
-ggplot(data = project_data %>% filter(status == "Completed"),aes(x = day(completion_duration),fill = delivery_program)) + geom_density()  + scale_fill_tableau(palette = "Tableau 10") + theme_minimal() + theme(legend.position = "none") + facet_wrap(~delivery_program,ncol = 1) +
-  labs(x = "Completion duration (days)",
+delduration <- ggplot(data = project_data %>% filter(status == "Completed"),aes(x = day(completion_duration),fill = delivery_program)) + geom_density()  + scale_fill_tableau(palette = "Tableau 10") + theme_minimal() + 
+facet_wrap(~delivery_program,ncol = 1) + theme(legend.position = "none",
+                                               plot.title = element_text(size = 10),
+                                               plot.subtitle = element_text(size = 8),
+                                               axis.text = element_text(size = 7)) +
+  labs(x = "Project completion duration (days)",
 y = "Density",
 caption = "Source: Melbourne Water Corporation",
 title = "Distribution of project duration after completion",
 subtitle = "Number of days between BCA and Stage 1")
+
 ```
 
 ```{r}
-#| label: fig-medduration
-#| fig-cap: "Median project completion duration across delivery programs"
-#| fig-height: 3 
-#| fig-width: 8
 
-project_data %>% filter(status == "Completed") %>% 
+medduration <- project_data %>% filter(status == "Completed") %>% 
   group_by(delivery_program) %>%
   summarise(Median_completion = median(day(completion_duration))) %>% 
   ggplot(aes(y = reorder(delivery_program,-Median_completion), x = Median_completion, fill = delivery_program)) + 
   geom_col() + scale_fill_tableau(palette = "Tableau 10") + 
-  geom_label(aes(label = Median_completion)) +  theme_minimal() + theme(legend.position = "none") + 
+  geom_label(aes(label = round(Median_completion,0),fontsize = 5,hjust = 1)) +  theme_minimal() + theme(legend.position = "none",
+                                                                        plot.title = element_text(size = 10),
+                                                                        plot.subtitle = element_text(size = 8),
+                                                                        axis.text = element_text(size = 7)) + 
   labs(x = "Duration (Days)",
        y = "Delivery program",
        title = "Median duration for project completion",
        subtitle = "Duration between BCA and Stage 1",
        caption = "Source: Melbourne Water Corporation")
+
+```
+
+```{r}
+#| label: fig-delduration
+#| fig-cap: "Distribution of project completion duration across delivery programs"
+#| fig-height: 5 
+#| fig-width: 8
+(delduration + medduration) +
+  plot_layout(nrow=1, heights = c(5,5)) &
+  plot_annotation(
+    theme = theme(plot.background = element_rect(color = "white", size = 2, fill = "white"),
+                  strip.background = element_rect(color = "white")) + theme_minimal()
+  )
 ```
 
 
