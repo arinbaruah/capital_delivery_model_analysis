@@ -130,6 +130,31 @@ ggplot(data = project_subset_data %>% group_by(yearmonth(bca),delivery_program) 
        aes(x = `yearmonth(bca)`,y = Total)) + geom_line() + facet_wrap(~delivery_program)
 ```
 
+
+```{r}
+
+# Create a variable for CDM
+project_data <- project_data %>% mutate(cdm = case_when(year(bca) >= 2016 & year(bca) <= 2021 ~ "CDM-16",
+                                                        year(bca) >= 2021 & year(bca) <= 2026 ~ "CDM-21",
+                                                        .default = "CDM-26"))
+
+# Create a variable for FFC bands
+project_data <- project_data %>% mutate(ffc_band = case_when(
+                                                             ffc >= 0 & ffc <= 5*10^6 ~ "< = 5",
+                                                             ffc >= 5* 10^6 & ffc <= 10 * 10^6 ~ "5-10",
+                                                             ffc >= 10* 10^6 & ffc <= 20 * 10^6 ~ "10-20",
+                                                             ffc >= 20* 10^6 & ffc <= 50 * 10^6 ~ "20-50",
+                                                             ffc >= 50* 10^6 & ffc <= 80 * 10^6 ~ "50-80",
+                                                             ffc >= 80* 10^6 & ffc <= 1 * 10^9 ~ "> 80",
+                                                        .default = NA))
+# Create a variable to indicate project completion status
+
+project_data <- project_data %>% mutate(status = if_else(stage1 <= today(),"Completed","Ongoing"))
+
+```
+
+
+
 ```{r}
 project_numbers <- project_subset_data %>% group_by(delivery_program,yearmonth(bca)) %>% summarise(Total = n())
 
@@ -139,34 +164,54 @@ project_tsibble <- project_numbers %>% # Tsibble created based on BCA year
 ```
 
 ```{r}
-gg_subseries(project_tsibble)
+project_numbers <- project_data %>% group_by(ffc_band,yearmonth(bca)) %>% summarise(Total = n())
 
-gg_season(project_tsibble)
+project_numbers <- project_data %>% group_by(ffc_band,yearmonth(bca)) %>% summarise(Total = n())
 
-ACF(project_tsibble) %>% autoplot()
+project_tsibble <- project_numbers %>% # Tsibble created based on BCA year
+   as_tsibble(index = `yearmonth(bca)`,key = ffc_band) %>% fill_gaps(Total = 0L) # Fill NA with 0
+
+```
+
+
+
+
+```{r}
+gg_subseries(project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` < ymd(20240601)))
+
+gg_season(project_tsibble %>% filter(ffc_band == "< = 5" & (`yearmonth(bca)` < ymd(20240601))))
+
+ACF(project_tsibble %>% filter(ffc_band == "< = 5")) %>% autoplot()
 ```
 
 
 ```{r}
-dcmp <- project_tsibble |> filter(delivery_program == "Major Works - Small Scale" & year(`yearmonth(bca)`) <= 2024) |>
-  model(stl = STL(Total ~ season(window = 11)))
+dcmp <- project_tsibble |> filter(ffc_band == "< = 5" & `yearmonth(bca)` < ymd(20240601)) |>
+  model(stl = STL(Total ~ season(window = 11))) 
+components(dcmp) %>% autoplot()
 ```
 
 
+
+
+
+
 ```{r}
-model_fit <- project_tsibble %>% filter(delivery_program == "Major Works - Small Scale" & year(`yearmonth(bca)`) <= 2024) |> model(
+model_fit <- project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` < ymd(20240601)) |> 
+  model(
      Mean = MEAN(Total),
     Naive = NAIVE(Total),
     Season_Naive = SNAIVE(Total),
+    ETS_auto = ETS(Total),
     ETS_ana = ETS(Total ~ error("A") + trend("N")+ season("A")),
     arima_auto = ARIMA(Total))
 
 
-model_fc <- model_fit |> forecast(h = 72,bootstrap =TRUE) %>%  mutate(Total = distributional::dist_truncated(Total, 0))
+model_fc <- model_fit %>% select(ETS_ana,Season_Naive) |> forecast(h = 72,bootstrap =TRUE) #%>%  mutate(Total = distributional::dist_truncated(Total, 0))
 
 model_fc |> autoplot() +
    geom_line(
-    data = project_tsibble %>% filter(delivery_program == "Major Works - Small Scale" & year(`yearmonth(bca)`) <= 2024),
+    data = project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` < ymd(20240601)),
     aes(x = `yearmonth(bca)`, y = Total, linetype = "Approved projects")
   ) +
   guides(
@@ -179,26 +224,6 @@ model_fc |> autoplot() +
     y = "Number of projects",
   ) 
 
-
-```
-```{r}
-#| eval: FALSE
-naive_sim <- project_tsibble %>% filter(delivery_program == "Major Works - Small Scale") |> model(
-    Naive = NAIVE(Total))
-
-sim <- naive_fit %>% select(Naive) |> generate(h = 6, times = 10, bootstrap = TRUE)
-```
-
-
-```{r}
-#| eval: FALSE
-project_tsibble %>% tail(52) |>
-  ggplot(aes(x = `yearmonth(bca)`)) +
-  geom_line(aes(y = Total)) +
-  geom_line(aes(y = .sim, colour = as.factor(.rep)),
-    data = sim) +
-  labs(title="Google daily closing stock price", y="$US" ) +
-  guides(colour = "none")
 
 ```
 
@@ -409,7 +434,7 @@ tibble(
 
 The current analysis attempts to forecast the number of projects that are expected in CDM-26. For this purpose, the project data corresponding to the delivery models C-16 and C-21 are utilised to forecast the numbers in the future delivery model. As explained in @sec-limit, due to data migration and data integrity issues for the projects in the C-11 delivery model, this is not utilised as part of the current analysis.
 
-Additionally, the forecasts were calculated for the "Major Works-Small Scale" delivery program. As explained in @sec-prodist, this particular program tends to form the majority of the projects for any delivery model and also requires about as much labour hours as all other projects combined. Hence, a forecasted number of projects in each month and year of the new delivery program can allow for better crew resource management and will additionally aid in proactive procurement of raw materials rather than reactive procurement, allowing for more efficient delivery process.
+Additionally, the forecasts were calculated for the projects with FFC valuations of 5 mil $ or lower. As explained in @sec-prodist, these subset of projects tend to form the majority of the projects for any delivery model and also requires about as much labour hours as all other projects combined. Hence, a forecasted number of projects in each month and year of the new delivery program can allow for better crew resource management and will additionally aid in proactive procurement of raw materials rather than reactive procurement, allowing for more efficient delivery process.
 
 The forecasts will be performed using both benchmark techniques as well as specialised techniques. These are listed in @tbl-forecast and delineated further in @sec-forecast.
 
@@ -431,7 +456,7 @@ tibble(
 ```
 ## Selecting an appropriate ETS forecast model
 
-The selection of the ETS model would require us to study the timeseries data of the Major Works-Small Scale delivery program projects in detail and outline any important timeseries characteristics that might be beneficial to obtain the appropriate ETS model for forecasting the projects in the upcoming delivery model. 
+The selection of the ETS model would require us to study the timeseries data of the projects worth 5 mil $ or lower in detail and outline any important timeseries characteristics that might be beneficial to obtain the appropriate ETS model for forecasting the projects in the upcoming delivery model. 
 
 @fig-decomp illustrates the additive decomposition of the time series data into its trend, seasonal, and remainder components. Analyzing the decomposed data enables us to select the most appropriate type of ETS model for forecasting the number of projects in the upcoming delivery period. The key characteristics of this time series are outlined below.
 
@@ -450,11 +475,11 @@ The selection of the ETS model would require us to study the timeseries data of 
 
 ```{r}
 #| label: fig-decomp
-#| fig-cap: "Time series decomposition for Major Works-Small Scale projects"
+#| fig-cap: "Time series decomposition for projects with FFC valuation of 5 mil $ or lower"
 
 components(dcmp) %>% autoplot() + 
   labs(title = "Time series decomposition plot",
-       subtitle = "Major Works-Small Scale",
+       subtitle = "Projects with FFC <= 5 mil $",
        x = "Timeline",
        y = "Number of projects") + theme_minimal()
 ```
@@ -464,7 +489,7 @@ components(dcmp) %>% autoplot() +
 #| fig-cap: "Residual diagnostic plots"
 gg_tsresiduals(dcmp) + labs(x = "Timeline",
                             title = "Residual diagnostics for timeseries data",
-                            subtitle = "Major Works-Small Scale") 
+                            subtitle = "Projects with FFC <= 5 mil $") 
 ```
 \begin{warningBox}
 The current forecast models face limitations due to the unavailability of project data beyond the current and past CDM. As a result, the forecasts exhibit high uncertainty, characterized by large residuals and broad prediction intervals.
@@ -747,7 +772,7 @@ medduration <- project_data %>% filter(status == "Completed") %>%
   summarise(Median_completion = median(day(completion_duration))) %>% 
   ggplot(aes(y = reorder(delivery_program,-Median_completion), x = Median_completion, fill = delivery_program)) + 
   geom_col() + scale_fill_tableau(palette = "Tableau 10") + 
-  geom_label(aes(label = round(Median_completion,0),fontsize = 5,hjust = 1)) +  theme_minimal() + theme(legend.position = "none",
+  geom_label(aes(label = round(Median_completion,0),hjust = 1)) +  theme_minimal() + theme(legend.position = "none",
                                                                         plot.title = element_text(size = 10),
                                                                         plot.subtitle = element_text(size = 8),
                                                                         axis.text = element_text(size = 7)) + 
@@ -767,7 +792,7 @@ medduration <- project_data %>% filter(status == "Completed") %>%
 (delduration + medduration) +
   plot_layout(nrow=1, heights = c(5,5)) &
   plot_annotation(
-    theme = theme(plot.background = element_rect(color = "white", size = 2, fill = "white"),
+    theme = theme(plot.background = element_rect(color = "white", linewidth = 2, fill = "white"),
                   strip.background = element_rect(color = "white")) + theme_minimal()
   )
 ```
