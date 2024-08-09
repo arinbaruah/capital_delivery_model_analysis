@@ -552,7 +552,7 @@ ggplot(project_group_progam %>% filter(cdm != "CDM-26"),aes(x = Percentage,
   scale_x_continuous(expand = c(0, 0), labels = scales::percent) +
   labs(title = "Distribution of delivery programs within each CDM",
        y = "Capital Delivery Model",
-       caption = "Melbourne Water Corporation",
+       caption = "Source: Melbourne Water Corporation",
        fill = "Delivery program") +
   scale_fill_manual(values = cc) + theme_minimal()
 ```
@@ -743,11 +743,13 @@ The other critical stage of the projects is to monitor the duration between the 
 
 1. The current sample of all completed projects indicate a right skewed distribution. This suggests that there are some projects which require unusually longer to complete across all delivery programs, possibly due to project cost variations, scope changes or other hurdles.
 
-2. The number of "Open Market" and "Contestable" projects are typically very low in number within any CDM. As a result, its distribution of completion duration is not expected to provide a representative figure for the future delivery model.
+2. The number of "Open Market" and "Contestable" projects are typically very low in number within any CDM. As a result, its distribution of completion duration is not expected to provide a representative figure for the future delivery model due to the resultant spread of the data.
 
 3. On the other hand, both the "Small scale" and "Framework" projects together constitute more than 2/3rd of the total proportion of projects. As a result, the distribution of the project completion duration may provide a good prior information for the upcoming delivery model under vastly similar circumstances.
 
-4. The distribution of completion durations for “Framework” and “Small-scale” projects indicates that the majority of these projects are completed in approximately one year. This insight is crucial for estimating the expected duration for a significant portion of projects in the upcoming CDM. It can help optimize resource and crew allocation, ensuring more efficient project management and planning.
+4. The distribution of completion durations for “Framework” and “Small-scale” projects indicates that the majority of these projects are completed in __approximately one year.__ This insight is crucial for estimating the expected duration for a significant portion of projects in the upcoming CDM. It can help optimise resource and crew allocation, ensuring more efficient project management and planning.
+
+5. The completion duration for projects under "Contestable" and "Open-Market" projects are comparable to one another and spans for __nearly a year and three months.__ 
 
 ```{r}
 project_data <- project_data %>% mutate(completion_duration = days(stage1 - bca))
@@ -779,7 +781,7 @@ medduration <- project_data %>% filter(status == "Completed") %>%
   labs(x = "Duration (Days)",
        y = "Delivery program",
        title = "Median duration for project completion",
-       subtitle = "Duration between BCA and Stage 1",
+       subtitle = "Number of days between BCA and Stage 1",
        caption = "Source: Melbourne Water Corporation")
 
 ```
