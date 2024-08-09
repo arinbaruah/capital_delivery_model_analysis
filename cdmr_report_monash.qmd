@@ -195,41 +195,6 @@ components(dcmp) %>% autoplot()
 
 
 
-
-```{r}
-model_fit <- project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` < ymd(20240601)) |> 
-  model(
-     Mean = MEAN(Total),
-    Naive = NAIVE(Total),
-    Season_Naive = SNAIVE(Total),
-    ETS_auto = ETS(Total),
-    ETS_ana = ETS(Total ~ error("A") + trend("N")+ season("A")),
-    arima_auto = ARIMA(Total))
-
-
-model_fc <- model_fit %>% select(ETS_ana,Season_Naive) |> forecast(h = 72,bootstrap =TRUE) #%>%  mutate(Total = distributional::dist_truncated(Total, 0))
-
-model_fc |> autoplot() +
-   geom_line(
-    data = project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` < ymd(20240601)),
-    aes(x = `yearmonth(bca)`, y = Total, linetype = "Approved projects")
-  ) +
-  guides(
-    color = guide_legend(title = "Forecast model"),
-    fill = guide_legend(title = "Forecast model"),
-    linetype = guide_legend("Melbourne Water data")
-  ) +
-  labs(
-    x = "Timeline",
-    y = "Number of projects",
-  ) 
-
-
-```
-
-
-
-
 ```{r}
 
 # Create a variable for CDM
@@ -456,7 +421,7 @@ tibble(
 ```
 ## Selecting an appropriate ETS forecast model
 
-The selection of the ETS model would require us to study the timeseries data of the projects worth 5 mil $ or lower in detail and outline any important timeseries characteristics that might be beneficial to obtain the appropriate ETS model for forecasting the projects in the upcoming delivery model. 
+The selection of the ETS model would require us to study the timeseries data of the projects worth 5 mil $ or lower in detail and outline any important timeseries characteristics that might be beneficial to obtain the appropriate ETS model for forecasting the projects in the upcoming delivery model. To train and evaluate the forecast models, a test dataset spanning from May 2022 to May 2024 is utilized. Projects completed before May 2022 serve as the training dataset.
 
 @fig-decomp illustrates the additive decomposition of the time series data into its trend, seasonal, and remainder components. Analyzing the decomposed data enables us to select the most appropriate type of ETS model for forecasting the number of projects in the upcoming delivery period. The key characteristics of this time series are outlined below.
 
@@ -802,6 +767,105 @@ medduration <- project_data %>% filter(status == "Completed") %>%
 
 
 ## Forecasting number of projects in CDM-26 {#sec-forecast}
+
+
+
+```{r}
+#| message: false
+#| warning: false
+project_tsibble_train <- project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` <= ymd(20220501))
+project_tsibble_test <- project_tsibble %>% filter(ffc_band == "< = 5" & 
+                                                     `yearmonth(bca)` > ymd(20220501) & 
+                                                     `yearmonth(bca)` < ymd(20240601))
+
+model_fit <- project_tsibble_train |> 
+  model(
+     Mean = MEAN(Total),
+    Naive = NAIVE(Total),
+    Season_Naive = SNAIVE(Total),
+    ETS_ana = ETS(Total ~ error("A") + trend("N")+ season("A")))
+
+
+```
+
+
+```{r}
+model_fit  |> forecast(h = 24) |> accuracy(project_tsibble %>%
+                                             filter(ffc_band == "< = 5" &
+                                                      `yearmonth(bca)` < ymd(20240601))) |>
+  filter(.type == "Test") %>%
+  select(-ME, -MPE, -ACF1,-MAPE, -ffc_band,-.type) %>% arrange(RMSE) %>% kable(digits = 2, align = "r")
+```
+```{r}
+#| label: fig-forecompvizbm
+#| fig-cap: "Forecasts of benchmark models overlayed on the approved projects"
+model_fit %>% select(-ETS_ana) %>% forecast(h = "2 years",bootstrap =TRUE) %>%
+ autoplot() + geom_line(
+    data = project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` < ymd(20240601)),
+    aes(x = `yearmonth(bca)`, y = Total, linetype = "Approved projects")) + guides(
+    color = guide_legend(title = "Forecast model"),
+    fill = guide_legend(title = "Forecast model"),
+    linetype = guide_legend("Melbourne Water data")) + 
+  labs(title = "ETS forecast model performance in test dataset",
+       subtitle = "Projects with FFC <= 5 mil $",
+       y = "Total number of projects",
+       x = "Timeline",caption = "Source: Melbourne Water Corporation") + theme_minimal()
+```
+
+
+
+```{r}
+#| label: fig-forecompvizets
+#| fig-cap: "Forecasts of ETS model overlayed on the approved projects"
+model_fit %>% select(ETS_ana) %>% forecast(h = "2 years",bootstrap =TRUE) %>%
+ autoplot() + geom_line(
+    data = project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` < ymd(20240601)),
+    aes(x = `yearmonth(bca)`, y = Total, linetype = "Approved projects")) + guides(
+    color = guide_legend(title = "Forecast model"),
+    fill = guide_legend(title = "Forecast model"),
+    linetype = guide_legend("Melbourne Water data")) + 
+  labs(title = "ETS forecast model performance in test dataset",
+       subtitle = "Projects with FFC <= 5 mil $",
+       y = "Total number of projects",
+       x = "Timeline",caption = "Source: Melbourne Water Corporation") + theme_minimal()
+```
+
+
+
+
+
+
+```{r}
+model_fit <- project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` < ymd(20240601)) |> 
+  model(
+     Mean = MEAN(Total),
+    Naive = NAIVE(Total),
+    Season_Naive = SNAIVE(Total),
+    ETS_auto = ETS(Total),
+    ETS_ana = ETS(Total ~ error("A") + trend("N")+ season("A")),
+    arima_auto = ARIMA(Total))
+
+
+model_fc <- model_fit %>% select(ETS_ana,Season_Naive) |> forecast(h = 72,bootstrap =TRUE) #%>%  mutate(Total = distributional::dist_truncated(Total, 0))
+
+model_fc |> autoplot() +
+   geom_line(
+    data = project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` < ymd(20240601)),
+    aes(x = `yearmonth(bca)`, y = Total, linetype = "Approved projects")
+  ) +
+  guides(
+    color = guide_legend(title = "Forecast model"),
+    fill = guide_legend(title = "Forecast model"),
+    linetype = guide_legend("Melbourne Water data")
+  ) +
+  labs(
+    x = "Timeline",
+    y = "Number of projects",
+  ) 
+
+
+```
+
 
 # Conclusion
 
