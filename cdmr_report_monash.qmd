@@ -419,7 +419,7 @@ tibble(
   row_spec(0, bold = TRUE) %>%  # Keep headers bold
   row_spec(1:5, font_size = 8)
 ```
-## Selecting an appropriate ETS forecast model
+## Selecting an appropriate ETS forecast model {#sec-etsmethod}
 
 The selection of the ETS model would require us to study the timeseries data of the projects worth 5 mil $ or lower in detail and outline any important timeseries characteristics that might be beneficial to obtain the appropriate ETS model for forecasting the projects in the upcoming delivery model. To train and evaluate the forecast models, a test dataset spanning from May 2022 to May 2024 is utilized. Projects completed before May 2022 serve as the training dataset.
 
@@ -803,11 +803,18 @@ model_fit <- project_tsibble_train |>
 
 
 ```{r}
+#| label: tbl-rmse
+#| tbl-cap: "RMSE of various forecast models"
 model_fit  |> forecast(h = 24) |> accuracy(project_tsibble %>%
                                              filter(ffc_band == "< = 5" &
                                                       `yearmonth(bca)` < ymd(20240601))) |>
   filter(.type == "Test") %>%
-  select(-ME, -MPE, -ACF1,-MAPE, -ffc_band,-.type) %>% arrange(RMSE) %>% kable(digits = 2, align = "r")
+  select(-ME, -MPE, -ACF1,-MAPE, -ffc_band,-.type) %>% arrange(RMSE) %>% kable("latex") %>%
+  kable_styling(latex_options = c("striped"), 
+                full_width = FALSE, 
+                position = "center") %>%
+  column_spec(1, bold = TRUE, color = "blue") %>%
+  column_spec(2, bold = TRUE, color = "red") 
 ```
 ```{r}
 #| label: fig-forecompvizbm
@@ -827,27 +834,40 @@ model_fit %>% select(-ETS_ana) %>% forecast(h = "2 years",bootstrap =TRUE) %>%
        x = "Timeline",caption = "Source: Melbourne Water Corporation") + theme_minimal()
 ```
 
+@sec-etsmethod delineated the process of selecting the ETS method which will be used for forecasting the number of projects. Based on the decomposition of the timeseries data, the type of ETS model which will be used for forecasting is the __ETS (A,N,A) model.__ @fig-forecompvizets illustrates the performance of the model on the test dataset. Some of the key observations are as follows:
 
+1. The ETS (A,N,A) model forecasts the number of projects with an additive seasonality. Since the trend of the data appeared to be cyclic in nature when performing its decomposition, hence, it was considered to be stationary and as a result, no trend was modelled in the forecasts.
+
+2. Current forecast model is limited by the relatively short duration of projects in the training dataset. As a result, the prediction intervals are moderately wide. While forecasting for future delivery models, as the size of the training dataset enlarges, the forecast models would be expected to be more confident and have narrower prediction intervals.
+
+3. Within the initial period of the test dataset (in 2022), the point forecasts were higher than the actual approved projects. However, towards the later part of the dataset, specifically in the years of 2023 and 2024, the point forecasts were closer to the actual number of projects.
+
+4. The actual approved projects consistently fell within the 80% and 95% prediction intervals for nearly the entire duration of the test dataset. This suggests that the current ETS model has effectively captured the underlying pattern in the data.
 
 ```{r}
 #| label: fig-forecompvizets
 #| fig-cap: "Forecasts of ETS model overlayed on the approved projects"
-model_fit %>% select(ETS_ana) %>% forecast(h = "2 years",bootstrap =TRUE) %>%
+#| fig-height: 4
+#| fig-width: 8
+model_fit %>% select(ETS_ana) %>% forecast(h = "2 years",bootstrap =TRUE) %>%  mutate(Total = distributional::dist_truncated(Total, 0)) %>%
  autoplot() + geom_line(
     data = project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` < ymd(20240601)),
     aes(x = `yearmonth(bca)`, y = Total, linetype = "Approved projects")) + guides(
     color = guide_legend(title = "Forecast model"),
     fill = guide_legend(title = "Forecast model"),
     linetype = guide_legend("Melbourne Water data")) + 
-  labs(title = "ETS forecast model performance in test dataset",
+  labs(title = "ETS (A,N,A) forecast model performance on test dataset",
        subtitle = "Projects with FFC <= 5 mil $",
        y = "Total number of projects",
        x = "Timeline",caption = "Source: Melbourne Water Corporation") + theme_minimal()
 ```
 
 
+In order to compare the various forecast models, we will utilise the root mean squared error (RMSE) on the out-of-sample test dataset. The RMSE is calculated through @eq-rmse. The RMSE is additionally a useful metric to compare forecast models as the results are in the same scale as the forecasts and hence, can be easily interpreted as the average mangnitude of errors between the predicted and actual values.
 
+$$RMSE = {\sqrt{\sum_{i=1} ^{N}\dfrac{(\hat{y_i} - y_i)^2}{N}}}$$ {#eq-rmse}
 
+@tbl-rmse shows the performance of the forecast models on the current out-of-sample test dataset. Although the Mean model had the lowest error, however due to the limitations of this model mentioned previously, we would expect the ETS (A,N,A) model to perform better with a larger training dataset in the future. As a result, the current forecasts for the projects in CDM-26 will be based off the ETS (A,N,A) model. These forecasts are depicted through @fig-forecastcdm26
 
 
 ```{r}
@@ -859,9 +879,15 @@ model_fit <- project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` <
     ETS_auto = ETS(Total),
     ETS_ana = ETS(Total ~ error("A") + trend("N")+ season("A")),
     arima_auto = ARIMA(Total))
+```
 
 
-model_fc <- model_fit %>% select(ETS_ana,Season_Naive) |> forecast(h = 72,bootstrap =TRUE) #%>%  mutate(Total = distributional::dist_truncated(Total, 0))
+```{r}
+#| label: fig-forecastcdm26
+#| fig-cap: "Forecasted number of projects in CDM-26 using ETS (A,N,A) model"
+#| fig-height: 4
+#| fig-width: 8
+model_fc <- model_fit %>% select(ETS_ana) |> forecast(h = 72,bootstrap =TRUE) %>%  mutate(Total = distributional::dist_truncated(Total, 0))
 
 model_fc |> autoplot() +
    geom_line(
@@ -876,7 +902,10 @@ model_fc |> autoplot() +
   labs(
     x = "Timeline",
     y = "Number of projects",
-  ) 
+    title = "Forecasted number of projects in CDM-26 using ETS (A,N,A) model",
+    subtitle = "Projects worth 5 mil $ or lower",
+    caption = "Source: Melbourne Water Corporation"
+  ) + theme_minimal()
 
 
 ```
