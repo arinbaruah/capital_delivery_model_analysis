@@ -768,7 +768,20 @@ medduration <- project_data %>% filter(status == "Completed") %>%
 
 ## Forecasting number of projects in CDM-26 {#sec-forecast}
 
+@tbl-forecast lists out the forecasting models which will be implemented to obtain the forecasts of the projects worth 5 mil $ or lower. These include benchmark models such as the "Mean","Naïve" and the "Seasonal Naïve" alongwith the specialised forecast method called the ETS method. For the purpose of training the forecast models, project data between 2016 January to 2022 May is used as the training dataset while the test dataset includes the project data between 2022 June to 2024 May. 
 
+@fig-forecompvizbm illustrates the performance of the benchmark forecast models on the test dataset. The visualisation further overlays the actual approved projects in the test dataset duration between 2022 June to 2024 May. Some of the key observations are as follows:
+
+1. The Naïve model which forecasts the total number of projects as the last value in the training dataset failed to capture the actual trend of the data by a significant margin. Additionally, as the forecast horizon extends, the prediction interval widens significantly, as a result of which, the uncertainty in the forecasted numbers rise, providing a poor estimate of the future number of projects. 
+
+2. The Seasonal Naïve model, which forecasts future expected projects by replicating the annual seasonality and trend from the current year, demonstrated greater confidence compared to the standard Naïve model, as evidenced by its narrower prediction intervals. However, this model assumes that the seasonal patterns and trends observed in the current period will persist unchanged into future years. This assumption may be overly stringent, particularly for capital delivery models that are influenced by business cycles. Additionally, the seasonal patterns in the training data may not be strong enough to support this assumption reliably.
+
+3. The Mean model, which forecasts future projects based on the average number of projects observed in the training data, exhibits the highest level of confidence among the benchmark models, as indicated by its narrow prediction intervals. This model assumes that small-scale projects valued at $5 million or less will remain relatively consistent each year due to their regular demand, making forecasting based on the historical mean a reasonable assumption. However, this model’s simplicity comes with limitations, as it does not account for seasonality or trends in the data, potentially making it less informative about the underlying patterns.
+
+\begin{noteBox}
+It is important to note that the lower prediction intervals for the Naïve and Season Naïve models also cover the negative Y-axis. This is however not possible when forecasting number of projects. Hence, using these models for the current dataset will not provide us an informative insight, especially when forecasting over a horizon of an entire capital delivery period of 5 years.
+
+\end{noteBox}
 
 ```{r}
 #| message: false
@@ -799,6 +812,8 @@ model_fit  |> forecast(h = 24) |> accuracy(project_tsibble %>%
 ```{r}
 #| label: fig-forecompvizbm
 #| fig-cap: "Forecasts of benchmark models overlayed on the approved projects"
+#| fig-height: 4
+#| fig-width: 8
 model_fit %>% select(-ETS_ana) %>% forecast(h = "2 years",bootstrap =TRUE) %>%
  autoplot() + geom_line(
     data = project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` < ymd(20240601)),
@@ -806,7 +821,7 @@ model_fit %>% select(-ETS_ana) %>% forecast(h = "2 years",bootstrap =TRUE) %>%
     color = guide_legend(title = "Forecast model"),
     fill = guide_legend(title = "Forecast model"),
     linetype = guide_legend("Melbourne Water data")) + 
-  labs(title = "ETS forecast model performance in test dataset",
+  labs(title = "Benchmark forecast model performance in test dataset",
        subtitle = "Projects with FFC <= 5 mil $",
        y = "Total number of projects",
        x = "Timeline",caption = "Source: Melbourne Water Corporation") + theme_minimal()
