@@ -59,18 +59,17 @@ The analysis report will use numerous abbreviations and terminologies at various
 
 # Executive Summary
 
-The purpose of this study is to outline the methodology and guidelines for conducting the Capital Delivery Model project data analysis. This analysis aims to develop a reproducible framework that compares the current delivery model with past models, providing valuable insights to enhance future delivery models planned for years between 2026 to 2031, and potentially use these learnings for future pricing submission periods.
+The goal of this study is to outline the methodology and guidelines for conducting the Capital Delivery Model project data analysis. This analysis aims to develop a reproducible framework that compares the current delivery model with past models, providing valuable insights to enhance the future delivery model planned for years between 2026 to 2031, and potentially use these learnings for future periods.
+
+For the purpose of the current analysis, Melbourne Water Corporation's project data with business need identifier (BNI) dates between 2016 to 2024 were analysed. The major areas of study for the current analysis are delineated as follows:
+
+1.	__Distribution of Projects by Delivery Model:__ Insights gained through the examination of projects categorized by delivery model and delivery programs. 
+2.	__Implication of the distribution of projects on overall project valuations:__ Analysis of the number of projects associated with each delivery model alongwith their subsequent cost valuations, thereby providing a range of potential outcomes and expectations for the new delivery model. 
+3.	__Project Duration Analysis:__ Investigation of project durations relative to their overall valuations. 
+4.	__Approval Duration Distribution:__ Assessment of the time required for project approvals across different various delivery programs and critical project stages. 
+5.	__Future Project Forecast:__ Estimation of the number of projects anticipated in the delivery period from 2026 to 2031. 
 
 By systematically examining past and present performance, the aim is to identify key trends, strengths, and areas for improvement, ensuring that future projects are executed more efficiently and effectively. 
-
-For the purpose of the current analysis, Melbourne Water Corporation's project data with business need identifier (BNI) dates between 2008 to 2024 were analysed. The major areas of study for the current analysis are delineated as follows:
-
-1. Distribution of the projects in each delivery model based on the overall valuation of the projects as determined by the final forecast cost (FFC).
-2. Distribution of the projects in numbers for each delivery model.
-3. Distribution of project duration based on their overall valuations.
-4. Project approval duration distribution across different stages of approvals.
-5. Forecasted number of projects in the future delivery period from 2026 to 2031.
-
 
 
 ```{r read-data}
@@ -125,10 +124,6 @@ project_subset_data <- project_data
 
 ```
 
-```{r}
-ggplot(data = project_subset_data %>% group_by(yearmonth(bca),delivery_program) %>% summarise(Total = n()),
-       aes(x = `yearmonth(bca)`,y = Total)) + geom_line() + facet_wrap(~delivery_program)
-```
 
 
 ```{r}
@@ -177,6 +172,8 @@ project_tsibble <- project_numbers %>% # Tsibble created based on BCA year
 
 
 ```{r}
+#| eval: false
+
 gg_subseries(project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` < ymd(20240601)))
 
 gg_season(project_tsibble %>% filter(ffc_band == "< = 5" & (`yearmonth(bca)` < ymd(20240601))))
@@ -188,7 +185,7 @@ ACF(project_tsibble %>% filter(ffc_band == "< = 5")) %>% autoplot()
 ```{r}
 dcmp <- project_tsibble |> filter(ffc_band == "< = 5" & `yearmonth(bca)` < ymd(20240601)) |>
   model(stl = STL(Total ~ season(window = 11))) 
-components(dcmp) %>% autoplot()
+#components(dcmp) %>% autoplot()
 ```
 
 
@@ -250,7 +247,8 @@ The current analysis is performed by studying the following key parameters in th
       1.	Total final forecast cost (FFC) \
       2.	CDM period (2016, 2021 and 2026) \
       3.	Project duration across each stage \
-      4.	Delivery Program
+      4.	Delivery Program\
+      5.  Project labour hours in each delivery program 
 
 # Objectives
 
@@ -265,12 +263,13 @@ The objectives and the scope of the analysis of the CDMs were defined through Me
 
 Based on the numerous inputs from the project director and the steering group at Major Capital Delivery division in Melbourne Water, the the scope and significance for the current CDM data analysis project was finalised. These have been delineated as follows:  
 
-  1.	The analysis must provide an estimate of the project breakdown for CDM-26 after the latest price submission in 2026 by analysing the current delivery model (CDM-21) and the previous delivery model (CDM-16). This can be used as a basis for obtaining an informed prior information to design the new capital delivery model (CDM-26).
+  1.	The analysis must provide an estimate of the project breakdown for CDM-26 after the latest price submission in 2026 by taking the current delivery model (CDM-21) and the previous delivery model (CDM-16) as the reference point. The results of this study can be used as a basis for obtaining an informed prior information to design the new capital delivery model (CDM-26).
   2.	The analysis would supplement the decision making on effective selection of service providers for projects in the future delivery model based on the current distribution of the delivery programs across various FFCs and past CDMs.
   3.	The breakdown of the projects must allow a conservative estimate of the number of projects that would require approval at each level of authority, thereby indicating the approval duration for the project to be approved and initiated.
   4.	The analysis should aid in understanding how the proportions of projects in the future delivery model would differ from the benchmarks created by past models upon additional inputs.
   5.	Insights obtained from the total project duration and the average duration for the critical stages of each project may allow for effective project team planning.
   6.	The analysis must allow one to quickly detect outliers in the data and investigate these outliers further.
+  7.  The study aims to develop a forecasting model capable of predicting the number of projects expected during a price-submission period. This model should continuously improve as more data is accumulated, potentially extending its applicability to future periods. By doing so, it is anticipated that the model will enable more efficient allocation of resources for future projects.
 
 
 # Methodology
