@@ -32,6 +32,7 @@ library(janitor)
 library(fpp3)
 library(ggrepel)
 library(patchwork)
+library(ggalluvial)
 ```
 
 
@@ -179,6 +180,33 @@ gg_subseries(project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` <
 gg_season(project_tsibble %>% filter(ffc_band == "< = 5" & (`yearmonth(bca)` < ymd(20240601))))
 
 ACF(project_tsibble %>% filter(ffc_band == "< = 5")) %>% autoplot()
+```
+
+
+```{r}
+#| eval: false
+# Example data
+
+library(RColorBrewer)
+data <- data.frame(
+  Source = c("A", "A", "B", "B", "C", "C"),
+  Target = c("X", "Y", "X", "Y", "Y", "Z"),
+  Freq = c(10, 20, 15, 25, 5, 10)
+)
+
+colors <- brewer.pal(n = length(unique(data$Source)), name = "Set2")
+
+ggplot(data = data, aes(axis1 = Source, axis2 = Target, y = Freq)) +
+  geom_alluvium(aes(fill = Source), color = "black") +
+  geom_stratum() +
+  geom_label(stat = "stratum", aes(label = after_stat(stratum)), size = 5, fill = "white", color = "black") +
+  scale_fill_manual(values = colors) +
+  theme_void() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+    legend.position = "none" # Hide the legend for a cleaner look
+  ) +
+  ggtitle("Enhanced Sankey Diagram Example")
 ```
 
 
@@ -571,7 +599,7 @@ ggplot(project_group_progam %>% filter(cdm != "CDM-26"),aes(x = Percentage,
 
 ```{r}
 #| label: fig-ffcprop
-#| fig-cap: "Project FFC band distribution across different CDMs"
+#| fig-cap: "Cumulative project valuations across different CDMs and FFC bands"
 #| fig-height: 4 
 #| fig-width: 8
 
@@ -590,7 +618,7 @@ ggplot(project_group_progam %>% filter(cdm != "CDM-26"),aes(x = Percentage,
                                 y = cdm,
                                 fill = ffc_band)) + geom_col(position = "fill") +
   labs(x = "Percentage of FFC",y = "Capital Delivery Model",
-       title = "Distribution of project forecast costs across CDMs",
+       title = "Distribution of total valuation of projects across CDMs and FFC bands",
        caption = "Source: Melbourne Water Corporation",
        fill = "FFC (in mil $)") +
   geom_label_repel(aes(label = scales::percent(Percentage, accuracy = 1)), 
@@ -808,7 +836,7 @@ model_fit  |> forecast(h = 24) |> accuracy(project_tsibble %>%
                                              filter(ffc_band == "< = 5" &
                                                       `yearmonth(bca)` < ymd(20240601))) |>
   filter(.type == "Test") %>%
-  select(-ME, -MPE, -ACF1,-MAPE, -ffc_band,-.type) %>% arrange(RMSE) %>% kable("latex") %>%
+  select(-ME, -MPE, -ACF1,-MAPE, -ffc_band,-.type) %>% arrange(RMSE) %>% kable("latex",digits = 2) %>%
   kable_styling(latex_options = c("striped"), 
                 full_width = FALSE, 
                 position = "center") %>%
