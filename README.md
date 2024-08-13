@@ -7,7 +7,7 @@
 # Acknowledgement
 
 
-
+![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/org_logo.png)
 
 The ongoing project aimed at optimizing the infrastructure capital delivery model through exploratory data analysis and advanced forecasting techniques is a collaborative effort between Monash University and Melbourne Water Corporation. This partnership leverages Monash University’s expertise in data analysis and forecasting with Melbourne Water Corporation’s extensive infrastructure knowledge to enhance project delivery efficiency and accuracy.
 
