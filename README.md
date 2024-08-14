@@ -1,7 +1,7 @@
 
 
 
-# Capital Delivery Model Data Analysis
+# Enhancing Future Capital Delivery: A Comparative analysis of Melbourne Water Corporation’s Project Models
 
 
 # Acknowledgement
@@ -9,11 +9,7 @@
 
 ![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/org_logo.png)
 
-The ongoing project aimed at optimizing the infrastructure capital delivery model through exploratory data analysis and advanced forecasting techniques is a collaborative effort between Monash University and Melbourne Water Corporation. This partnership leverages Monash University’s expertise in data analysis and forecasting with Melbourne Water Corporation’s extensive infrastructure knowledge to enhance project delivery efficiency and accuracy.
-
-
-
-This repository contains the required reproducible analysis for the capital delivery model data analysis and forecasts of the future projects for the upcoming pricing submission period to be submitted to DTF.
+The ongoing project aimed at optimizing the infrastructure capital delivery model through exploratory data analysis and implementing forecasting techniques draws guidance from the department of Business and Econometrics, Monash University and Major Capital Delivery, Melbourne Water Corporation. This partnership leverages Monash University’s expertise in data analysis and forecasting with Melbourne Water Corporation’s extensive infrastructure and inknowledge to enhance project delivery efficiency and accuracy.
 
 # Background 🕵🏻‍♀️
 

@@ -194,6 +194,15 @@ data <- data.frame(
   Freq = c(10, 20, 15, 25, 5, 10)
 )
 
+
+project_group_progam <- project_data %>%
+  group_by(ffc_band, cdm) %>%
+  summarise(Total = sum(ffc)) %>%
+  ungroup() %>%
+  group_by(cdm) %>%
+  mutate(Percentage = Total / sum(Total))
+
+
 colors <- brewer.pal(n = length(unique(data$Source)), name = "Set2")
 
 ggplot(data = data, aes(axis1 = Source, axis2 = Target, y = Freq)) +
@@ -207,6 +216,46 @@ ggplot(data = data, aes(axis1 = Source, axis2 = Target, y = Freq)) +
     legend.position = "none" # Hide the legend for a cleaner look
   ) +
   ggtitle("Enhanced Sankey Diagram Example")
+
+
+ggplot(data = project_group_progam, aes(axis1 = ffc_band, axis2 = cdm, y = Total)) +
+  geom_alluvium(aes(fill = cdm, color = "black")) +
+  geom_stratum() +
+  geom_label(stat = "stratum", aes(label = after_stat(stratum)), size = 5, fill = "white", color = "black") +
+  #scale_fill_manual(values = colors) +
+  theme_void() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+    legend.position = "none" # Hide the legend for a cleaner look
+  ) +
+  ggtitle("Enhanced Sankey Diagram Example")
+
+
+library(dplyr)
+
+# Sample data
+data <- data.frame(
+  Project = c('Project A', 'Project B', 'Project C', 'Project D', 'Project E'),
+  Percentage = c(20, 15, 15, 10, 30),
+  Cost = c(10, 5, 5, 2, 8)
+)
+
+# Sort data by Cost in descending order
+data <- data %>%
+  arrange(desc(Cost))
+
+# Calculate cumulative percentage for cost
+data <- data %>%
+  mutate(CumulativeCost = cumsum(Cost) / sum(Cost) * 100)
+
+library(ggplot2)
+
+ggplot(data = data, aes(x = reorder(Project, -Cost), y = Cost)) +
+  geom_bar(stat = "identity") +
+  geom_line(aes(y = CumulativeCost * max(Cost) / 100, group = 1), color = "blue", size = 1) +
+  scale_y_continuous(sec.axis = sec_axis(~ . * 100 / max(Cost), name = "Cumulative Percentage")) +
+  labs(x = "Projects", y = "Costs", title = "Pareto Chart") +
+  theme_minimal()
 ```
 
 
@@ -468,6 +517,8 @@ The selection of the ETS model would require us to study the timeseries data of 
 ```{r}
 #| label: fig-decomp
 #| fig-cap: "Time series decomposition for projects with FFC valuation of 5 mil $ or lower"
+#| fig-height: 4 
+#| fig-width: 8
 
 components(dcmp) %>% autoplot() + 
   labs(title = "Time series decomposition plot",
@@ -479,6 +530,8 @@ components(dcmp) %>% autoplot() +
 ```{r}
 #| label: fig-resid
 #| fig-cap: "Residual diagnostic plots"
+#| fig-height: 4 
+#| fig-width: 8
 gg_tsresiduals(dcmp) + labs(x = "Timeline",
                             title = "Residual diagnostics for timeseries data",
                             subtitle = "Projects with FFC <= 5 mil $") 
@@ -496,9 +549,22 @@ The critical phase of a project initiates from the BCA to stage 3. As this is th
 
 @kunkcu2022using have studied various construction management projects utilizing key performance indicators (KPIs) and found them to be highly effective tools for evaluating project performance. In the context of Melbourne Water's projects, the focus is to engage a service provider who is able to deliver the project within the constrained time period, communicates progress regularly, minimises cost and time variations,reports and mitigates unsafe work conditions, engages a diverse group of employees, and undertakes sustainable initiatives. These are called the key result areas (KRAs) and are drawn into a legal agreement while employing a service provider. A high KRA score often attracts a monetary incentive for the service provider, thereby making this an area of interest for both the key parties.
 
-While the KRAs are subjective in nature and difficult to track, each of them are further quantified through the usage of KPIs. Based on the data provided by the service providers and through careful feature engineering, a framework to track and analyse project progress is delineated in @sec-results. The role of the KPIs and KRAs are two-fold. First, these indicators allow the team at Melbourne Water to gauge the progress of the project, secondly, it allows Melbourne Water to engineer the right behaviour on the part of the service provider who is responsible for the construction of the project.
+While the KRAs are subjective in nature and difficult to track, each of them are further quantified through the usage of KPIs. Based on the data provided by the service providers and through careful feature engineering, a framework to track and analyse project progress is delineated in @sec-results. The role of the KPIs and KRAs are two-fold. First, these indicators allow the team at Melbourne Water to gauge the progress of the project, secondly, it allows Melbourne Water to engineer the right behaviour on the part of the service provider who is responsible for the construction of the project. @fig-flowchartkpi illustrates the scope of the KRAs and KPIs within a project.
 
-
+::: {#fig-flowchartkpi fig-cap="KRA-KPI flowchart"}
+```{mermaid}
+flowchart TB
+  A{KRA} --> B(Timeliness)
+  A{KRA} --> C(Sustainability)
+  A{KRA} --> D(Safety)
+  A{KRA} --> E(Social procurement)
+  
+  B --> F[KPIs]
+  C --> G[KPIs]
+  D --> H[KPIs]
+  E --> I[KPIs]
+```
+:::
 
 
 
