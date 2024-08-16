@@ -306,6 +306,23 @@ To comply with Melbourne Water Corporation’s confidentiality requirements, the
 
 \end{confBox}
 
+# Limitations of the data {#sec-limit}
+
+The limitations within the source of the data which may have affected the analysis are delineated as follows:
+
+1. As the source file was exported from the Microsoft PowerBI organisational dashboard, certain fields such as the dates were not in their desirable format for the current analysis and were required to be converted into a machine-readable format.This was a critical step to perform the required exploratory data analysis and form the time-series data for forecasting purposes.
+
+2. While the original dataset contains project data from 2008 to 2024, a recent software migration to the Microsoft Project Online platform has rendered the data for the period between 2008 and 2016 potentially unrepresentative. As a result, the current analysis utilizes data from 2016 to 2024. This period encompasses the two recent delivery model periods.
+
+3. Multiple projects were observed to have empty PBC fields. This is likely due to the case where small scale projects tend to bypass one gate of approval to reduce approval duration. While this does not apply to all projects of similar nature, there is however no indicator in the data which allows for detection of such an event other than a missing date.
+
+4. The dataset here is an observational data and in particular, a census data. Some of the limitations that are prevalent in such datasets are as follows :
+
+   - Each row in the dataset is a project whose details are provided by an individual Project Manager. As a result, there may be non-uniformity in the data provided as each Project Manager may have their own interpretations of the data they may have provided.
+   - The current dataset obtained is a subset of an observational data. These types of data are often plagued with lack of randomisation during the selection of data. This may lead to biases in the dataset such as selection and systematic bias.
+   - The data maybe mis-classified or filled in non-uniform units by the various sources, leading to lack of accuracy of the overall dataset.
+
+
 # Introduction
 
 The construction of large-scale infrastructure projects, commonly referred to as “CAPEX” projects, is highly resource-intensive and typically requires effective collaboration among multiple organizations for successful and timely completion. @no2013specification suggests that in a collaborative work environment, teams are required to generate information using standardized procedures and agreed-upon standards and methods. This ensures consistency in form and quality, allowing the information to be used and reused without the need for modification or interpretation. However, in practice, such high level collaboration is often challenging and needs well laid communication as well as contractual frameworks for effective 
@@ -889,7 +906,7 @@ model_fit <- project_tsibble_train |>
      Mean = MEAN(Total),
     Naive = NAIVE(Total),
     Season_Naive = SNAIVE(Total),
-    ETS_ana = ETS(Total ~ error("A") + trend("N")+ season("A")))
+    ETS_ana = ETS(Total ~ error("A") + season("A")))
 
 
 ```
@@ -952,7 +969,10 @@ model_fit %>% select(ETS_ana) %>% forecast(h = "2 years",bootstrap =TRUE) %>%  m
   labs(title = "ETS (A,N,A) forecast model performance on test dataset",
        subtitle = "Projects with FFC <= 5 mil $",
        y = "Total number of projects",
-       x = "Timeline",caption = "Source: Melbourne Water Corporation") + theme_minimal()
+       x = "Timeline",caption = "Source: Melbourne Water Corporation") + 
+  theme(legend.text = element_text(size = 7),
+        legend.title = element_text(size = 9)) +
+  theme_minimal()
 ```
 
 
@@ -970,7 +990,7 @@ model_fit <- project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` <
     Naive = NAIVE(Total),
     Season_Naive = SNAIVE(Total),
     ETS_auto = ETS(Total),
-    ETS_ana = ETS(Total ~ error("A") + trend("N")+ season("A")),
+    ETS_ana = ETS(Total ~ error("A") + season("A")),
     arima_auto = ARIMA(Total))
 ```
 
@@ -1006,23 +1026,22 @@ model_fc |> autoplot() +
 
 # Conclusion
 
-# Limitations of the data {#sec-limit}
-
-The limitations within the source of the data which may have affected the analysis are delineated as follows:
-
-1. As the source file was exported from the Microsoft PowerBI organisational dashboard, certain fields such as the dates were not in their desirable format for the current analysis and were required to be converted into a machine-readable format.This was a critical step to perform the required exploratory data analysis and form the time-series data for forecasting purposes.
-
-2. While the original dataset contains project data from 2008 to 2024, a recent software migration to the Microsoft Project Online platform has rendered the data for the period between 2008 and 2016 potentially unrepresentative. As a result, the current analysis utilizes data from 2016 to 2024. This period encompasses the two recent delivery model periods.
-
-3. Multiple projects were observed to have empty PBC fields. This is likely due to the case where small scale projects tend to bypass one gate of approval to reduce approval duration. While this does not apply to all projects of similar nature, there is however no indicator in the data which allows for detection of such an event other than a missing date.
-
-4. The dataset here is an observational data and in particular, a census data. Some of the limitations that are prevalent in such datasets are as follows :
-
-   - Each row in the dataset is a project whose details are provided by an individual Project Manager. As a result, there may be non-uniformity in the data provided as each Project Manager may have their own interpretations of the data they may have provided.
-   - The current dataset obtained is a subset of an observational data. These types of data are often plagued with lack of randomisation during the selection of data. This may lead to biases in the dataset such as selection and systematic bias.
-   - The data maybe mis-classified or filled in non-uniform units by the various sources, leading to lack of accuracy of the overall dataset.
 
 # Key areas of improvement
+
+The current data analysis and forecasting project was created with the goal of formalising a reproducible framework to obtain valuable insights from past delivery models that could be utilised for designing the next delivery model. While the study delineated various factors which can be taken into account while designing the upcoming delivery model, there are several improvements to the current analysis that can make the insights further robust and accessible. These are listed as follows:
+
+1. __Incorporating Spatial Analysis:__ The current study primarily focuses on temporal analysis, and spatial analysis has not been implemented due to data constraints. However, incorporating spatial analysis is expected to uncover valuable patterns and insights, especially regarding resource allocation and demand based on the location of the asset. Future analyses should integrate geographical data to provide a deeper understanding of projects across various asset locations of the organization.
+
+2. __Incorporating Inflation Factors in forecasts:__ While current forecasting methods are capable of predicting the total valuation of projects, they do not account for inflationary factors such as increases in raw material and manpower costs. Future developments in forecasting methods should incorporate the Consumer Price Index (CPI) to better estimate the total expected valuation of projects, reflecting the impact of inflation on project costs. Such forecasts would allow the project teams to get an informed idea regarding the various cost allocations.
+
+3.	__Advanced Forecasting with PowerBI:__ While PowerBI has the ability to provide under-the-hood forecasts, however to replicate the specialised forecast methods from the “Fable” package, PowerBI has the ability to run R scripts within the dashboard, thereby allowing us to tweak the forecast models to learn better from the historical data and improve the accuracy of the future predictions, as well as allow users to view these insights through a user-friendly PowerBI dashboard.
+
+4. __Visualisation and Accessibility:__ To make the current study available to a broader audience, the insights and visualisations can be replicated on a PowerBI organisational dashboard. This would have the added benefit of leveraging Microsoft Fabric’s datalake where the live data can be extracted, transformed and loaded onto the dashboard, providing insights based on live project data.
+
+5. __Implementing KRA and KPI dashboard reporting:__ Incorporating Key Result Areas (KRAs) and Key Performance Indicators (KPIs) into the dashboard facilitates effective tracking of current projects against historical data and organizational benchmarks. These indicators enable organsations to assess project delivery performance and efficiency across different service providers and project types. By developing these metrics in close consultation with business leaders, they can be tailored to align with strategic objectives and then visualized for quick and intuitive access on the dashboard.
+
+
 
 # References
 
