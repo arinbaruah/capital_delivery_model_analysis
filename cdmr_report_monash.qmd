@@ -1029,7 +1029,7 @@ model_fc |> autoplot() +
 
 # Key areas of improvement
 
-The current data analysis and forecasting project was created with the goal of formalising a reproducible framework to obtain valuable insights from past delivery models that could be utilised for designing the next delivery model. While the study delineated various factors which can be taken into account while designing the upcoming delivery model, there are several improvements to the current analysis that can make the insights further robust and accessible. These are listed as follows:
+The current data analysis and forecasting project was created with the goal of formalising a reproducible framework to obtain valuable insights from past delivery models that could be utilised for designing the next delivery model. While the study delineated various factors which can be taken into account, there are several improvements to the current analysis that can make the insights further robust and accessible. These are listed as follows:
 
 1. __Incorporating Spatial Analysis:__ The current study primarily focuses on temporal analysis, and spatial analysis has not been implemented due to data constraints. However, incorporating spatial analysis is expected to uncover valuable patterns and insights, especially regarding resource allocation and demand based on the location of the asset. Future analyses should integrate geographical data to provide a deeper understanding of projects across various asset locations of the organization.
 
@@ -1044,5 +1044,6 @@ The current data analysis and forecasting project was created with the goal of f
 
 
 # References
+
 
 

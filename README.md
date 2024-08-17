@@ -13,11 +13,17 @@ The ongoing project aimed at optimizing the infrastructure capital delivery mode
 
 # Background 🕵🏻‍♀️
 
-This study aims to develop a reproducible framework by analysing project data across various delivery models. The goal is to establish a benchmark that serves as an informed basis for designing a new delivery model. Through focused exploratory and temporal data analysis of historical project data, and by standardizing these results, the study seeks to provide preliminary expectations for the future of capital delivery. A key aspect of this study involves implementing both benchmark and specialized time series forecasting techniques to predict the number of projects in future delivery models. This will be achieved by decomposing the time series into its trend, seasonality, and residual components. A thorough analysis of this decomposition will enable the development of advanced forecasting models, such as ETS and SARIMA, to generate projections for the upcoming delivery model. Additionally, the model is designed to continuously learn and improve as more data becomes available, potentially extending its applicability beyond the next pricing submission period.
-
-The entire reproducible analysis has been performed using the R statistical analysis language, an open-source software. Forecasting tools used were based on the “Fable” package, an in-house implementation of specialised forecasting methods developed at Monash University. 
+The Capital Delivery Model is crucial for optimizing project management within the water industry. It provides a structured approach to engaging project personnel and service providers, ensuring efficient project execution and successful timely outcomes. However, designing and reviewing such a model presents significant challenges, including managing external partnerships along with their risks, rising project costs, and securing approvals from higher authorities for timely approvals.
 
 
-# Objective 🤔
+# Objective 🎯
 
 The Capital Delivery Model Data Analysis and Forecasting project aims to optimize the engagement of project personnel and service providers to enhance the efficiency and success of project delivery. This study is designed to investigate the complexities inherent in capital delivery projects, such as extending partnerships with external organizations, managing rising project costs and timeline variations, and securing necessary approvals. By analysing historical and current project data, the project seeks to develop a reproducible framework for evaluating and improving the upcoming Capital Delivery Model.
+
+The major areas of study for the current analysis are delineated as follows:
+
+1.	Distribution of Projects by Delivery Model: Examination of current and past projects categorized by delivery model, based on the overall cost of the project.
+2.	Implication of the distribution of projects on overall project valuations: Analysis of the number of projects associated with each delivery model along with their subsequent cost valuations, thereby providing a range of potential outcomes and expectations for the new delivery model.
+3.	Project Duration Analysis: Investigation of project durations relative to their overall valuations.
+4.	Approval Duration Distribution: Assessment of the time required for project approvals across different stages.
+5.	Future Project Forecast: Estimation of the number of projects anticipated in the delivery period from 2026 to 2031.
