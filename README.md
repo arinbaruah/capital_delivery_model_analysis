@@ -32,4 +32,6 @@ The major areas of study for the current analysis are delineated as follows:
 
 This analysis can be reproduced by running the following command in the RStudio terminal
 
-`quarto render cdmr_report_monash.qmd`
+```
+quarto render cdmr_report_monash.qmd
+```
