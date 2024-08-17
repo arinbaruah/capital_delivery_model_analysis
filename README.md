@@ -27,3 +27,9 @@ The major areas of study for the current analysis are delineated as follows:
 3.	Project Duration Analysis: Investigation of project durations relative to their overall valuations.
 4.	Approval Duration Distribution: Assessment of the time required for project approvals across different stages.
 5.	Future Project Forecast: Estimation of the number of projects anticipated in the delivery period from 2026 to 2031.
+
+# Reproduce this analysis
+
+This analysis can be reproduced by running the following command in the RStudio terminal
+
+`quarto render cdmr_report_monash.qmd`
