@@ -1026,6 +1026,14 @@ model_fc |> autoplot() +
 
 # Conclusion
 
+The current CDM data analysis and forecasting project yielded the following results :
+
+1. Based on the analysis of sample data from CDM-21 and CDM-16, the new delivery model is projected to successfully deliver __at least 70% of the projects with a forecasted final cost (FFC) of $5 million or less.__
+
+2. Projects with higher valuations and risk are approved by higher authorities who maybe external to the department or the organisation. In such cases, approval duration is expected to be considerably higher, with some projects taking more than an entire year to reach the "approved" stage. The __current study recommends breaking down projects of large valuations into smaller "bundled" projects that allows for a faster approval process within the same department or the organisation.__
+
+3. 
+
 
 # Key areas of improvement
 
