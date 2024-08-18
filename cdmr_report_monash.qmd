@@ -1030,7 +1030,7 @@ The current CDM data analysis and forecasting project yielded the following resu
 
 1. Based on the analysis of sample data from CDM-21 and CDM-16, the new delivery model is projected to successfully deliver __at least 70% of the projects with a forecasted final cost (FFC) of $5 million or less.__
 
-2. Projects with higher valuations and risk are approved by higher authorities who maybe external to the department or the organisation. In such cases, approval duration is expected to be considerably higher, with some projects taking more than an entire year to reach the "approved" stage. The __current study recommends breaking down projects of large valuations into smaller "bundled" projects that allows for a faster approval process within the same department or the organisation.__
+2. Projects with higher valuations and associated risks require approval from higher authorities, often external to the department or organization. This can lead to significantly longer approval times, with some projects taking well over a year to reach the “approved” stage. The current study recommends segmenting high-valuation projects into smaller, “bundled” projects to expedite the approval process, __potentially reducing the approval duration to approximately 8 months (250 days) and follow an approval process which is within the department or the organisation.__
 
 3. 
 
