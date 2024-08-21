@@ -724,6 +724,38 @@ Some of the key observations and recommendations based on the breakdown of the p
 
 3. With an anticipated increase in the number of projects for the upcoming delivery program, which will require approval from the DTF, it is important to address potential delays. Historically, these projects face prolonged approval times due to associated costs, risks, and the need for coordination with external government agencies. To streamline the approval process, it is advisable to negotiate special considerations or exemptions with the ministry and DTF. This approach could help mitigate barriers and facilitate a more timely approval for these complex, large-scale, high-risk projects.
 
+```{r}
+#| eval: false
+
+project_approval_duration <- project_data %>% filter(cdm != "CDM-26") %>% 
+  group_by(approval_body) %>% mutate(approval_duration = days(bca-pbc)) 
+
+project_approval_duration <- project_approval_duration %>% mutate(approval_body_dummy = case_when( approval_body ==  "DTF" ~ "Government approval",
+                                                                   approval_body == "MW Board" ~ "Board of directors",
+                                                                   approval_body == "Finance, Audit and Compliance" ~ "Finance and Audit",
+                                                                   approval_body == "MD" ~ "Managing Director",
+                                                                   approval_body ==  "Executive Leadership Group" ~ "Level 1 authority",
+                                                                   approval_body == "Senior Leadership Group" ~ "Level 2 authority",
+                                                                   approval_body == "People Leadership Group" ~ "Level 3 authority"))
+
+
+dim_order <- c("Level 3 authority","Level 2 authority","Level 1 authority","Managing Director","Finance and Audit",
+               "Board of directors","Government approval")
+
+project_approval_duration$approval_body_dummy <- factor(project_approval_duration$approval_body_dummy,levels =  dim_order )
+
+options(scipen = 1000)
+
+
+
+project_approval_duration %>%
+  ggplot(aes(y = approval_body_dummy,x = day(approval_duration))) + geom_boxplot() +
+  labs(x = "Approval duration (Days)",
+       y = "Approval body",
+       title = "Project approval duration for various authorities",
+       caption = "Source: Melbourne Water Corporation") +
+ facet_wrap(~cdm) + theme_minimal()
+```
 
 ```{r}
 #| label: fig-approvaltime
@@ -746,6 +778,34 @@ project_approval_duration %>%
        title = "Project approval duration for various authorities",
        caption = "Source: Melbourne Water Corporation") +
  facet_wrap(~cdm) + theme_minimal()
+```
+```{r}
+#| eval: false
+project_group_approval <- project_group_approval %>% mutate(approval_body_dummy = case_when( approval_body ==  "DTF" ~ "Government approval",
+                                                                   approval_body == "MW Board" ~ "Board of directors",
+                                                                   approval_body == "Finance, Audit and Compliance" ~ "Finance and Audit",
+                                                                   approval_body == "MD" ~ "Managing Director",
+                                                                   approval_body ==  "Executive Leadership Group" ~ "Level 1 authority",
+                                                                   approval_body == "Senior Leadership Group" ~ "Level 2 authority",
+                                                                   approval_body == "People Leadership Group" ~ "Level 3 authority"))
+
+
+dim_order <- c("Government approval","Board of directors","Finance and Audit",
+               "Managing Director","Level 1 authority","Level 2 authority","Level 3 authority")
+
+project_group_approval$approval_body_dummy <- factor(project_group_approval$approval_body_dummy, levels = dim_order)
+
+ggplot(project_group_approval %>% filter(cdm != "CDM-26"),aes(x = Percentage,
+                                y = cdm,
+                                fill = approval_body_dummy)) + geom_col(position = "fill") +
+  labs(x = "Percentage of projects",y = "Capital Delivery Model",
+       title = "Distribution of projects based on approval body across delivery models",
+       caption = "Source: Melbourne Water Corporation",
+       fill = "Approval body") +
+  geom_label_repel(aes(label = scales::percent(Percentage, accuracy = 1)), 
+            position = position_fill(vjust = 0.5), size = 3,color = "white",fontface = "bold") +
+  scale_x_continuous(expand = c(0, 0), labels = scales::percent) +
+  scale_fill_tableau(palette = "Tableau 10") + theme_minimal() 
 ```
 
 
@@ -827,10 +887,13 @@ The other critical stage of the projects is to monitor the duration between the 
 5. The completion duration for projects under "Contestable" and "Open-Market" projects are comparable to one another and spans for __nearly a year and three months.__ 
 
 ```{r}
-project_data <- project_data %>% mutate(completion_duration = days(stage1 - bca))
+project_data <- project_data %>% mutate(completion_duration = days(stage1 - bca)) %>% mutate(delivery_program_dummy = case_when(delivery_program == "Major Works - Small Scale" ~ "Small scale projects",
+                                                                        delivery_program == "Major Works - Framework" ~ "Framework projects",
+                                                                        delivery_program == "Major Works - Open Market" ~ "Large scale projects",
+                                                                        delivery_program == "Contestable" ~ "Small scale contestable projects"))
 
-delduration <- ggplot(data = project_data %>% filter(status == "Completed"),aes(x = day(completion_duration),fill = delivery_program)) + geom_density()  + scale_fill_tableau(palette = "Tableau 10") + theme_minimal() + 
-facet_wrap(~delivery_program,ncol = 1) + theme(legend.position = "none",
+delduration <- ggplot(data = project_data %>% filter(status == "Completed"),aes(x = day(completion_duration),fill = delivery_program_dummy)) + geom_density()  + scale_fill_tableau(palette = "Tableau 10") + theme_minimal() + 
+facet_wrap(~delivery_program_dummy,ncol = 1) + theme(legend.position = "none",
                                                plot.title = element_text(size = 10),
                                                plot.subtitle = element_text(size = 8),
                                                axis.text = element_text(size = 7)) +
@@ -843,10 +906,40 @@ subtitle = "Number of days between BCA and Stage 1")
 ```
 
 ```{r}
+#| eval: false
+medduration <- project_data %>% filter(status == "Completed") %>% 
+  group_by(delivery_program) %>%
+  summarise(Median_completion = median(day(completion_duration))) 
+
+medduration <- medduration %>% mutate(delivery_program_dummy = case_when(delivery_program == "Major Works - Small Scale" ~ "Small scale projects",
+                                                                        delivery_program == "Major Works - Framework" ~ "Framework projects",
+                                                                        delivery_program == "Major Works - Open Market" ~ "Large scale projects",
+                                                                        delivery_program == "Contestable" ~ "Small scale contestable projects"))
+
+medduration <- medduration %>% 
+  ggplot(aes(y = reorder(delivery_program_dummy,-Median_completion), x = Median_completion, fill = delivery_program_dummy)) + 
+  geom_col() + scale_fill_tableau(palette = "Tableau 10") + 
+  geom_label(aes(label = round(Median_completion,0),hjust = 1)) +  theme_minimal() + theme(legend.position = "none",
+                                                                        plot.title = element_text(size = 10),
+                                                                        plot.subtitle = element_text(size = 8),
+                                                                        axis.text = element_text(size = 7)) + 
+  labs(x = "Duration (Days)",
+       y = "Delivery program",
+       title = "Median duration for project completion",
+       subtitle = "Number of days between BCA and Stage 1",
+       caption = "Source: Melbourne Water Corporation")
+
+```
+
+
+```{r}
 
 medduration <- project_data %>% filter(status == "Completed") %>% 
   group_by(delivery_program) %>%
-  summarise(Median_completion = median(day(completion_duration))) %>% 
+  summarise(Median_completion = median(day(completion_duration))) 
+
+
+medduration <- medduration %>% 
   ggplot(aes(y = reorder(delivery_program,-Median_completion), x = Median_completion, fill = delivery_program)) + 
   geom_col() + scale_fill_tableau(palette = "Tableau 10") + 
   geom_label(aes(label = round(Median_completion,0),hjust = 1)) +  theme_minimal() + theme(legend.position = "none",
@@ -926,6 +1019,8 @@ model_fit  |> forecast(h = 24) |> accuracy(project_tsibble %>%
   column_spec(1, bold = TRUE, color = "blue") %>%
   column_spec(2, bold = TRUE, color = "red") 
 ```
+
+
 ```{r}
 #| label: fig-forecompvizbm
 #| fig-cap: "Forecasts of benchmark models overlayed on the approved projects"
