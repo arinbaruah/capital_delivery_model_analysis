@@ -516,7 +516,15 @@ tibble(
 
 The selection of the ETS model would require us to study the timeseries data of the projects worth 5 mil $ or lower in detail and outline any important timeseries characteristics that might be beneficial to obtain the appropriate ETS model for forecasting the projects in the upcoming delivery model. To train and evaluate the forecast models, a test dataset spanning from May 2022 to May 2024 is utilized. Projects completed before May 2022 serve as the training dataset.
 
-@fig-decomp illustrates the additive decomposition of the time series data into its trend, seasonal, and remainder components. Analyzing the decomposed data enables us to select the most appropriate type of ETS model for forecasting the number of projects in the upcoming delivery period. The key characteristics of this time series are outlined below.
+Analyzing the decomposed data enables us to select the most appropriate type of ETS model for forecasting the number of projects in the upcoming delivery period. An additive decomposition of a timeseries data is obtained based on @eq-decomp. 
+
+$$ \boxed{y_t = S_t + T_t + R_t}$$ {#eq-decomp}
+
+Where,
+
+$y_t$ is the data of interest, $S_t$ is the seasonal component of the timeseries, $T_t$ is the trend component and $R_t$ is the remainder.
+
+@fig-decomp illustrates the additive decomposition of the time series data into its trend, seasonal, and remainder components. The key characteristics of this time series are outlined below.
 
 1. There appears to be a cyclic trend in the data which repeats itself in approximately 3 years as observed through the sinusoidal trend line. This indicates that there is no clear additive or multiplicative trend in the data which can be replicated through the ETS model. The ETS model is however well suited to work with cyclic data.
 
@@ -665,10 +673,10 @@ project_group_progam$ffc_band <- factor(project_group_progam$ffc_band, levels = 
 ggplot(project_group_progam %>% filter(cdm != "CDM-26"),aes(x = Percentage,
                                 y = cdm,
                                 fill = ffc_band)) + geom_col(position = "fill") +
-  labs(x = "Percentage of projects",y = "Capital Delivery Model",
-       title = "Distribution of project forecast costs across CDMs",
+  labs(x = "Percentage of projects by number",y = "Capital Delivery Model",
+       title = "Distribution of project forecast costs across Capital Delivery Models",
        caption = "Source: Melbourne Water Corporation",
-       fill = "FFC (in mil $)") +
+       fill = "Cost bands (in mil $)") +
   geom_label_repel(aes(label = scales::percent(Percentage, accuracy = 1)), 
             position = position_fill(vjust = 0.5), size = 3,color = "white",fontface = "bold") +
   scale_x_continuous(expand = c(0, 0), labels = scales::percent) +
@@ -700,10 +708,10 @@ project_group_progam$ffc_band <- factor(project_group_progam$ffc_band, levels = 
 ggplot(project_group_progam %>% filter(cdm != "CDM-26"),aes(x = Percentage,
                                 y = cdm,
                                 fill = ffc_band)) + geom_col(position = "fill") +
-  labs(x = "Percentage of FFC",y = "Capital Delivery Model",
-       title = "Distribution of total valuation of projects across CDMs and FFC bands",
+  labs(x = "Percentage of projects by total valuation",y = "Capital Delivery Model",
+       title = "Distribution of total valuation of projects across delivery models and cost bands",
        caption = "Source: Melbourne Water Corporation",
-       fill = "FFC (in mil $)") +
+       fill = "Cost bands (in mil $)") +
   geom_label_repel(aes(label = scales::percent(Percentage, accuracy = 1)), 
             position = position_fill(vjust = 0.5), size = 3,color = "white",fontface = "bold") +
   scale_x_continuous(expand = c(0, 0), labels = scales::percent) +
