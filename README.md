@@ -13,6 +13,8 @@ The ongoing project aimed at optimizing the infrastructure capital delivery mode
 
 # License
 
+![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/images/cc_license.jpeg)
+
 This repository is licensed under Creative Commons Legal Code CC0 1.0 Universal and can be referred to [here](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/LICENSE).
 
 # Background 🕵🏻‍♀️
