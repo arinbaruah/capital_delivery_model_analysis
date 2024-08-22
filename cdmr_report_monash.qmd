@@ -1007,7 +1007,8 @@ model_fit <- project_tsibble_train |>
      Mean = MEAN(Total),
     Naive = NAIVE(Total),
     Season_Naive = SNAIVE(Total),
-    ETS_ana = ETS(Total ~ error("A") + season("A")))
+    ETS_ana = ETS(Total ~ error("A") + season("A")),
+    arima_auto = ARIMA(Total))
 
 
 ```
@@ -1034,13 +1035,13 @@ model_fit  |> forecast(h = 24) |> accuracy(project_tsibble %>%
 #| fig-cap: "Forecasts of benchmark models overlayed on the approved projects"
 #| fig-height: 4
 #| fig-width: 8
-model_fit %>% select(-ETS_ana) %>% forecast(h = "2 years",bootstrap =TRUE) %>%
+model_fit %>% select(-c(ETS_ana,Naive,arima_auto)) %>% forecast(h = "2 years",bootstrap =TRUE) %>% mutate(Total = distributional::dist_truncated(Total, 0)) %>%
  autoplot() + geom_line(
     data = project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` < ymd(20240601)),
     aes(x = `yearmonth(bca)`, y = Total, linetype = "Approved projects")) + guides(
     color = guide_legend(title = "Forecast model"),
     fill = guide_legend(title = "Forecast model"),
-    linetype = guide_legend("Melbourne Water data")) + 
+    linetype = guide_legend("Actual data")) + 
   labs(title = "Benchmark forecast model performance in test dataset",
        subtitle = "Projects with FFC <= 5 mil $",
        y = "Total number of projects",
@@ -1062,7 +1063,7 @@ model_fit %>% select(-ETS_ana) %>% forecast(h = "2 years",bootstrap =TRUE) %>%
 #| fig-cap: "Forecasts of ETS model overlayed on the approved projects"
 #| fig-height: 4
 #| fig-width: 8
-model_fit %>% select(ETS_ana) %>% forecast(h = "2 years",bootstrap =TRUE) %>%  mutate(Total = distributional::dist_truncated(Total, 0)) %>%
+model_fit %>% select(c(ETS_ana,arima_auto)) %>% forecast(h = "2 years",bootstrap =TRUE) %>%  mutate(Total = distributional::dist_truncated(Total, 0)) %>%
  autoplot() + geom_line(
     data = project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` < ymd(20240601)),
     aes(x = `yearmonth(bca)`, y = Total, linetype = "Approved projects")) + guides(
@@ -1077,7 +1078,23 @@ model_fit %>% select(ETS_ana) %>% forecast(h = "2 years",bootstrap =TRUE) %>%  m
         legend.title = element_text(size = 9)) +
   theme_minimal()
 ```
-
+```{r}
+#| eval: false
+model_fit %>% select(ETS_ana,arima_auto) %>% forecast(h = "2 years",bootstrap =TRUE) %>%  mutate(Total = distributional::dist_truncated(Total, 0)) %>%
+ autoplot() + geom_line(
+    data = project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` < ymd(20240601)),
+    aes(x = `yearmonth(bca)`, y = Total, linetype = "Approved projects")) + guides(
+    color = guide_legend(title = "Forecast model"),
+    fill = guide_legend(title = "Forecast model"),
+    linetype = guide_legend("Actual data")) + 
+  labs(title = "Specialised forecast model performance comparison with actual data",
+       subtitle = "Projects with FFC <= 5 mil $",
+       y = "Total number of projects",
+       x = "Timeline",caption = "Source: Melbourne Water Corporation") + 
+  theme(legend.text = element_text(size = 7),
+        legend.title = element_text(size = 9)) +
+  theme_minimal()
+```
 
 In order to compare the various forecast models, we will utilise the root mean squared error (RMSE) on the out-of-sample test dataset. The RMSE is calculated through @eq-rmse. The RMSE is additionally a useful metric to compare forecast models as the results are in the same scale as the forecasts and hence, can be easily interpreted as the average mangnitude of errors between the predicted and actual values.
 
@@ -1103,7 +1120,7 @@ model_fit <- project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` <
 #| fig-cap: "Forecasted number of projects in CDM-26 using ETS (A,N,A) model"
 #| fig-height: 4
 #| fig-width: 8
-model_fc <- model_fit %>% select(ETS_ana) |> forecast(h = 72,bootstrap =TRUE) %>%  mutate(Total = distributional::dist_truncated(Total, 0))
+model_fc <- model_fit %>% select(ETS_ana,arima_auto) |> forecast(h = 72,bootstrap =TRUE) %>%  mutate(Total = distributional::dist_truncated(Total, 0))
 
 model_fc |> autoplot() +
    geom_line(
@@ -1113,12 +1130,12 @@ model_fc |> autoplot() +
   guides(
     color = guide_legend(title = "Forecast model"),
     fill = guide_legend(title = "Forecast model"),
-    linetype = guide_legend("Melbourne Water data")
+    linetype = guide_legend("Actual data")
   ) +
   labs(
     x = "Timeline",
     y = "Number of projects",
-    title = "Forecasted number of projects in CDM-26 using ETS (A,N,A) model",
+    title = "Forecasted number of projects in CDM-26 using specialised forecast models",
     subtitle = "Projects worth 5 mil $ or lower",
     caption = "Source: Melbourne Water Corporation"
   ) + theme_minimal()
