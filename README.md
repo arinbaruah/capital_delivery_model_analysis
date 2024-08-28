@@ -11,6 +11,11 @@
 
 The ongoing project aimed at optimizing the infrastructure capital delivery model through exploratory data analysis and implementing forecasting techniques draws guidance from the department of Business and Econometrics, Monash University and Major Capital Delivery, Melbourne Water Corporation. This partnership leverages Monash University’s expertise in data analysis and forecasting with Melbourne Water Corporation’s extensive infrastructure and inknowledge to enhance project delivery efficiency and accuracy.
 
+# Important files
+
+![Final executive report](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/cdmr_report_monash.pdf) [Under progress] 🚧
+![Final presentation](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/CDMR_analysis.html) [Under progress] 🏗️
+
 # License
 
 ![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/images/cc_license.jpeg)
