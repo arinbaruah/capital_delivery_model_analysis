@@ -24,15 +24,26 @@ The Capital Delivery Model is crucial for optimizing project management within t
 
 # Objective 🎯
 
-The Capital Delivery Model Data Analysis and Forecasting project aims to optimize the engagement of project personnel and service providers to enhance the efficiency and success of project delivery. This study is designed to investigate the complexities inherent in capital delivery projects, such as extending partnerships with external organizations, managing rising project costs and timeline variations, and securing necessary approvals. By analysing historical and current project data, the project seeks to develop a reproducible framework for evaluating and improving the upcoming Capital Delivery Model.
-
+This study aims to create a reproducible framework for analysing project data across various delivery models to establish a benchmark for designing a new model. By conducting focused exploratory and temporal data analysis on historical project data and standardising results, the study seeks to set preliminary expectations for the future of capital delivery. It will additionally implement benchmark and specialised time series forecasting techniques, including ETS and SARIMA, by decomposing the time series into trend, seasonality, and residuals. The model will continuously learn and improve with new data, extending its usefulness beyond the next pricing submission period.
+ 
 The major areas of study for the current analysis are delineated as follows:
 
-1.	Distribution of Projects by Delivery Model: Examination of current and past projects categorized by delivery model, based on the overall cost of the project.
-2.	Implication of the distribution of projects on overall project valuations: Analysis of the number of projects associated with each delivery model along with their subsequent cost valuations, thereby providing a range of potential outcomes and expectations for the new delivery model.
-3.	Project Duration Analysis: Investigation of project durations relative to their overall valuations.
-4.	Approval Duration Distribution: Assessment of the time required for project approvals across different stages.
-5.	Future Project Forecast: Estimation of the number of projects anticipated in the delivery period from 2026 to 2031.
+1. __Distribution of Projects by Delivery Model:__ Examination of current and past projects categorised by delivery model, based on the overall cost of the project.
+2. __Implication of the distribution of projects on overall project valuations:__ Analysis of the number of projects associated with each delivery model along with their subsequent cost valuations, thereby providing a range of potential outcomes and expectations for the new delivery model.
+3. __Project Duration Analysis:__ Investigation of project durations relative to their overall valuations.
+4. __Approval Duration Distribution:__ Assessment of the time required for project approvals across different stages.
+5. __Future Project Forecast:__ Estimation of the number of projects anticipated in the delivery period from 2026 to 2031.
+
+# Key outcomes 🧐
+
+The systematic approach to studying the historical capital delivery models and projecting insights into the future delivery model yielded the following key outcomes:
+ 
+1. The entire analysis was conducted in R, providing the key benefit of a formalised, automated and reproducible pipeline for data handling and cleaning based on critical assumptions. This code is scalable for future purposes and is expected to significantly reduce data cleaning duration by at least 30 %, making it suitable for processing live project data in the future.
+2. Based on historical data analysis of past delivery models, it is anticipated that over 70% of the upcoming projects will be valued at $5 million or less. Given the high volume of projects in this category, it is likely that a specialised project approval process would positively affect the efficient and timely delivery of these projects. Additionally, a dedicated team may be established to efficiently manage and deliver these projects for its efficient delivery.
+3. Further analysis reveals that projects valued at $5 million or less, which constitute nearly 70% of the projects within a capital delivery model, account for only 10% of the total project costs. This suggests that, despite requiring similar manpower resources as larger projects, these smaller projects contribute only a fraction of the overall project valuation, further highlighting the need for a dedicated team to effectively manage and execute these projects.
+4. Analysing the historical breakdown of projects based on the approving body has provided valuable insights into how future model distributions might look. Specifically, the duration of project approval varies depending on the approving authority. By examining approval durations, we can establish benchmarks for the approval process timeline. This information is crucial for effective planning and for proactively addressing potential risks related to approval delays.
+5. Analysing the duration of critical stages in the project lifecycle, based on delivery programs and project valuations, has revealed that some projects, on average, take longer to complete than others. This analysis provides valuable benchmarks and insights, allowing us to monitor current projects against historical expectations and identify any deviations early on. 
+6. A key focus of this study is to accurately predict the number of projects expected each year and month in the next delivery model. By employing classical additive time series decomposition, we can analyse the project data to uncover important characteristics such as trends, seasonality, and residuals. Building on these insights, we use specialized forecasting methods, specifically the Error-Trend-Seasonality (ETS) and  Seasonal-ARIMA models, to predict future project volumes. These models offer the advantage of continuous learning, allowing them to adapt and remain applicable beyond the next delivery model as more data becomes available. Based on the results obtained, it could be observed that the forecasting model predicted on average, 3 new approved projects in each month with 2 peaks in a year, one during the mid year while one at the end of the year. These peaks indicate a higher than average number of approved projects. This forecasting is potentially crucial for efficient crew resource management during project execution. 
 
 # Reproduce this analysis
 
