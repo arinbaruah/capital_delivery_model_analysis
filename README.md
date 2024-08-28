@@ -40,7 +40,7 @@ The major areas of study for the current analysis are delineated as follows:
 4. __Approval Duration Distribution:__ Assessment of the time required for project approvals across different stages.
 5. __Future Project Forecast:__ Estimation of the number of projects anticipated in the delivery period from 2026 to 2031.
 
-# Key outcomes 🧐
+# Key insights 🧐
 
 The systematic approach to studying the historical capital delivery models and projecting insights into the future delivery model yielded the following key outcomes:
  
