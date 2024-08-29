@@ -13,12 +13,12 @@
 ├── cdmr_report_monash.pdf  # Rendered project report
 |── DL Forecast.ipynb]      # Deep learning forecast model Jupyter notebook
 |── CDMR_presentation.qmd   # Project presentation file
-|── Short_talk1.pptx # Interim 3-minute presentation
+|── Short_talk1.pptx        # Interim 3-minute presentation
 |── images                  # Important images for report
 ├── data                    # Datasets
 │   ├── Capital_Deliver_Project_deidentified.csv  # De-identified project data
-│   ├── integration         # End-to-end, integration tests (alternatively `e2e`)
-│   └── unit                # Unit tests
+│   ├── integration                               
+│   └── unit                                   
 └── ...
 ```
 # Acknowledgement
