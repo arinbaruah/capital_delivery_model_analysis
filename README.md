@@ -6,6 +6,20 @@
 > [!WARNING]
 > The project is currently under progress and will be notified on this space once project deliverables are ready
 
+# Repository Navigation
+.
+├── [cdmr_report_monash.qmd](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/cdmr_report_monash.qmd)  # Reprodcible analysis file
+├── [cdmr_report_monash.pdf](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/cdmr_report_monash.pdf)  # Rendered project report
+|── [DL Forecast.ipynb](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/DL%20Forecast.ipynb) # Deep learning forecast model Jupyter notebook
+|── [CDMR_presentation.qmd] # Project presentation file
+|── [Short_talk1.pptx](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/Short_talk1.pptx) # Interim 3-minute presentation
+|── images                  # Important images for report
+├── data                    # Datasets
+│   ├── [Capital_Deliver_Project_deidentified.csv](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/data/Capital_Deliver_Project_deidentified.csv)  # De-identified project data
+│   ├── integration         # End-to-end, integration tests (alternatively `e2e`)
+│   └── unit                # Unit tests
+└── ...
+
 # Acknowledgement
 
 
