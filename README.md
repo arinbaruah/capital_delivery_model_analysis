@@ -7,11 +7,12 @@
 > The project is currently under progress and will be notified on this space once project deliverables are ready
 
 # Repository Navigation
+```
 .
 ├── cdmr_report_monash.qmd  # Reprodcible analysis file
-├── cdmr_report_monash.pdf # Rendered project report
-|── DL Forecast.ipynb] # Deep learning forecast model Jupyter notebook
-|── CDMR_presentation.qmd # Project presentation file
+├── cdmr_report_monash.pdf  # Rendered project report
+|── DL Forecast.ipynb]      # Deep learning forecast model Jupyter notebook
+|── CDMR_presentation.qmd   # Project presentation file
 |── Short_talk1.pptx # Interim 3-minute presentation
 |── images                  # Important images for report
 ├── data                    # Datasets
@@ -19,7 +20,7 @@
 │   ├── integration         # End-to-end, integration tests (alternatively `e2e`)
 │   └── unit                # Unit tests
 └── ...
-
+```
 # Acknowledgement
 
 
