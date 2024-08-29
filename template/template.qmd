@@ -13,24 +13,26 @@ bibliography: references.bib
 format: report-pdf
 ---
 
-# Introduction
-
-In a famous paper, @BC64 introduced a family of transformations \dots
-
-```{r}
-#| label: fig-density
-#| fig-cap: Simulated data from a N(0,1) distribution.
-library(tidyverse)
-set.seed(2022-12-20)
-df <- tibble(x = rnorm(200))
-df |>
-  ggplot(aes(x=x)) +
-  geom_density(bw = "SJ") +
-  geom_rug()
+::: {#fig-flowchart fig-cap="Project approval gate flowchart"}
+```{mermaid}
+flowchart LR
+  A(BNI) --> B(PBC)
+  B --> C{BCA} --> D(Stage 1) --> E(Stage 2) --> F(Stage 3)
 ```
+:::
 
-@fig-density shows a kernel density estimate of simulated data from a N(0,1) distribution. The sample variance is given by
-$$
-  s^2 = \frac{1}{n-1} \sum_{i=1}^n (x_i-\bar{x})^2 = `r round(sd(df$x), 2)`.
-$$ {#eq-s2}
-Note that @eq-s2 is an unbiased estimate of the variance, but it is not the maximum likelihood estimate [@Rice2007, p.269].
+
+::: {#fig-flowchartkpi fig-cap="KRA-KPI flowchart"}
+```{mermaid}
+flowchart TB
+  A{KRA} --> B(Timeliness)
+  A{KRA} --> C(Sustainability)
+  A{KRA} --> D(Safety)
+  A{KRA} --> E(Social procurement)
+  
+  B --> F[KPIs]
+  C --> G[KPIs]
+  D --> H[KPIs]
+  E --> I[KPIs]
+```
+:::

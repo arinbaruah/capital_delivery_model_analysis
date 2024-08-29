@@ -403,13 +403,9 @@ The hierarchy of a project approval flowchart is illustrated through @fig-flowch
 
 While selected projects may bypass some of the approval gates, however, this flowchart is generally true for all of Melbourne Water projects.
 
-::: {#fig-flowchart fig-cap="Project approval gate flowchart"}
-```{mermaid}
-flowchart LR
-  A(BNI) --> B(PBC)
-  B --> C{BCA} --> D(Stage 1) --> E(Stage 2) --> F(Stage 3)
-```
-:::
+-----
+
+-----
 
 For the purpose of assigning the delivery model to each of the projects, the BCA date is utilised as this is effectively the date when the project went live. On the other hand, the completion status of the project is determined based on whether the Stage 1 date is before or after the data export date. (19th July, 2024). @tbl-cdm tabulates the criteria utilised for assigning each project to a relevant CDM.
 
@@ -576,21 +572,9 @@ The critical phase of a project initiates from the BCA to stage 3. As this is th
 
 While the KRAs are subjective in nature and difficult to track, each of them are further quantified through the usage of KPIs. Based on the data provided by the service providers and through careful feature engineering, a framework to track and analyse project progress is delineated in @sec-results. The role of the KPIs and KRAs are two-fold. First, these indicators allow the team at Melbourne Water to gauge the progress of the project, secondly, it allows Melbourne Water to engineer the right behaviour on the part of the service provider who is responsible for the construction of the project. @fig-flowchartkpi illustrates the scope of the KRAs and KPIs within a project.
 
-::: {#fig-flowchartkpi fig-cap="KRA-KPI flowchart"}
-```{mermaid}
-flowchart TB
-  A{KRA} --> B(Timeliness)
-  A{KRA} --> C(Sustainability)
-  A{KRA} --> D(Safety)
-  A{KRA} --> E(Social procurement)
-  
-  B --> F[KPIs]
-  C --> G[KPIs]
-  D --> H[KPIs]
-  E --> I[KPIs]
-```
-:::
+-----
 
+-----
 
 
 
