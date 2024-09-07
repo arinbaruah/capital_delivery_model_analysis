@@ -42,18 +42,18 @@ library(ggalluvial)
 
 The analysis report will use numerous abbreviations and terminologies at various stages. This section will serve as a reference for what do these abbreviations mean alongwith their definitions.
 
-1. __BNI__ : Business Need Identifier
-2. __PBC__ : Preliminary Business Case
-3. __BCA__ : Business Case Approval 
-4. __Stage 1__ : First stage of project completion
-5. __Stage 2__ : Second stage of project completion
-6. __Stage 3__ : Third stage of project completion
-7. __FFC__ : Final forecasted cost of project
+1. __BNI (Business Need Identifier)__ : A date on which a project concept is first conceived
+2. __PBC (Preliminary Business Case)__ : A date on which the first business case is submitted
+3. __BCA__ : A date on which the business case is approved and the project  
+4. __Stage 1__ : A date on which the first stage of practical completion of project is reached
+5. __Stage 2__ : A date on which the second stage of practical completion of project is reached
+6. __Stage 3__ : A date on which the defect detection period of project is reached
+7. __FFC (Final Forecast Cost)__ : An estimate of the total valuation of the project in dollar value
 8. __ID__ : Unique identification for each individual project
 9. __Owner group__ : The division within Melbourne Water Corporation responsible for completing the particular project
 10. __Delivery Program__ : The subdivision within Melbourne Water Corporation responsible for completing the particular project
-11. __PS__ : Pricing submission period for Melbourne Water's business case to be submitted to Department of Treasury and Finance (DTF) 
-12. __CDM__: Capital Delivery Model
+11. __PS (Price Submission)__ : Pricing submission period for Melbourne Water's business case to be submitted to Department of Treasury and Finance (DTF) 
+12. __CDM (Capital Delivery Model)__: The Capital Delivery Model is a set of frameworks that allows Melbourne Water to efficiently delegate the design or construction activities to the third party service provider by accounting for the type of project, cost of project and the risks associated with the project.
 
 
 \newpage
@@ -1080,7 +1080,7 @@ In order to compare the various forecast models, we will utilise the root mean s
 
 $$RMSE = {\sqrt{\sum_{i=1} ^{N}\dfrac{(\hat{y_i} - y_i)^2}{N}}}$$ {#eq-rmse}
 
-@tbl-rmse shows the performance of the forecast models on the current out-of-sample test dataset. Although the Mean model had the lowest error, however due to the limitations of this model mentioned previously, we would expect the ETS (A,N,A) model to perform better with a larger training dataset in the future. As a result, the current forecasts for the projects in CDM-26 will be based off the ETS (A,N,A) model. These forecasts are depicted through @fig-forecastcdm26
+@tbl-rmse shows the performance of the forecast models on the current out-of-sample test dataset. Although the Mean model had the lowest error, however due to the limitations of this model mentioned previously, we would expect the ETS (A,N,A) model to perform better with a larger training dataset in the future. As a result, the current forecasts for the projects in CDM-26 will be based off the ETS (A,N,A) model. These forecasts are depicted through @fig-forecastcdm26.
 
 
 ```{r}
