@@ -37,7 +37,7 @@ library(ggalluvial)
 
 
 
-
+\newpage
 # List of abbreviations and terminologies
 
 The analysis report will use numerous abbreviations and terminologies at various stages. This section will serve as a reference for what do these abbreviations mean alongwith their definitions.
@@ -51,9 +51,10 @@ The analysis report will use numerous abbreviations and terminologies at various
 7. __FFC (Final Forecast Cost)__ : An estimate of the total valuation of the project in dollar value
 8. __ID__ : Unique identification for each individual project
 9. __Owner group__ : The division within Melbourne Water Corporation responsible for completing the particular project
-10. __Delivery Program__ : The subdivision within Melbourne Water Corporation responsible for completing the particular project
+10. __Delivery Program__ : The classification of the project based on the capital delivery program framework
 11. __PS (Price Submission)__ : Pricing submission period for Melbourne Water's business case to be submitted to Department of Treasury and Finance (DTF) 
 12. __CDM (Capital Delivery Model)__: The Capital Delivery Model is a set of frameworks that allows Melbourne Water to efficiently delegate the design or construction activities to the third party service provider by accounting for the type of project, cost of project and the risks associated with the project.
+13. __Owner Team__ : The subdivision within Melbourne Water Corporation responsible for completing the project 
 
 
 \newpage
@@ -854,13 +855,13 @@ project_data <- project_data %>% mutate(conception_duration = days(pbc - bni))
 
 del_prg <- c("Major Works - Framework","Major Works - Open Market")
 
-ggplot(data = project_data %>% filter(delivery_program %in% del_prg  & cdm != "CDM-26"),aes(y = day(conception_duration),x = delivery_program,fill = delivery_program)) + geom_boxplot()  + facet_wrap(~cdm) + scale_fill_tableau(palette = "Tableau 10") + 
+ggplot(data = project_data %>% filter(delivery_program %in% del_prg  & cdm != "CDM-26"),aes(y = day(conception_duration),x = delivery_program,fill = delivery_program)) + geom_boxplot()  + facet_wrap(~cdm) +
   theme_minimal() + theme(legend.position = "none",axis.text.x = element_text(size = 8)) + 
   labs(x = "Delivery program",
        y = "Duration (Days)",
        caption = "Source: Melbourne Water Corporation", 
        title = "Distribution of duration for preliminary business case submission",
-       subtitle = "Number of days between BNI and PBC")
+       subtitle = "Number of days between BNI and PBC") + scale_fill_tableau(palette = "Superfishel Stone")
 ```
 The other critical stage of the projects is to monitor the duration between the project approval (BCA) to project delivery (Stage 1). @fig-delduration illustrates how the duration of projects from approval to delivery stage differ across various delivery programs. Key insights from this visualisation are as follows:
 
@@ -959,18 +960,20 @@ medduration <- medduration %>%
 
 ## Forecasting number of projects in CDM-26 {#sec-forecast}
 
-@tbl-forecast lists out the forecasting models which will be implemented to obtain the forecasts of the projects worth 5 mil $ or lower. These include benchmark models such as the "Mean","Naïve" and the "Seasonal Naïve" alongwith the specialised forecast method called the ETS method. For the purpose of training the forecast models, project data between 2016 January to 2022 May is used as the training dataset while the test dataset includes the project data between 2022 June to 2024 May. 
+@tbl-forecast lists out the forecasting models which will be implemented to obtain the forecasts of the projects worth 5 mil $ or lower. These include benchmark models such as the "Mean" and the "Seasonal Naïve" alongwith the specialised forecast method called the ETS method. For the purpose of training the forecast models, project data between 2016 January to 2022 May is used as the training dataset while the test dataset includes the project data between 2022 June to 2024 May. 
 
 @fig-forecompvizbm illustrates the performance of the benchmark forecast models on the test dataset. The visualisation further overlays the actual approved projects in the test dataset duration between 2022 June to 2024 May. Some of the key observations are as follows:
 
-1. The Naïve model which forecasts the total number of projects as the last value in the training dataset failed to capture the actual trend of the data by a significant margin. Additionally, as the forecast horizon extends, the prediction interval widens significantly, as a result of which, the uncertainty in the forecasted numbers rise, providing a poor estimate of the future number of projects. 
 
-2. The Seasonal Naïve model, which forecasts future expected projects by replicating the annual seasonality and trend from the current year, demonstrated greater confidence compared to the standard Naïve model, as evidenced by its narrower prediction intervals. However, this model assumes that the seasonal patterns and trends observed in the current period will persist unchanged into future years. This assumption may be overly stringent, particularly for capital delivery models that are influenced by business cycles. Additionally, the seasonal patterns in the training data may not be strong enough to support this assumption reliably.
+1. The Seasonal Naïve model, which forecasts future expected projects by replicating the annual seasonality and trend from the current year, demonstrated greater confidence compared to the standard Naïve model, as evidenced by its narrower prediction intervals. However, this model assumes that the seasonal patterns and trends observed in the current period will persist unchanged into future years. This assumption may be overly stringent, particularly for capital delivery models that are influenced by business cycles. Additionally, the seasonal patterns in the training data may not be strong enough to support this assumption reliably.
 
-3. The Mean model, which forecasts future projects based on the average number of projects observed in the training data, exhibits the highest level of confidence among the benchmark models, as indicated by its narrow prediction intervals. This model assumes that small-scale projects valued at $5 million or less will remain relatively consistent each year due to their regular demand, making forecasting based on the historical mean a reasonable assumption. However, this model’s simplicity comes with limitations, as it does not account for seasonality or trends in the data, potentially making it less informative about the underlying patterns.
+2. The Mean model, which forecasts future projects based on the average number of projects observed in the training data, exhibits the highest level of confidence among the benchmark models, as indicated by its narrow prediction intervals. This model assumes that small-scale projects valued at $5 million or less will remain relatively consistent each year due to their regular demand, making forecasting based on the historical mean a reasonable assumption. However, this model’s simplicity comes with limitations, as it does not account for seasonality or trends in the data, potentially making it less informative about the underlying patterns.
+
+3. The current models encounter a significant challenge when forecasting small discrete values, such as the number of expected monthly projects. As noted by @hyndman2018forecasting, these statistical models produce continuous value forecasts and can contain negative lower prediction intervals when the mean is close to 0. Such an outcome that is not meaningful for expected number of projects as forecasts. In this analysis, a specialised implementation of the ETS model, known as Croston’s method, is attempted and compared against other benchmark and ETS models. While Croston’s method is better suited for handling data with zeros or small counts, it has a key limitation as per @shenstone2005stochastic : it does not correspond to a formal statistical model, and thus, prediction intervals cannot be computed.
+
 
 \begin{noteBox}
-It is important to note that the lower prediction intervals for the Naïve and Season Naïve models also cover the negative Y-axis. This is however not possible when forecasting number of projects. Hence, using these models for the current dataset will not provide us an informative insight, especially when forecasting over a horizon of an entire capital delivery period of 5 years.
+It is important to note that the lower prediction intervals for the Season Naïve models cover the negative Y-axis. This is however not possible in real practice when forecasting number of projects. In order to prevent this issue, all lower prediction intervals are truncated to values greater than or equal to 0.
 
 \end{noteBox}
 
@@ -988,26 +991,14 @@ model_fit <- project_tsibble_train |>
     Naive = NAIVE(Total),
     Season_Naive = SNAIVE(Total),
     ETS_ana = ETS(Total ~ error("A") + season("A")),
-    arima_auto = ARIMA(Total))
+    arima_auto = ARIMA(Total),
+    Croston = CROSTON(Total))
 
 
 ```
 
 
-```{r}
-#| label: tbl-rmse
-#| tbl-cap: "RMSE of various forecast models"
-model_fit  |> forecast(h = 24) |> accuracy(project_tsibble %>%
-                                             filter(ffc_band == "< = 5" &
-                                                      `yearmonth(bca)` < ymd(20240601))) |>
-  filter(.type == "Test") %>%
-  select(-ME, -MPE, -ACF1,-MAPE, -ffc_band,-.type) %>% arrange(RMSE) %>% kable("latex",digits = 2) %>%
-  kable_styling(latex_options = c("striped"), 
-                full_width = FALSE, 
-                position = "center") %>%
-  column_spec(1, bold = TRUE, color = "blue") %>%
-  column_spec(2, bold = TRUE, color = "red") 
-```
+
 
 
 ```{r}
@@ -1015,7 +1006,7 @@ model_fit  |> forecast(h = 24) |> accuracy(project_tsibble %>%
 #| fig-cap: "Forecasts of benchmark models overlayed on the approved projects"
 #| fig-height: 4
 #| fig-width: 8
-model_fit %>% select(-c(ETS_ana,Naive,arima_auto)) %>% forecast(h = "2 years",bootstrap =TRUE) %>% mutate(Total = distributional::dist_truncated(Total, 0)) %>%
+model_fit %>% select(-c(ETS_ana,Naive,arima_auto,Croston)) %>% forecast(h = "2 years",bootstrap =TRUE) %>% mutate(Total = distributional::dist_truncated(Total, 0)) %>%
  autoplot() + geom_line(
     data = project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` < ymd(20240601)),
     aes(x = `yearmonth(bca)`, y = Total, linetype = "Approved projects")) + guides(
@@ -1043,8 +1034,8 @@ model_fit %>% select(-c(ETS_ana,Naive,arima_auto)) %>% forecast(h = "2 years",bo
 #| fig-cap: "Forecasts of ETS model overlayed on the approved projects"
 #| fig-height: 4
 #| fig-width: 8
-model_fit %>% select(c(ETS_ana,arima_auto)) %>% forecast(h = "2 years",bootstrap =TRUE) %>%  mutate(Total = distributional::dist_truncated(Total, 0)) %>%
- autoplot() + geom_line(
+model_fit %>% select(ETS_ana) %>% forecast(h = "2 years",bootstrap =TRUE) %>%  mutate(Total = distributional::dist_truncated(Total, 0)) %>% 
+ autoplot() +  geom_line(
     data = project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` < ymd(20240601)),
     aes(x = `yearmonth(bca)`, y = Total, linetype = "Approved projects")) + guides(
     color = guide_legend(title = "Forecast model"),
@@ -1058,6 +1049,7 @@ model_fit %>% select(c(ETS_ana,arima_auto)) %>% forecast(h = "2 years",bootstrap
         legend.title = element_text(size = 9)) +
   theme_minimal()
 ```
+
 ```{r}
 #| eval: false
 model_fit %>% select(ETS_ana,arima_auto) %>% forecast(h = "2 years",bootstrap =TRUE) %>%  mutate(Total = distributional::dist_truncated(Total, 0)) %>%
@@ -1076,11 +1068,27 @@ model_fit %>% select(ETS_ana,arima_auto) %>% forecast(h = "2 years",bootstrap =T
   theme_minimal()
 ```
 
-In order to compare the various forecast models, we will utilise the root mean squared error (RMSE) on the out-of-sample test dataset. The RMSE is calculated through @eq-rmse. The RMSE is additionally a useful metric to compare forecast models as the results are in the same scale as the forecasts and hence, can be easily interpreted as the average mangnitude of errors between the predicted and actual values.
+In order to compare the various forecast models, we will utilise the root mean squared error (RMSE) on the out-of-sample test dataset. The RMSE is calculated through @eq-rmse. The RMSE is additionally a useful metric to compare forecast models as the results are in the same scale as the forecasts and hence, can be easily interpreted as the average magnitude of errors between the predicted and actual values.
 
 $$RMSE = {\sqrt{\sum_{i=1} ^{N}\dfrac{(\hat{y_i} - y_i)^2}{N}}}$$ {#eq-rmse}
 
 @tbl-rmse shows the performance of the forecast models on the current out-of-sample test dataset. Although the Mean model had the lowest error, however due to the limitations of this model mentioned previously, we would expect the ETS (A,N,A) model to perform better with a larger training dataset in the future. As a result, the current forecasts for the projects in CDM-26 will be based off the ETS (A,N,A) model. These forecasts are depicted through @fig-forecastcdm26.
+
+```{r}
+#| label: tbl-rmse
+#| tbl-cap: "RMSE of various forecast models"
+#| tbl-pos: H
+model_fit  |> forecast(h = 24) |> accuracy(project_tsibble %>%
+                                             filter(ffc_band == "< = 5" &
+                                                      `yearmonth(bca)` < ymd(20240601))) |>
+  filter(.type == "Test") %>%
+  select(-ME, -MPE, -ACF1,-MAPE, -ffc_band,-.type) %>% arrange(RMSE) %>% kable("latex",digits = 2) %>%
+  kable_styling(latex_options = c("striped"), 
+                full_width = FALSE, 
+                position = "center") %>%
+  column_spec(1, bold = TRUE, color = "blue") %>%
+  column_spec(2, bold = TRUE, color = "red") 
+```
 
 
 ```{r}
@@ -1100,13 +1108,13 @@ model_fit <- project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` <
 #| fig-cap: "Forecasted number of projects in CDM-26 using ETS (A,N,A) model"
 #| fig-height: 4
 #| fig-width: 8
-model_fc <- model_fit %>% select(ETS_ana,arima_auto) |> forecast(h = 72,bootstrap =TRUE) %>%  mutate(Total = distributional::dist_truncated(Total, 0))
+model_fc <- model_fit %>% select(ETS_ana) |> forecast(h = 72,bootstrap =TRUE) %>%  mutate(Total = distributional::dist_truncated(Total, 0)) 
 
 model_fc |> autoplot() +
    geom_line(
     data = project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` < ymd(20240601)),
     aes(x = `yearmonth(bca)`, y = Total, linetype = "Approved projects")
-  ) +
+  ) + 
   guides(
     color = guide_legend(title = "Forecast model"),
     fill = guide_legend(title = "Forecast model"),

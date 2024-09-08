@@ -12,4 +12,4 @@
 9. __`Stage 2`__ : A date on which the second stage of practical completion of project is reached
 10. __`Stage 3`__ : A date on which the defect detection period of project is reached
 11. __`EPT`__ : An indicator for the number of gates (approvals) a project must go through
-12. __`Owner Team`__ : The subdivision within Melbourne Water Corporation responsible for 
+12. __`Owner Team`__ : The subdivision within Melbourne Water Corporation responsible for completing the project 
