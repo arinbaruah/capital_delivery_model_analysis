@@ -827,12 +827,11 @@ ggplot(project_group_approval %>% filter(cdm != "CDM-26"),aes(x = Percentage,
 
 ## Labour utilisation analysis for each delivery program
 
-![Distribution of labour hours fo each delivery program](images/labour_hours.png){#fig-labour}
-
-
 @fig-labour depicts the distribution of the labour hours across each of the four delivery programs within MCD. The plot indicates that the current model is capable of delivering multiple small-scale and low risk contestable projects. The labour hours associated with Major Works-Framework and Major Works-Small Scale appear to be fairly similar, despite the fact that the __Small Scale projects account for about only 10% of the FFC in a delivery period__. The future CDM for PS-26 should consider __streamlining or bundling multiple small-scale projects together to generate higher efficiency in Project Management labour resource allocation.__ 
 
-## Critical project stage duration analysis
+![Distribution of labour hours of each delivery program](images/labour_hours.png){#fig-labour}
+
+## Critical project stage duration analysis 
 
 As explained previously through @fig-flowchart, a project typically undergoes several key critical stages from conceptualisation to completion. It is critical to study the duration in between these stages and also compare across CDMs to observe any changes and what it may mean for the future CDM.
 
