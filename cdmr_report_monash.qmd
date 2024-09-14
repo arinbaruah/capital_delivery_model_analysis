@@ -32,7 +32,6 @@ library(janitor)
 library(fpp3)
 library(ggrepel)
 library(patchwork)
-library(ggalluvial)
 ```
 
 
@@ -991,7 +990,6 @@ model_fit <- project_tsibble_train |>
     Naive = NAIVE(Total),
     Season_Naive = SNAIVE(Total),
     ETS_ana = ETS(Total ~ error("A") + season("A")),
-    arima_auto = ARIMA(Total),
     Croston = CROSTON(Total))
 
 
@@ -1006,7 +1004,7 @@ model_fit <- project_tsibble_train |>
 #| fig-cap: "Forecasts of benchmark models overlayed on the approved projects"
 #| fig-height: 4
 #| fig-width: 8
-model_fit %>% select(-c(ETS_ana,Naive,arima_auto,Croston)) %>% forecast(h = "2 years",bootstrap =TRUE) %>% mutate(Total = distributional::dist_truncated(Total, 0)) %>%
+model_fit %>% select(-c(ETS_ana,Naive,Croston)) %>% forecast(h = "2 years",bootstrap =TRUE) %>% mutate(Total = distributional::dist_truncated(Total, 0)) %>%
  autoplot() + geom_line(
     data = project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` < ymd(20240601)),
     aes(x = `yearmonth(bca)`, y = Total, linetype = "Approved projects")) + guides(
@@ -1157,13 +1155,32 @@ The current data analysis and forecasting project was created with the goal of f
 
 2. __Incorporating Inflation Factors in forecasts:__ While current forecasting methods are capable of predicting the total valuation of projects, they do not account for inflationary factors such as increases in raw material and manpower costs. Future developments in forecasting methods should incorporate the Consumer Price Index (CPI) to better estimate the total expected valuation of projects, reflecting the impact of inflation on project costs. Such forecasts would allow the project teams to get an informed idea regarding the various cost allocations.
 
-3.	__Advanced Forecasting with PowerBI:__ While PowerBI has the ability to provide under-the-hood forecasts, however to replicate the specialised forecast methods from the “Fable” package, PowerBI has the ability to run R scripts within the dashboard, thereby allowing us to tweak the forecast models to learn better from the historical data and improve the accuracy of the future predictions, as well as allow users to view these insights through a user-friendly PowerBI dashboard.
+3. __Visualisation and Accessibility:__ To make the current study available to a broader audience, the insights and visualisations can be replicated on a PowerBI organisational dashboard. This would have the added benefit of leveraging Microsoft Fabric’s datalake where the live data can be extracted, transformed and loaded onto the dashboard, providing insights based on live project data.
 
-4. __Visualisation and Accessibility:__ To make the current study available to a broader audience, the insights and visualisations can be replicated on a PowerBI organisational dashboard. This would have the added benefit of leveraging Microsoft Fabric’s datalake where the live data can be extracted, transformed and loaded onto the dashboard, providing insights based on live project data.
+4. __Implementing KRA and KPI dashboard reporting:__ Incorporating Key Result Areas (KRAs) and Key Performance Indicators (KPIs) into the dashboard facilitates effective tracking of current projects against historical data and organizational benchmarks. These indicators enable organsations to assess project delivery performance and efficiency across different service providers and project types. By developing these metrics in close consultation with business leaders, they can be tailored to align with strategic objectives and then visualized for quick and intuitive access on the dashboard.
 
-5. __Implementing KRA and KPI dashboard reporting:__ Incorporating Key Result Areas (KRAs) and Key Performance Indicators (KPIs) into the dashboard facilitates effective tracking of current projects against historical data and organizational benchmarks. These indicators enable organsations to assess project delivery performance and efficiency across different service providers and project types. By developing these metrics in close consultation with business leaders, they can be tailored to align with strategic objectives and then visualized for quick and intuitive access on the dashboard.
+# Packages used
 
+1. __Tidyverse__: Wickham H, Averick M, Bryan J, Chang W, McGowan LD, François R, Grolemund G, Hayes A, Henry L, Hester J, Kuhn M, Pedersen TL, Miller E, Bache SM,
+  Müller K, Ooms J, Robinson D, Seidel DP, Spinu V, Takahashi K, Vaughan D, Wilke C, Woo K, Yutani H (2019). “Welcome to the tidyverse.” _Journal of
+  Open Source Software_, *4*(43), 1686. doi:10.21105/joss.01686 <https://doi.org/10.21105/joss.01686>.
+2. __fpp3__: Hyndman R (2023). _fpp3: Data for "Forecasting: Principles and Practice" (3rd Edition)_. R package version 0.5, <https://CRAN.R-project.org/package=fpp3>.
 
+3. __ggthemes__: Arnold J (2024). _ggthemes: Extra Themes, Scales and Geoms for 'ggplot2'_. R package version 5.1.0, <https://CRAN.R-project.org/package=ggthemes>.
+
+4. __janitor__: Firke S (2023). _janitor: Simple Tools for Examining and Cleaning Dirty Data_. R package version 2.2.0, <https://CRAN.R-project.org/package=janitor>.
+
+5. __lubridate__: Garrett Grolemund, Hadley Wickham (2011). Dates and Times Made Easy with lubridate. Journal of Statistical Software, 40(3), 1-25. URL
+  https://www.jstatsoft.org/v40/i03/.
+  
+6. __ggrepel__: Slowikowski K (2024). _ggrepel: Automatically Position Non-Overlapping Text Labels with 'ggplot2'_. R package version 0.9.5, <https://CRAN.R-project.org/package=ggrepel>.
+
+7. __tibble__: Müller K, Wickham H (2023). _tibble: Simple Data Frames_. R package version 3.2.1, <https://CRAN.R-project.org/package=tibble>.
+
+8. __kableExtra__: Zhu H (2024). _kableExtra: Construct Complex Table with 'kable' and Pipe Syntax_. R package version 1.4.0,
+  <https://CRAN.R-project.org/package=kableExtra>.
+  
+9. __patchwork__: Pedersen T (2024). _patchwork: The Composer of Plots_. R package version 1.2.0, <https://CRAN.R-project.org/package=patchwork>.
 
 # References
 

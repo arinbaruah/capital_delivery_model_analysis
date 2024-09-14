@@ -36,3 +36,16 @@ flowchart TB
   E --> I[KPIs]
 ```
 :::
+
+
+
+```{r}
+project_numbers <- project_data %>% group_by(delivery_program,yearmonth(bca)) %>% summarise(Total = sum(ffc))
+
+project_tsibble <- project_numbers %>% # Tsibble created based on BCA year
+   as_tsibble(index = `yearmonth(bca)`,key = delivery_program) %>% fill_gaps(Total = 0L) # Fill NA with 0
+```
+```{r}
+gg_season(project_tsibble)
+```
+
