@@ -9,9 +9,8 @@
 # Repository Navigation
 ```
 .
-├── cdmr_report_monash.qmd  # Reprodcible analysis file
-├── cdmr_report_monash.pdf  # Rendered project report
-├── DL Forecast.ipynb]      # Deep learning forecast model Jupyter notebook
+├── cdmr_report_monash.qmd  # Reproducible analysis file in .qmd format
+├── cdmr_report_monash.pdf  # Rendered project report in PDF format
 ├── CDMR_presentation.qmd   # Project presentation file
 ├── Short_talk1.pptx        # Interim 3-minute presentation
 ├── images                  # Important images for report
@@ -23,12 +22,11 @@
 ```
 # Acknowledgement
 
-
 ![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/org_logo.png)
 
 The ongoing project aimed at optimizing the infrastructure capital delivery model through exploratory data analysis and implementing forecasting techniques draws guidance from the department of Business and Econometrics, Monash University and Major Capital Delivery, Melbourne Water Corporation. This partnership leverages Monash University’s expertise in data analysis and forecasting with Melbourne Water Corporation’s extensive infrastructure and inknowledge to enhance project delivery efficiency and accuracy.
 
-# Important files
+# Quick links to project files
 
 1. [Final executive report](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/cdmr_report_monash.pdf) [Under progress] 🚧
 2. [Final presentation](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/CDMR_analysis.html) [Under progress] 🏗️
@@ -39,6 +37,15 @@ The ongoing project aimed at optimizing the infrastructure capital delivery mode
 ![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/images/cc_license.jpeg)
 
 This repository is licensed under Creative Commons Legal Code CC0 1.0 Universal and can be referred to [here](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/LICENSE).
+
+# About the data
+
+
+| Variable name   | Class            | Description
+| --------------- | ---------------  | -------------- |
+| BNI             | Datetime         | Business Need Identifier is a date on which a project concept is first conceived  |
+| PBC             | Datetime         | Preliminary Business Case is a date on which the first business case is submitted |
+
 
 # Background 🕵🏻‍♀️
 
