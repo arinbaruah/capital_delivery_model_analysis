@@ -1156,7 +1156,7 @@ The current data analysis and forecasting project was created with the goal of f
 
 3. __Visualisation and Accessibility:__ To make the current study available to a broader audience, the insights and visualisations can be replicated on a PowerBI organisational dashboard. This would have the added benefit of leveraging Microsoft Fabric’s datalake where the live data can be extracted, transformed and loaded onto the dashboard, providing insights based on live project data.
 
-4. __Implementing KRA and KPI dashboard reporting:__ Incorporating Key Result Areas (KRAs) and Key Performance Indicators (KPIs) into the dashboard facilitates effective tracking of current projects against historical data and organizational benchmarks. These indicators enable organsations to assess project delivery performance and efficiency across different service providers and project types. By developing these metrics in close consultation with business leaders, they can be tailored to align with strategic objectives and then visualized for quick and intuitive access on the dashboard.
+4. __Implementing KRA and KPI dashboard reporting:__ Incorporating Key Result Areas (KRAs) and Key Performance Indicators (KPIs) into the dashboard facilitates effective tracking of current projects against historical data and organizational benchmarks. These indicators enable organisations to assess project delivery performance and efficiency across different service providers and project types. By developing these metrics in close consultation with business leaders, they can be tailored to align with strategic objectives and then visualized for quick and intuitive access on the dashboard.
 
 # Packages used
 
