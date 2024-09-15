@@ -41,11 +41,21 @@ This repository is licensed under Creative Commons Legal Code CC0 1.0 Universal 
 # About the data
 
 
-| Variable name   | Class            | Description
-| --------------- | ---------------  | -------------- |
-| BNI             | Datetime         | Business Need Identifier is a date on which a project concept is first conceived  |
-| PBC             | Datetime         | Preliminary Business Case is a date on which the first business case is submitted |
-
+| Variable name            | Class               | Description
+| ---------------          | ---------------     | -------------- |
+| `ID`                     | Character           | Unique identification for each individual project |
+| `FFC`                    | Double              | An estimate of the total valuation of the project in dollar value |
+| `Delivery Program`       | Character           | The classification of the project based on the capital delivery program framework |
+| `Tender Closed`          | Datetime            | A date on which the tender process (if applicable) for the project was closed |
+| `Owner Group`            | Character           | The division within Melbourne Water Corporation responsible for completing the particular project |
+| `BNI`                    | Datetime            | Business Need Identifier is a date on which a project concept is first conceived  |
+|`PBC`                     | Datetime            | A date on which the first business case is submitted
+| `BCA`                    | Datetime            | A date on which the business case is approved and the project |
+| `Stage1`                 | Datetime            | A date on which the first stage of practical completion of project is reached |
+| `Stage2`                 | Datetime            | A date on which the second stage of practical completion of project is reached |
+| `Stage3`                 | Datetime            | A date on which the defect detection period of project is reached |
+| `EPT`                    | Character           |An indicator for the number of gates (approvals) a project must go through |
+| `Owner Team`             | Character           |The subdivision within Melbourne Water Corporation responsible for completing the project |
 
 # Background 🕵🏻‍♀️
 
