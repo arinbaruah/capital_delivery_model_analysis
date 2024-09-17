@@ -14,12 +14,27 @@
 ├── CDMR_presentation.qmd   # Project presentation file
 ├── Short_talk1.pptx        # Interim 3-minute presentation
 ├── images                  # Important images for report
-├─── data                    # Datasets
-│   ├── Capital_Deliver_Project_deidentified.csv  # De-identified project data
-│   ├── integration                               
-│   └── unit                                   
+├─── data                   # Datasets
+│   └── Capital_Deliver_Project_deidentified.csv  # De-identified project data
+│                                
+│                                    
 └── ...
 ```
+# Reproduce this analysis
+
+Steps to reproduce the analysis are as follows:
+
+1. [Download and install R and R Studio](https://posit.co/download/rstudio-desktop/)
+2. Open a new project in R Studio and select
+    - "Version Control" -> "Git"
+    - Enter repository URL as https://github.com/arinbaruah/capital_delivery_model_analysis.git
+4. After opening the R project, run the command `renv::restore` in the __R console__.
+5. Once all the packages are updated/restored, run the following command in __R terminal__ to render the PDF file
+
+```
+quarto render cdmr_report_monash.qmd
+```
+
 # Acknowledgement
 
 ![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/org_logo.png)
@@ -85,10 +100,4 @@ The systematic approach to studying the historical capital delivery models and p
 5. Analysing the duration of critical stages in the project lifecycle, based on delivery programs and project valuations, has revealed that some projects, on average, take longer to complete than others. This analysis provides valuable benchmarks and insights, allowing us to monitor current projects against historical expectations and identify any deviations early on. 
 6. A key focus of this study is to accurately predict the number of projects expected each year and month in the next delivery model. By employing classical additive time series decomposition, we can analyse the project data to uncover important characteristics such as trends, seasonality, and residuals. Building on these insights, we use specialized forecasting methods, specifically the Error-Trend-Seasonality (ETS) and  Seasonal-ARIMA models, to predict future project volumes. These models offer the advantage of continuous learning, allowing them to adapt and remain applicable beyond the next delivery model as more data becomes available. Based on the results obtained, it could be observed that the forecasting model predicted on average, 3 new approved projects in each month with 2 peaks in a year, one during the mid year while one at the end of the year. These peaks indicate a higher than average number of approved projects. This forecasting is potentially crucial for efficient crew resource management during project execution. 
 
-# Reproduce this analysis
 
-This analysis can be reproduced by running the following command in the RStudio terminal
-
-```
-quarto render cdmr_report_monash.qmd
-```
