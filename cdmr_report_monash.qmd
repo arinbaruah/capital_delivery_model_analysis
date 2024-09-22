@@ -516,7 +516,7 @@ $$ \boxed{y_t = S_t + T_t + R_t}$$ {#eq-decomp}
 
 Where,
 
-$y_t$ is the data of interest, $S_t$ is the seasonal component of the timeseries, $T_t$ is the trend component and $R_t$ is the remainder.
+$y_t$ is the data of interest, $S_t$ is the seasonal component, $T_t$ is the trend component and $R_t$ is the remainder.
 
 @fig-decomp illustrates the additive decomposition of the time series data into its trend, seasonal, and remainder components. The key characteristics of this time series are outlined below.
 
@@ -1001,8 +1001,9 @@ model_fit <- project_tsibble_train |>
 ```{r}
 #| label: fig-forecompvizbm
 #| fig-cap: "Forecasts of benchmark models overlayed on the approved projects"
-#| fig-height: 4
+#| fig-height: 3
 #| fig-width: 8
+#| fig-pos: "H"
 model_fit %>% select(-c(ETS_ana,Naive,Croston)) %>% forecast(h = "2 years",bootstrap =TRUE) %>% mutate(Total = distributional::dist_truncated(Total, 0)) %>%
  autoplot() + geom_line(
     data = project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` < ymd(20240601)),
@@ -1016,7 +1017,19 @@ model_fit %>% select(-c(ETS_ana,Naive,Croston)) %>% forecast(h = "2 years",boots
        x = "Timeline",caption = "Source: Melbourne Water Corporation") + theme_minimal()
 ```
 
-@sec-etsmethod delineated the process of selecting the ETS method which will be used for forecasting the number of projects. Based on the decomposition of the timeseries data, the type of ETS model which will be used for forecasting is the __ETS (A,N,A) model.__ @fig-forecompvizets illustrates the performance of the model on the test dataset. Some of the key observations are as follows:
+@sec-etsmethod delineated the process of selecting the ETS method which will be used for forecasting the number of projects. Based on the decomposition of the timeseries data, the type of ETS model which will be used for forecasting is the __ETS (A,N,A) model.__ 
+
+Based on this particular configuration of the ETS model, the forecasts are provided by @eq-forecast.
+
+$$\boxed{y_t = l_{t-1} + s_{t-m} + \epsilon_t}$$ {#eq-forecast}
+Where, $l_{t-1}$ is the level of the timeseries in one previous time step, $s_{t-m}$ is the seasonality in one seasonal time step behind, and $\epsilon_t$ is the residual error of the forecasts. The level and seasonality of the timeseries are further calculated using @eq-level and @eq-season.
+
+$$l_t = l_{t-1} + \alpha \epsilon_t $$ {#eq-level}
+$$s_t = s_{t-m} + \gamma\epsilon_t $$ {#eq-season}
+Where $\alpha$ and $\gamma$ are hyperparameters and are __optimised by minimising the sum of squared errors (SSE).__
+
+
+@fig-forecompvizets illustrates the performance of the model on the test dataset. Some of the key observations are as follows:
 
 1. The ETS (A,N,A) model forecasts the number of projects with an additive seasonality. Since the trend of the data appeared to be cyclic in nature when performing its decomposition, hence, it was considered to be stationary and as a result, no trend was modelled in the forecasts.
 
