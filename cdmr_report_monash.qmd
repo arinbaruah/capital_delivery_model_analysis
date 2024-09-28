@@ -874,20 +874,21 @@ The other critical stage of the projects is to monitor the duration between the 
 5. The completion duration for projects under "Contestable" and "Open-Market" projects are comparable to one another and spans for __nearly a year and three months.__ 
 
 ```{r}
-project_data <- project_data %>% mutate(completion_duration = days(stage1 - bca)) %>% mutate(delivery_program_dummy = case_when(delivery_program == "Major Works - Small Scale" ~ "Small scale projects",
-                                                                        delivery_program == "Major Works - Framework" ~ "Framework projects",
-                                                                        delivery_program == "Major Works - Open Market" ~ "Large scale projects",
-                                                                        delivery_program == "Contestable" ~ "Small scale contestable projects"))
+project_data <- project_data %>% mutate(completion_duration = days(stage1 - bca)) 
+# %>% mutate(delivery_program_dummy = case_when(delivery_program == "Major Works - Small Scale" ~ "Small scale projects",
+#                                                                         delivery_program == "Major Works - Framework" ~ "Framework projects",
+#                                                                         delivery_program == "Major Works - Open Market" ~ "Large scale projects",
+#                                                                         delivery_program == "Contestable" ~ "Small scale contestable projects"))
 
-delduration <- ggplot(data = project_data %>% filter(status == "Completed"),aes(x = day(completion_duration),fill = delivery_program_dummy)) + geom_density()  + scale_fill_tableau(palette = "Tableau 10") + theme_minimal() + 
-facet_wrap(~delivery_program_dummy,ncol = 1) + theme(legend.position = "none",
+delduration <- ggplot(data = project_data %>% filter(status == "Completed"),aes(x = day(completion_duration),fill = delivery_program)) + geom_density()  + scale_fill_tableau(palette = "Tableau 10") + theme_minimal() + 
+facet_wrap(~delivery_program,ncol = 1) + theme(legend.position = "none",
                                                plot.title = element_text(size = 10),
                                                plot.subtitle = element_text(size = 8),
                                                axis.text = element_text(size = 7)) +
-  labs(x = "Project completion duration (days)",
+  labs(x = "Project completion duration (Days)",
 y = "Density",
 caption = "Source: Melbourne Water Corporation",
-title = "Distribution of project duration after completion",
+title = "Distribution of project completion duration",
 subtitle = "Number of days between BCA and Stage 1")
 
 ```
@@ -898,19 +899,19 @@ medduration <- project_data %>% filter(status == "Completed") %>%
   group_by(delivery_program) %>%
   summarise(Median_completion = median(day(completion_duration))) 
 
-medduration <- medduration %>% mutate(delivery_program_dummy = case_when(delivery_program == "Major Works - Small Scale" ~ "Small scale projects",
-                                                                        delivery_program == "Major Works - Framework" ~ "Framework projects",
-                                                                        delivery_program == "Major Works - Open Market" ~ "Large scale projects",
-                                                                        delivery_program == "Contestable" ~ "Small scale contestable projects"))
+# #medduration <- medduration %>% mutate(delivery_program_dummy = case_when(delivery_program == "Major Works - Small Scale" ~ "Small scale projects",
+#                                                                         delivery_program == "Major Works - Framework" ~ "Framework projects",
+#                                                                         delivery_program == "Major Works - Open Market" ~ "Large scale projects",
+#                                                                         delivery_program == "Contestable" ~ "Small scale contestable projects"))
 
 medduration <- medduration %>% 
-  ggplot(aes(y = reorder(delivery_program_dummy,-Median_completion), x = Median_completion, fill = delivery_program_dummy)) + 
+  ggplot(aes(y = reorder(delivery_program,-Median_completion), x = Median_completion, fill = delivery_program)) + 
   geom_col() + scale_fill_tableau(palette = "Tableau 10") + 
   geom_label(aes(label = round(Median_completion,0),hjust = 1)) +  theme_minimal() + theme(legend.position = "none",
                                                                         plot.title = element_text(size = 10),
                                                                         plot.subtitle = element_text(size = 8),
                                                                         axis.text = element_text(size = 7)) + 
-  labs(x = "Duration (Days)",
+  labs(x = "Project completion duration (Days)",
        y = "Delivery program",
        title = "Median duration for project completion",
        subtitle = "Number of days between BCA and Stage 1",
