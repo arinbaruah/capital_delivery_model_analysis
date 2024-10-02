@@ -1141,6 +1141,24 @@ model_fc |> autoplot() +
 
 
 ```
+## Tracking service provider’s performance through KPIs and KRAs
+
+Based on the broad critical areas of assessments as illustrated by @fig-flowchartkpi, a total of 14 key performance indicators (KPIs) were identified, each catering to a specific key result area (KRA). The calculations of these metrics have the following requirements.
+
+- Each KPI must be a fair assessment of the service provider's progress in the project.
+- KPI calculations performed by the service provider must accurately demonstrate the various initiatives taken by them to meet project requirements.
+- All calculations must be reproducible and be supported by supplementary data.
+- The KPI calculations will be further evaluated by Melbourne Water, with a focus on identifying and addressing any discrepancies during the reproduction process.
+- Must incentivise the correct behaviour in the service provider
+
+In order to summarise the KRA-KPI  assessment results for a particular project, a dashboard on Microsoft PowerBI is generated, as illustrated by @fig-dashboard. The aim of this dashboard is to understand the current KPI scores provided by the service provider and what is its variation when compared to the assessments performed by Melbourne Water.
+
+In addition to the KRA tracker dashboard, a structured Microsoft Excel template, as shown in @fig-template, was developed to perform scenario-based weighted scoring of KPIs. This template linked performance outcomes to financial payouts for the service provider. By doing so, Melbourne Water was able to __incentivise initiatives that were timely, safe, inclusive, and sustainable.__ Simultaneously, the service provider could assess the return on investment for their current initiatives and project potential payouts by improving their performance.
+
+
+![Project KRA tracker dashboard](images/dashboard.png){#fig-dashboard}
+
+![Scenario based performance payout template](images/payout.png){#fig-template}
 
 
 # Conclusion
@@ -1155,9 +1173,7 @@ The current CDM data analysis and forecasting project yielded the following resu
 
 4. Although __Small-Scale delivery program projects account for approximately 10 % of the total valuation of projects__ within a CDM, the labour utilisation is however the same as that of Frameworks delivery program projects which delivers a significantly larger proportion of the total valuation. The future Capital Delivery Model for PS-26 should explore __streamlining or bundling multiple Small-Scale projects to enhance efficiency in project management and optimize labor resource allocation.__
 
-
-
-
+5. A scoring system mechanism was implemented through the KRA-KPI metric dashboards and templates, allowing Melbourne Water to __perform fair and transparent assessments of a service provider's project initiatives__, and at the same time, __financially incentivise them to improve over the course of the project__.
 
 
 # Key areas of improvement
@@ -1169,8 +1185,6 @@ The current data analysis and forecasting project was created with the goal of f
 2. __Incorporating Inflation Factors in forecasts:__ While current forecasting methods are capable of predicting the total valuation of projects, they do not account for inflationary factors such as increases in raw material and manpower costs. Future developments in forecasting methods should incorporate the Consumer Price Index (CPI) to better estimate the total expected valuation of projects, reflecting the impact of inflation on project costs. Such forecasts would allow the project teams to get an informed idea regarding the various cost allocations.
 
 3. __Visualisation and Accessibility:__ To make the current study available to a broader audience, the insights and visualisations can be replicated on a PowerBI organisational dashboard. This would have the added benefit of leveraging Microsoft Fabric’s datalake where the live data can be extracted, transformed and loaded onto the dashboard, providing insights based on live project data.
-
-4. __Implementing KRA and KPI dashboard reporting:__ Incorporating Key Result Areas (KRAs) and Key Performance Indicators (KPIs) into the dashboard facilitates effective tracking of current projects against historical data and organizational benchmarks. These indicators enable organisations to assess project delivery performance and efficiency across different service providers and project types. By developing these metrics in close consultation with business leaders, they can be tailored to align with strategic objectives and then visualized for quick and intuitive access on the dashboard.
 
 # Packages used
 
