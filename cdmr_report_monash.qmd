@@ -43,7 +43,7 @@ The analysis report will use numerous abbreviations and terminologies at various
 
 1. __BNI (Business Need Identifier)__ : A date on which a project concept is first conceived
 2. __PBC (Preliminary Business Case)__ : A date on which the first business case is submitted
-3. __BCA__ : A date on which the business case is approved and the project  
+3. __BCA (Business Case Approval)__ : A date on which the business case is approved and the project  
 4. __Stage 1__ : A date on which the first stage of practical completion of project is reached
 5. __Stage 2__ : A date on which the second stage of practical completion of project is reached
 6. __Stage 3__ : A date on which the defect detection period of project is reached
@@ -54,6 +54,8 @@ The analysis report will use numerous abbreviations and terminologies at various
 11. __PS (Price Submission)__ : Pricing submission period for Melbourne Water's business case to be submitted to Department of Treasury and Finance (DTF) 
 12. __CDM (Capital Delivery Model)__: The Capital Delivery Model is a set of frameworks that allows Melbourne Water to efficiently delegate the design or construction activities to the third party service provider by accounting for the type of project, cost of project and the risks associated with the project.
 13. __Owner Team__ : The subdivision within Melbourne Water Corporation responsible for completing the project 
+14. __KRA (Key results area)__: A set of collective metrics which provide the current progress or performance in a broad area of interest.
+15. __KPI (Key performance indicator)__: A single specific metric which provides the current progress or performance in a focussed area of interest.
 
 
 \newpage
@@ -67,8 +69,9 @@ For the purpose of the current analysis, Melbourne Water Corporation's project d
 1.	__Distribution of Projects by Delivery Model:__ Insights gained through the examination of projects categorized by delivery model and delivery programs. 
 2.	__Implication of the distribution of projects on overall project valuations:__ Analysis of the number of projects associated with each delivery model alongwith their subsequent cost valuations, thereby providing a range of potential outcomes and expectations for the new delivery model. 
 3.	__Project Duration Analysis:__ Investigation of project durations relative to their overall valuations. 
-4.	__Approval Duration Distribution:__ Assessment of the time required for project approvals across different various delivery programs and critical project stages. 
+4.	__Approval Duration Distribution:__ Assessment of the time required for project approvals across various delivery programs and critical project stages. 
 5.	__Future Project Forecast:__ Estimation of the number of projects anticipated in the delivery period from 2026 to 2031. 
+6. __Tracking service provider’s performance through KRAs and KPIs:__ Adoption of a fair and transparent assessment tracking methodology to incentivise the service provider for taking timely, inclusive, sustainable and safe initiatives.
 
 By systematically examining past and present performance, the aim is to identify key trends, strengths, and areas for improvement, ensuring that future projects are executed more efficiently and effectively. 
 
@@ -300,6 +303,8 @@ project_data <- project_data %>% mutate(status = if_else(stage1 <= today(),"Comp
 
 The data for the current analysis has been sourced from the “Estimating & Scheduling” PowerBI dashboard in the Major Program Delivery workspace at Melbourne Water Corporation. This dashboard draws this data from the Microsoft Project Online software which logs individual project data based on the inputs of the assigned project managers. The data was exported as a CSV file on 19th July, 2024 and as such, contains the latest updated project valuations up to that date. Due to the sensitive nature of the data, there is no public access to this data. 
 
+Additionally, a separate dataset was used to implement a KRA-KPI methodology for tracking project progress and incentivising improved performance among service providers. This dataset, submitted as a Microsoft Excel sheet, was directly populated by the service providers at the end of each month. 
+
 \begin{confBox}
 
 To comply with Melbourne Water Corporation’s confidentiality requirements, the data has been de-identified and includes only the relevant fields necessary for obtaining insights for the intended evaluation purpose.
@@ -316,7 +321,9 @@ The limitations within the source of the data which may have affected the analys
 
 3. Multiple projects were observed to have empty PBC fields. This is likely due to the case where small scale projects tend to bypass one gate of approval to reduce approval duration. While this does not apply to all projects of similar nature, there is however no indicator in the data which allows for detection of such an event other than a missing date.
 
-4. The dataset here is an observational data and in particular, a census data. Some of the limitations that are prevalent in such datasets are as follows :
+4. The KRA-KPI tracking dataset is currently in a Microsoft Excel format where the information is not presented in a tidy, structured manner, making it unsuitable for analysis in R or PowerBI. Manually cleaning and reformatting the data into a tidy format could introduce potential inaccuracies, which would require additional filtering at a later stage.
+
+5. The dataset here is an observational data and in particular, a census data. Some of the limitations that are prevalent in such datasets are as follows :
 
    - Each row in the dataset is a project whose details are provided by an individual Project Manager. As a result, there may be non-uniformity in the data provided as each Project Manager may have their own interpretations of the data they may have provided.
    - The current dataset obtained is a subset of an observational data. These types of data are often plagued with lack of randomisation during the selection of data. This may lead to biases in the dataset such as selection and systematic bias.
@@ -325,7 +332,7 @@ The limitations within the source of the data which may have affected the analys
 
 # Introduction
 
-The construction of large-scale infrastructure projects, commonly referred to as “CAPEX” projects, is highly resource-intensive and typically requires effective collaboration among multiple organizations for successful and timely completion. @no2013specification suggests that in a collaborative work environment, teams are required to generate information using standardized procedures and agreed-upon standards and methods. This ensures consistency in form and quality, allowing the information to be used and reused without the need for modification or interpretation. However, in practice, such high level collaboration is often challenging and needs well laid communication as well as contractual frameworks for effective 
+The construction of large-scale infrastructure projects, commonly referred to as “CAPEX” projects, is highly resource-intensive and typically requires effective collaboration among multiple organisations for successful and timely completion. @no2013specification suggests that in a collaborative work environment, teams are required to generate information using standardized procedures and agreed-upon standards and methods. This ensures consistency in form and quality, allowing the information to be used and reused without the need for modification or interpretation. However, in practice, such high level collaboration is often challenging and needs well laid communication as well as contractual frameworks for effective 
 
 To initiate, monitor, and deliver these projects, a comprehensive framework is usually developed. This framework assesses the project’s valuation and associated risks, and then engages the appropriate service providers to ensure timely project delivery. This framework which governs the delivery route of a project is termed as the Capital Delivery Model.
 
@@ -335,14 +342,9 @@ Each Capital Delivery Model presides over a period of 5 years, after the complet
 
 # Motivation of the current study
 
-The process of estimating the mix of the type of projects expected in the new capital delivery model after the 2026 price submission is based on the analysis of the current delivery model (CDM 2021) and the previous delivery model (CDM 2016). The forthcoming 2026 price submission is projected to surpass recent submissions in value, presenting significant challenges in project management. This includes the engagement of service providers for construction, efficient management of key crew resources, and rigorous monitoring to ensure timely infrastructure delivery. The current data analysis review of the projects in CDM 2016 and CDM 2021 will provide an adequate baseline of the expected proportion of the major capital delivery projects based on valuation and duration expected in the future delivery model (CDM 2026), thereby providing insights and eventually aiding in the key decision making for creation of the frameworks.
+1. The process of estimating the mix of the type of projects expected in the new capital delivery model after the 2026 price submission is based on the analysis of the current delivery model (CDM 2021) and the previous delivery model (CDM 2016). The forthcoming 2026 price submission is projected to surpass recent submissions in value, presenting significant challenges in project management. This includes the engagement of service providers for construction, efficient management of key crew resources, and rigorous monitoring to ensure timely infrastructure delivery. The current data analysis review of the projects in CDM 2016 and CDM 2021 will provide an adequate baseline of the expected proportion of the major capital delivery projects based on valuation and duration expected in the future delivery model (CDM 2026), thereby providing insights and eventually aiding in the key decision making for creation of the frameworks.
 
-The current analysis is performed by studying the following key parameters in the project data: \
-      1.	Total final forecast cost (FFC) \
-      2.	CDM period (2016, 2021 and 2026) \
-      3.	Project duration across each stage \
-      4.	Delivery Program\
-      5.  Project labour hours in each delivery program 
+2. The KRA-KPI tracking methodology will enable Melbourne Water to conduct fair and transparent assessments of service providers assigned to projects in an efficient and quick manner. The newly generated templates will highlight any calculation discrepancies and flag historical data changes, while the dashboard will provide a comprehensive overview of assessments. This approach adds a layer of verification, ensuring data integrity and facilitating quicker decision-making and turnarounds.
 
 # Objectives
 
@@ -351,7 +353,7 @@ The objectives and the scope of the analysis of the CDMs were defined through Me
   1. The analysis must clearly indicate the performance level of project deliveries for both the current CDM-21 and the previous CDM-16. This should primarily focus on the duration of the projects and highlight any notable changes in this aspect.
   2. Insights on the current and previous CDM must be able to provide a baseline for the estimated number of projects which can be expected in the future delivery model (CDM-26). These projections would allow for more informed decision making while building the contractual frameworks to engage service providers.
   3. A detailed analysis of the historical project data should indicate the proportion of projects requiring approval by each governing body. This will provide an estimation of the duration of projects from the BNI stage to the BCA stage for the new delivery model, enabling better resource management.
-  
+  4. Adoption of templates and dashboards that allow Melbourne Water to track and verify the current project progress and further facilitates fair and transparent assessment of the service providers.
   
 # Significance of the current study
 
@@ -364,6 +366,7 @@ Based on the numerous inputs from the project director and the steering group at
   5.	Insights obtained from the total project duration and the average duration for the critical stages of each project may allow for effective project team planning.
   6.	The analysis must allow one to quickly detect outliers in the data and investigate these outliers further.
   7.  The study aims to develop a forecasting model capable of predicting the number of projects expected during a price-submission period. This model should continuously improve as more data is accumulated, potentially extending its applicability to future periods. By doing so, it is anticipated that the model will enable more efficient allocation of resources for future projects.
+  8.  The implementation of the KRA-KPI tracking templates is expected to identify potential discrepancies in service providers’ project progress calculations, enabling faster turnaround of assessment reports. Additionally, these templates offer the benefit of reusability for future projects, establishing a consistent structure for tracking and assessing service provider performance.
 
 
 # Methodology
@@ -1186,7 +1189,7 @@ The current data analysis and forecasting project was created with the goal of f
 
 3. __Visualisation and Accessibility:__ To make the current study available to a broader audience, the insights and visualisations can be replicated on a PowerBI organisational dashboard. This would have the added benefit of leveraging Microsoft Fabric’s datalake where the live data can be extracted, transformed and loaded onto the dashboard, providing insights based on live project data.
 
-# Packages used
+# Packages and resources used
 
 1. __Tidyverse__: Wickham H, Averick M, Bryan J, Chang W, McGowan LD, François R, Grolemund G, Hayes A, Henry L, Hester J, Kuhn M, Pedersen TL, Miller E, Bache SM,
   Müller K, Ooms J, Robinson D, Seidel DP, Spinu V, Takahashi K, Vaughan D, Wilke C, Woo K, Yutani H (2019). “Welcome to the tidyverse.” _Journal of
@@ -1208,6 +1211,8 @@ The current data analysis and forecasting project was created with the goal of f
   <https://CRAN.R-project.org/package=kableExtra>.
   
 9. __patchwork__: Pedersen T (2024). _patchwork: The Composer of Plots_. R package version 1.2.0, <https://CRAN.R-project.org/package=patchwork>.
+
+10. __ChatGPT__: OpenAI. (2024). ChatGPT [Large language model]. https://chat.openai.com
 
 # References
 
