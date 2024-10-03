@@ -88,6 +88,7 @@ The major areas of study for the current analysis are delineated as follows:
 3. __Project Duration Analysis:__ Investigation of project durations relative to their overall valuations.
 4. __Approval Duration Distribution:__ Assessment of the time required for project approvals across different stages.
 5. __Future Project Forecast:__ Estimation of the number of projects anticipated in the delivery period from 2026 to 2031.
+6. __Tracking service provider’s performance through KRAs and KPIs:__ Adoption of a fair and transparent assessment tracking methodology to incentivise the service provider for taking timely, inclusive, sustainable and safe initiatives.
 
 # Key insights 🧐
 
