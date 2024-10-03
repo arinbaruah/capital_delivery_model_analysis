@@ -856,14 +856,49 @@ project_data <- project_data %>% mutate(conception_duration = days(pbc - bni))
 
 del_prg <- c("Major Works - Framework","Major Works - Open Market")
 
-ggplot(data = project_data %>% filter(delivery_program %in% del_prg  & cdm != "CDM-26"),aes(y = day(conception_duration),x = delivery_program,fill = delivery_program)) + geom_boxplot()  + facet_wrap(~cdm) +
+ggplot(data = project_data %>% filter(delivery_program %in% del_prg  & cdm != "CDM-26"),aes(y = day(conception_duration),
+                                                                                            x = delivery_program,
+                                                                                            fill = delivery_program)) + geom_boxplot(aes(color = "Median"))  + 
+  stat_summary(fun = mean, geom = "pointrange", aes(color= "Mean"), 
+               fatten = 2) +
+  scale_color_manual(values = c("Median" = "black",
+                                "Mean" = "red")) +
+  guides(fill = "none") +
+  facet_wrap(~cdm) +
   theme_minimal() + theme(legend.position = "none",axis.text.x = element_text(size = 8)) + 
   labs(x = "Delivery program",
        y = "Duration (Days)",
+       color = "Metric",
        caption = "Source: Melbourne Water Corporation", 
        title = "Distribution of duration for preliminary business case submission",
-       subtitle = "Number of days between BNI and PBC") + scale_fill_tableau(palette = "Superfishel Stone")
+       subtitle = "Number of days between BNI and PBC") + 
+  theme(legend.position = "top") +
+  scale_fill_tableau(palette = "Superfishel Stone")
+
+
 ```
+
+```{r}
+framework_cdm16 <- project_data %>% filter(cdm == "CDM-16" & 
+                                             delivery_program == "Major Works - Framework") %>% 
+  select(conception_duration) %>% mutate_all(day) %>% drop_na()
+framework_cdm21 <- project_data %>% filter(cdm == "CDM-21" & 
+                                             delivery_program == "Major Works - Framework") %>% 
+  select(conception_duration) %>% mutate_all(day) %>% drop_na()
+
+#t.test(framework_cdm21,framework_cdm16)$p.value 
+
+open_cdm16 <- project_data %>% filter(cdm == "CDM-16" & 
+                                             delivery_program == "Major Works - Open Market") %>% 
+  select(conception_duration) %>% mutate_all(day) %>% drop_na()
+open_cdm21 <- project_data %>% filter(cdm == "CDM-21" & 
+                                             delivery_program == "Major Works - Open Market") %>% 
+  select(conception_duration) %>% mutate_all(day) %>% drop_na()
+
+#t.test(open_cdm21,open_cdm16)$p.value 
+```
+
+
 The other critical stage of the projects is to monitor the duration between the project approval (BCA) to project delivery (Stage 1). @fig-delduration illustrates how the duration of projects from approval to delivery stage differ across various delivery programs. Key insights from this visualisation are as follows:
 
 1. The current sample of all completed projects indicate a right skewed distribution. This suggests that there are some projects which require unusually longer to complete across all delivery programs, possibly due to project cost variations, scope changes or other hurdles.
