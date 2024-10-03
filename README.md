@@ -11,9 +11,10 @@
 .
 ├── cdmr_report_monash.qmd  # Reproducible analysis file in .qmd format
 ├── cdmr_report_monash.pdf  # Rendered project report in PDF format
-├── CDMR_presentation.qmd   # Project presentation file
-├── Short_talk1.pptx        # Interim 3-minute presentation
+├── Short_talk.pptx         # Interim 3-minute presentation
+├── Final_presentation.pptx # Final 10-minute presentation
 ├── images                  # Important images for report
+├── literature              # Folder containing references to literature
 ├─── data                   # Datasets
 │   └── Capital_Deliver_Project_deidentified.csv  # De-identified project data
 │                                
