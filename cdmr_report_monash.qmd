@@ -472,8 +472,8 @@ As the valuation of a project rises, it typically requires to go through multipl
 #| tbl-pos: H
 
 tibble(
-  "FFC of project ($)" = c("0-2.5 mil", "2.5-5 mil","5-8 mil","8-40 mil","40-75 mil","75-125 mil","> 125 mil"),
-  "Approval authority" = c("People leadership group", "Senior leadership group","Executive leadership group","Managing director","Finance, audit and compliance"," Melbourne Water board","Department of Treasury and Finance")
+  "FFC of project ($)" = c("> 125 mil","75-125 mil","40-75 mil","8-40 mil","5-8 mil","2.5-5 mil","0-2.5 mil"),
+  "Approval authority" = c("Department of Treasury and Finance"," Melbourne Water board","Finance, audit and compliance","Managing director","Executive leadership group","Senior leadership group","People leadership group")
 ) %>%
   kable("latex") %>%
   kable_styling(latex_options = c("striped"), 
@@ -610,7 +610,7 @@ cc <- c("Contestable" = "#FF6F61" ,
         "Major Works - Open Market" = "#FFD700",
         "Major Works - Small Scale" = "#87CEFA")
 
-ggplot(project_group_progam %>% filter(cdm != "CDM-26"),aes(x = Percentage,
+pl1 <- ggplot(project_group_progam %>% filter(cdm != "CDM-26"),aes(x = Percentage,
                                 y = cdm,
                                 fill = delivery_program)) + geom_col() +
   geom_text(aes(label = scales::percent(Percentage, accuracy = 1)), 
@@ -621,6 +621,8 @@ ggplot(project_group_progam %>% filter(cdm != "CDM-26"),aes(x = Percentage,
        caption = "Source: Melbourne Water Corporation",
        fill = "Delivery program") +
   scale_fill_manual(values = cc) + theme_minimal()
+pl1
+ggsave("images/distribution_delivery_programs.jpeg",pl1,width = 8,height = 4)
 ```
 ## Distribution of projects by FFC bands for each delivery model {#sec-prodist}
 
@@ -653,7 +655,7 @@ dim_order <- c("> 80","50-80","20-50","10-20","5-10","< = 5")
 
 project_group_progam$ffc_band <- factor(project_group_progam$ffc_band, levels = dim_order)
 
-ggplot(project_group_progam %>% filter(cdm != "CDM-26"),aes(x = Percentage,
+pl2 <- ggplot(project_group_progam %>% filter(cdm != "CDM-26"),aes(x = Percentage,
                                 y = cdm,
                                 fill = ffc_band)) + geom_col(position = "fill") +
   labs(x = "Percentage of projects by number",y = "Capital Delivery Model",
@@ -665,7 +667,8 @@ ggplot(project_group_progam %>% filter(cdm != "CDM-26"),aes(x = Percentage,
   scale_x_continuous(expand = c(0, 0), labels = scales::percent) +
   scale_fill_tableau(palette = "Miller Stone") + theme_minimal() 
 
-
+pl2
+ggsave("images/distribution_cost_bands.jpeg",pl2,width = 8,height = 4)
 ```
 
 
@@ -688,7 +691,7 @@ dim_order <- c("> 80","50-80","20-50","10-20","5-10","< = 5")
 
 project_group_progam$ffc_band <- factor(project_group_progam$ffc_band, levels = dim_order)
 
-ggplot(project_group_progam %>% filter(cdm != "CDM-26"),aes(x = Percentage,
+pl3 <- ggplot(project_group_progam %>% filter(cdm != "CDM-26"),aes(x = Percentage,
                                 y = cdm,
                                 fill = ffc_band)) + geom_col(position = "fill") +
   labs(x = "Percentage of projects by total valuation",y = "Capital Delivery Model",
@@ -700,9 +703,50 @@ ggplot(project_group_progam %>% filter(cdm != "CDM-26"),aes(x = Percentage,
   scale_x_continuous(expand = c(0, 0), labels = scales::percent) +
   scale_fill_tableau(palette = "Miller Stone") + theme_minimal() 
 
+pl3
+ggsave("images/small_scale_cost_distribution.jpeg",pl3,width = 8,height = 4)
+```
+```{r}
+#| eval: false
+#| fig-cap: "Cumulative project valuations across different CDMs and FFC bands"
+#| fig-height: 4 
+#| fig-width: 8
+
+project_group_progam <- project_data %>% 
+  mutate(program = case_match(ffc_band,"< = 5" ~ "< = 5",
+                              .default = "All other projects"))
+
+project_group_progam <- project_group_progam %>%
+  group_by(program, cdm) %>%
+  summarise(Total = sum(ffc)) %>%
+  ungroup() %>%
+  group_by(cdm) %>%
+  mutate(Percentage = Total / sum(Total))
+
+dim_order <- c("> 80","50-80","20-50","10-20","5-10","< = 5")
+
+
+
+
+color_codes <- c("All other projects" = "gray","< = 5" = "#D35400")
+
+pl <- ggplot(project_group_progam %>% filter(cdm != "CDM-26"),aes(x = Percentage,
+                                y = cdm,
+                                fill = program)) + geom_col(position = "fill") +
+  labs(x = "Percentage of projects by total valuation",y = "Capital Delivery Model",
+       title = "Distribution of total valuation of projects across delivery models and cost bands",
+       caption = "Source: Melbourne Water Corporation",
+       fill = "Cost bands (in mil $)") +
+    geom_label_repel(aes(label = scales::percent(Percentage, accuracy = 1)), 
+            position = position_fill(vjust = 0.5), size = 3,color = "white",fontface = "bold") +
+  scale_fill_manual(values = color_codes) +
+  scale_x_continuous(expand = c(0, 0), labels = scales::percent) +
+  theme_minimal() 
+
+ggsave("images/small_scale_cost_distribution.jpeg",pl,width = 8,height = 4)
+
 
 ```
-
 ## Estimating number of projects to be approved by each approval body
 
 Analysing the breakdown of the projects for the past and the current CDM could provide critical information on what would the future CDM distribution look like. This is especially true as there is a clear dependence on the duration of project approval depending upon the approval authority as illustrated by @fig-approvaltime. @tbl-approval shows the criteria of approval body allocation for a project based on the risk and the FFC valuation of these projects.
@@ -762,13 +806,16 @@ project_approval_duration <- project_data %>% filter(cdm != "CDM-26") %>%
 
 project_approval_duration$approval_body <- factor(project_approval_duration$approval_body, levels = app_order)
 
-project_approval_duration %>%
+pl4 <- project_approval_duration %>%
   ggplot(aes(y = approval_body,x = day(approval_duration))) + geom_boxplot() +
   labs(x = "Approval duration (Days)",
        y = "Approval body",
        title = "Project approval duration for various authorities",
        caption = "Source: Melbourne Water Corporation") +
  facet_wrap(~cdm) + theme_minimal()
+pl4
+
+ggsave("images/approval_duration_distribution.jpeg",pl4,width = 8,height = 4)
 ```
 ```{r}
 #| eval: false
@@ -786,7 +833,7 @@ dim_order <- c("Government approval","Board of directors","Finance and Audit",
 
 project_group_approval$approval_body_dummy <- factor(project_group_approval$approval_body_dummy, levels = dim_order)
 
-ggplot(project_group_approval %>% filter(cdm != "CDM-26"),aes(x = Percentage,
+pl5 <- ggplot(project_group_approval %>% filter(cdm != "CDM-26"),aes(x = Percentage,
                                 y = cdm,
                                 fill = approval_body_dummy)) + geom_col(position = "fill") +
   labs(x = "Percentage of projects",y = "Capital Delivery Model",
@@ -797,6 +844,7 @@ ggplot(project_group_approval %>% filter(cdm != "CDM-26"),aes(x = Percentage,
             position = position_fill(vjust = 0.5), size = 3,color = "white",fontface = "bold") +
   scale_x_continuous(expand = c(0, 0), labels = scales::percent) +
   scale_fill_tableau(palette = "Tableau 10") + theme_minimal() 
+
 ```
 
 
@@ -814,7 +862,7 @@ project_group_approval <- project_data %>%
   mutate(Percentage = Total / sum(Total))
 
 
-ggplot(project_group_approval %>% filter(cdm != "CDM-26"),aes(x = Percentage,
+pl5 <- ggplot(project_group_approval %>% filter(cdm != "CDM-26"),aes(x = Percentage,
                                 y = cdm,
                                 fill = approval_body)) + geom_col(position = "fill") +
   labs(x = "Percentage of projects",y = "Capital Delivery Model",
@@ -825,6 +873,9 @@ ggplot(project_group_approval %>% filter(cdm != "CDM-26"),aes(x = Percentage,
             position = position_fill(vjust = 0.5), size = 3,color = "white",fontface = "bold") +
   scale_x_continuous(expand = c(0, 0), labels = scales::percent) +
   scale_fill_tableau(palette = "Tableau 10") + theme_minimal() 
+
+pl5
+ggsave("images/approval_bodies_duration.jpeg",pl5,width = 8,height = 4)
 ```
 
 
@@ -856,7 +907,7 @@ project_data <- project_data %>% mutate(conception_duration = days(pbc - bni))
 
 del_prg <- c("Major Works - Framework","Major Works - Open Market")
 
-ggplot(data = project_data %>% filter(delivery_program %in% del_prg  & cdm != "CDM-26"),aes(y = day(conception_duration),
+pl6 <- ggplot(data = project_data %>% filter(delivery_program %in% del_prg  & cdm != "CDM-26"),aes(y = day(conception_duration),
                                                                                             x = delivery_program,
                                                                                             fill = delivery_program)) + geom_boxplot(aes(color = "Median"))  + 
   stat_summary(fun = mean, geom = "pointrange", aes(color= "Mean"), 
@@ -874,8 +925,9 @@ ggplot(data = project_data %>% filter(delivery_program %in% del_prg  & cdm != "C
        subtitle = "Number of days between BNI and PBC") + 
   theme(legend.position = "top") +
   scale_fill_tableau(palette = "Superfishel Stone")
+pl6
 
-
+ggsave("images/pbc_duration.jpeg",pl6,width = 8,height = 4)
 ```
 
 ```{r}
@@ -985,12 +1037,15 @@ medduration <- medduration %>%
 #| fig-cap: "Distribution of project completion duration across delivery programs"
 #| fig-height: 5 
 #| fig-width: 8
-(delduration + medduration) +
+pl7 <- (delduration + medduration) +
   plot_layout(nrow=1, heights = c(5,5)) &
   plot_annotation(
     theme = theme(plot.background = element_rect(color = "white", linewidth = 2, fill = "white"),
                   strip.background = element_rect(color = "white")) + theme_minimal()
   )
+pl7
+
+ggsave("images/completion_duration.jpeg",pl7,width = 8,height = 4)
 ```
 
 
@@ -1043,7 +1098,7 @@ model_fit <- project_tsibble_train |>
 #| fig-height: 3
 #| fig-width: 8
 #| fig-pos: "H"
-model_fit %>% select(-c(ETS_ana,Naive,Croston)) %>% forecast(h = "2 years",bootstrap =TRUE) %>% mutate(Total = distributional::dist_truncated(Total, 0)) %>%
+pl8 <- model_fit %>% select(-c(ETS_ana,Naive,Croston)) %>% forecast(h = "2 years",bootstrap =TRUE) %>% mutate(Total = distributional::dist_truncated(Total, 0)) %>%
  autoplot() + geom_line(
     data = project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` < ymd(20240601)),
     aes(x = `yearmonth(bca)`, y = Total, linetype = "Approved projects")) + guides(
@@ -1054,6 +1109,8 @@ model_fit %>% select(-c(ETS_ana,Naive,Croston)) %>% forecast(h = "2 years",boots
        subtitle = "Projects with FFC <= 5 mil $",
        y = "Total number of projects",
        x = "Timeline",caption = "Source: Melbourne Water Corporation") + theme_minimal()
+pl8
+ggsave("images/benchmark_forecasts.jpeg",pl8,width = 8,height = 4)
 ```
 
 @sec-etsmethod delineated the process of selecting the ETS method which will be used for forecasting the number of projects. Based on the decomposition of the timeseries data, the type of ETS model which will be used for forecasting is the __ETS (A,N,A) model.__ 
@@ -1083,7 +1140,7 @@ Where $\alpha$ and $\gamma$ are hyperparameters and are __optimised by minimisin
 #| fig-cap: "Forecasts of ETS model overlayed on the approved projects"
 #| fig-height: 4
 #| fig-width: 8
-model_fit %>% select(ETS_ana) %>% forecast(h = "2 years",bootstrap =TRUE) %>%  mutate(Total = distributional::dist_truncated(Total, 0)) %>% 
+pl9<- model_fit %>% select(ETS_ana) %>% forecast(h = "2 years",bootstrap =TRUE) %>%  mutate(Total = distributional::dist_truncated(Total, 0)) %>% 
  autoplot() +  geom_line(
     data = project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` < ymd(20240601)),
     aes(x = `yearmonth(bca)`, y = Total, linetype = "Approved projects")) + guides(
@@ -1097,6 +1154,8 @@ model_fit %>% select(ETS_ana) %>% forecast(h = "2 years",bootstrap =TRUE) %>%  m
   theme(legend.text = element_text(size = 7),
         legend.title = element_text(size = 9)) +
   theme_minimal()
+pl9
+ggsave("images/ets_ana_model_forecast_test.jpeg",pl9,width = 8,height = 4)
 ```
 
 ```{r}
@@ -1115,6 +1174,7 @@ model_fit %>% select(ETS_ana,arima_auto) %>% forecast(h = "2 years",bootstrap =T
   theme(legend.text = element_text(size = 7),
         legend.title = element_text(size = 9)) +
   theme_minimal()
+
 ```
 
 In order to compare the various forecast models, we will utilise the root mean squared error (RMSE) on the out-of-sample test dataset. The RMSE is calculated through @eq-rmse. The RMSE is additionally a useful metric to compare forecast models as the results are in the same scale as the forecasts and hence, can be easily interpreted as the average magnitude of errors between the predicted and actual values.
@@ -1159,7 +1219,7 @@ model_fit <- project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` <
 #| fig-width: 8
 model_fc <- model_fit %>% select(ETS_ana) |> forecast(h = 72,bootstrap =TRUE) %>%  mutate(Total = distributional::dist_truncated(Total, 0)) 
 
-model_fc |> autoplot() +
+pl10 <- model_fc |> autoplot() +
    geom_line(
     data = project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` < ymd(20240601)),
     aes(x = `yearmonth(bca)`, y = Total, linetype = "Approved projects")
@@ -1177,7 +1237,8 @@ model_fc |> autoplot() +
     caption = "Source: Melbourne Water Corporation"
   ) + theme_minimal()
 
-
+pl10
+ggsave("images/ets_ana_model_forecast_results.jpeg",pl10,width = 8,height = 4)
 ```
 ## Tracking service provider’s performance through KPIs and KRAs
 
