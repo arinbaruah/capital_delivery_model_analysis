@@ -94,12 +94,29 @@ The major areas of study for the current analysis are delineated as follows:
 # Key insights 🧐
 
 The systematic approach to studying the historical capital delivery models and projecting insights into the future delivery model yielded the following key outcomes:
- 
-1. The entire analysis was conducted in R, providing the key benefit of a formalised, automated and reproducible pipeline for data handling and cleaning based on critical assumptions. This code is scalable for future purposes and is expected to significantly reduce data cleaning duration by at least 30 %, making it suitable for processing live project data in the future.
-2. Based on historical data analysis of past delivery models, it is anticipated that over 70% of the upcoming projects will be valued at $5 million or less. Given the high volume of projects in this category, it is likely that a specialised project approval process would positively affect the efficient and timely delivery of these projects. Additionally, a dedicated team may be established to efficiently manage and deliver these projects for its efficient delivery.
-3. Further analysis reveals that projects valued at $5 million or less, which constitute nearly 70% of the projects within a capital delivery model, account for only 10% of the total project costs. This suggests that, despite requiring similar manpower resources as larger projects, these smaller projects contribute only a fraction of the overall project valuation, further highlighting the need for a dedicated team to effectively manage and execute these projects.
-4. Analysing the historical breakdown of projects based on the approving body has provided valuable insights into how future model distributions might look. Specifically, the duration of project approval varies depending on the approving authority. By examining approval durations, we can establish benchmarks for the approval process timeline. This information is crucial for effective planning and for proactively addressing potential risks related to approval delays.
-5. Analysing the duration of critical stages in the project lifecycle, based on delivery programs and project valuations, has revealed that some projects, on average, take longer to complete than others. This analysis provides valuable benchmarks and insights, allowing us to monitor current projects against historical expectations and identify any deviations early on. 
-6. A key focus of this study is to accurately predict the number of projects expected each year and month in the next delivery model. By employing classical additive time series decomposition, we can analyse the project data to uncover important characteristics such as trends, seasonality, and residuals. Building on these insights, we use specialized forecasting methods, specifically the Error-Trend-Seasonality (ETS) and  Seasonal-ARIMA models, to predict future project volumes. These models offer the advantage of continuous learning, allowing them to adapt and remain applicable beyond the next delivery model as more data becomes available. Based on the results obtained, it could be observed that the forecasting model predicted on average, 3 new approved projects in each month with 2 peaks in a year, one during the mid year while one at the end of the year. These peaks indicate a higher than average number of approved projects. This forecasting is potentially crucial for efficient crew resource management during project execution. 
 
+1. Based on the analysis of sample data from CDM-21 and CDM-16, the new delivery model is projected to successfully deliver __at least 70% of the projects with a forecasted final cost (FFC) of $5 million or less.__
+
+![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/images/distribution_cost_bands.jpeg)
+   
+
+2. Projects with higher valuations and associated risks require approval from higher authorities, often external to the department or organization. This can lead to significantly longer approval times, with some projects taking well over a year to reach the “approved” stage. The current study recommends segmenting high-valuation projects into smaller, “bundled” projects to expedite the approval process, __potentially reducing the approval duration to approximately 8 months (250 days) and follow an approval process which is within the department or the organisation.__
+
+![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/images/approval_duration_distribution.jpeg)   
+
+3. In the upcoming delivery model, it is expected that __more than half of all the projects will need to be approved by the "People leadership group".__ Additionally, the percentage of projects approved by the “Senior Leadership Group,” “Finance, Audit, and Compliance,” and “Managing Director (MD)” has remained __consistent over the past two CDMs,suggesting a stable pattern in the composition of future approvals.__
+
+![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/images/approval_duration.jpeg)
+
+4. An ETS forecast model was trained on historical data to predict the expected number of projects valued at ≤ $5 million. The forecasts indicate an average of approximately three projects per month, with a notable annual peak observed mid-year and another towards the year’s end.
+
+![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/images/ets_ana_model_forecast_results.jpeg)
+
+5. Although __Small-Scale delivery program projects account for approximately 10 % of the total valuation of projects__ within a CDM, the labour utilisation is however the same as that of Frameworks delivery program projects which delivers a significantly larger proportion of the total valuation. The future Capital Delivery Model for PS-26 should explore __streamlining or bundling multiple Small-Scale projects to enhance efficiency in project management and optimize labor resource allocation.__
+
+![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/images/labour_hours.png)
+
+6. A scoring system mechanism was implemented through the KRA-KPI metric dashboards and templates, allowing Melbourne Water to __perform fair and transparent assessments of a service provider's project initiatives__, and at the same time, __financially incentivise them to improve over the course of the project__.
+
+![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/images/kra_dashboard1.png)
 
