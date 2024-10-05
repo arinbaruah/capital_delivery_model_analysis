@@ -884,53 +884,11 @@ ggsave("images/approval_bodies_duration.jpeg",pl5,width = 8,height = 4)
 @fig-labour depicts the distribution of the labour hours across each of the four delivery programs within MCD. The plot indicates that the current model is capable of delivering multiple small-scale and low risk contestable projects. The labour hours associated with Major Works-Framework and Major Works-Small Scale appear to be fairly similar, despite the fact that the __Small Scale projects account for about only 10% of the FFC in a delivery period__. The future CDM for PS-26 should consider __streamlining or bundling multiple small-scale projects together to generate higher efficiency in Project Management labour resource allocation.__ 
 
 ![Distribution of labour hours of each delivery program](images/labour_hours.png){#fig-labour}
-
-## Critical project stage duration analysis 
-
-As explained previously through @fig-flowchart, a project typically undergoes several key critical stages from conceptualisation to completion. It is critical to study the duration in between these stages and also compare across CDMs to observe any changes and what it may mean for the future CDM.
-
-@fig-compduration compares the duration of time taken to submit a business case for further approval once a project has been conceptualised. This is quantified by calculating the duration between the BNI stage and the PBC stage of the project lifecycle. The comparison was done only for the delivery programs under Major Works-Framework and Major Works-Open Market as the other programs are generally fast-tracked by bypassing the PBC stage. Some of the key observations are as follows:
-
-1. In each of the CDMs, the duration of time for project conceptualisation is higher for Major Works-Open Market as compared to Major Works-Framework. This is typically the case due to the fact that a business case for Frameworks projects are contracted to a list of already approved service providers and will be engaged through a specific working contract which was agreed between the parties previously. On the other hand, Open Market projects are those that need to be tendered in the market and may require to form a working partnership with a new service provider. This leads to the requirement of further due-diligence, risk and cost analysis, contractual deliverables review and liaising with other government bodies to finalise a business case. As a result, the median duration for project concept submission is typically longer for these projects.
-
-2. The median time taken between the BNI and PBC stages, referred to as the project conceptualization stage, has increased from CDM-16 to CDM-21. In CDM-21, the median duration for each delivery program exceeded 2 years, which is significantly longer than the durations observed in CDM-16. For future CDMs, it is advisable to consider these extended durations and explore strategies to reduce the time required for projects to progress from BNI to PBC, aiming to align with the shorter durations seen in CDM-16.
-
-3. Several outliers were observed in the business case submission duration for Major Works-Framework projects under CDM-16. These outliers were significantly higher than the median durations for both Framework projects and Open Market projects. Investigating the causes of these delays can provide valuable insights. Understanding these issues is expected to benefit the upcoming CDM by helping to streamline the business case submission process and minimize any inadvertent delays.
-
 ```{r}
-#| label: fig-compduration
-#| fig-cap: "Comparison of PBC duration across CDMs"
-#| fig-height: 4 
-#| fig-width: 8
-
 project_data <- project_data %>% mutate(conception_duration = days(pbc - bni))
 
 del_prg <- c("Major Works - Framework","Major Works - Open Market")
 
-pl6 <- ggplot(data = project_data %>% filter(delivery_program %in% del_prg  & cdm != "CDM-26"),aes(y = day(conception_duration),
-                                                                                            x = delivery_program,
-                                                                                            fill = delivery_program)) + geom_boxplot(aes(color = "Median"))  + 
-  stat_summary(fun = mean, geom = "pointrange", aes(color= "Mean"), 
-               fatten = 2) +
-  scale_color_manual(values = c("Median" = "black",
-                                "Mean" = "red")) +
-  guides(fill = "none") +
-  facet_wrap(~cdm) +
-  theme_minimal() + theme(legend.position = "none",axis.text.x = element_text(size = 8)) + 
-  labs(x = "Delivery program",
-       y = "Duration (Days)",
-       color = "Metric",
-       caption = "Source: Melbourne Water Corporation", 
-       title = "Distribution of duration for preliminary business case submission",
-       subtitle = "Number of days between BNI and PBC") + 
-  theme(legend.position = "top") +
-  scale_fill_tableau(palette = "Superfishel Stone")
-pl6
-
-ggsave("images/pbc_duration.jpeg",pl6,width = 8,height = 4)
-```
-
-```{r}
 framework_cdm16 <- project_data %>% filter(cdm == "CDM-16" & 
                                              delivery_program == "Major Works - Framework") %>% 
   select(conception_duration) %>% mutate_all(day) %>% drop_na()
@@ -947,8 +905,58 @@ open_cdm21 <- project_data %>% filter(cdm == "CDM-21" &
                                              delivery_program == "Major Works - Open Market") %>% 
   select(conception_duration) %>% mutate_all(day) %>% drop_na()
 
+```
+
+
+## Critical project stage duration analysis 
+
+As explained previously through @fig-flowchart, a project typically undergoes several key critical stages from conceptualisation to completion. It is critical to study the duration in between these stages and also compare across CDMs to observe any changes and what it may mean for the future CDM.
+
+@fig-compduration compares the duration of time taken to submit a business case for further approval once a project has been conceptualised. This is quantified by calculating the duration between the BNI stage and the PBC stage of the project lifecycle. The comparison was done only for the delivery programs under Major Works-Framework and Major Works-Open Market as the other programs are generally fast-tracked by bypassing the PBC stage. Some of the key observations are as follows:
+
+1. In each of the CDMs, the duration of time for project conceptualisation is higher for Major Works-Open Market as compared to Major Works-Framework. This is typically the case due to the fact that a business case for Frameworks projects are contracted to a list of already approved service providers and will be engaged through a specific working contract which was agreed between the parties previously. On the other hand, Open Market projects are those that need to be tendered in the market and may require to form a working partnership with a new service provider. This leads to the requirement of further due-diligence, risk and cost analysis, contractual deliverables review and liaising with other government bodies to finalise a business case. As a result, the median duration for project concept submission is typically longer for these projects.
+
+2. The median and mean time taken between the BNI and PBC stages, referred to as the project conceptualisation stage, has increased from CDM-16 to CDM-21. In CDM-21, the submission duration for each delivery program exceeded 2 years, which is longer than the durations observed in CDM-16. For future CDMs, it is advisable to consider these extended durations and explore strategies to reduce the time required for projects to progress from BNI to PBC, aiming to align with the shorter durations seen in CDM-16. 
+
+3. To analyse if the increase in duration from CDM-16 to CDM-21 was statistically significant for each of the delivery programs, a hypothesis test based on the student's T-test was performed by considering a 95 % confidence interval. The results of this test suggested that there was indeed a __significant rise in PBC duration for "Major-Works Framework" from CDM-16 to CDM-21__ (P-value: `r round(t.test(framework_cdm21,framework_cdm16)$p.value,3)`) while the same was not true for "Major-Works Open Market" (P-value: `r round(t.test(open_cdm21,open_cdm16)$p.value,3)`).
+
+4. Several outliers were observed in the business case submission duration for Major Works-Framework projects under CDM-16. These outliers were significantly higher than the median durations for both Framework projects and Open Market projects. Investigating the causes of these delays can provide valuable insights. Understanding these issues is expected to benefit the upcoming CDM by helping to streamline the business case submission process and minimize any inadvertent delays.
+
+
+```{r}
+#| label: fig-compduration
+#| fig-cap: "Comparison of PBC duration across CDMs"
+#| fig-height: 4 
+#| fig-width: 8
+
+
+
+pl6 <- ggplot(data = project_data %>% filter(delivery_program %in% del_prg  & cdm != "CDM-26"),aes(y = day(conception_duration),
+                                                                                            x = delivery_program,
+                                                                                            fill = delivery_program)) + geom_boxplot(aes(color = "Median"))  + 
+  stat_summary(fun = mean, geom = "pointrange", aes(color= "Mean"), 
+               fatten = 2) +
+  scale_color_manual(values = c("Median" = "black",
+                                "Mean" = "red")) +
+  guides(fill = "none") +
+  facet_wrap(~cdm) +
+  theme_minimal() + theme(legend.position = "none",axis.text.x = element_text(size = 8)) + 
+  labs(x = "Delivery program",
+       y = "Duration (Days)",
+       color = "Point estimate",
+       caption = "Source: Melbourne Water Corporation", 
+       title = "Distribution of duration for preliminary business case submission",
+       subtitle = "Number of days between BNI and PBC") + 
+  theme(legend.position = "top") +
+  scale_fill_tableau(palette = "Superfishel Stone")
+pl6
+
+ggsave("images/pbc_duration.jpeg",pl6,width = 8,height = 4)
+
+
 #t.test(open_cdm21,open_cdm16)$p.value 
 ```
+
 
 
 The other critical stage of the projects is to monitor the duration between the project approval (BCA) to project delivery (Stage 1). @fig-delduration illustrates how the duration of projects from approval to delivery stage differ across various delivery programs. Key insights from this visualisation are as follows:
@@ -1311,6 +1319,3 @@ The current data analysis and forecasting project was created with the goal of f
 10. __ChatGPT__: OpenAI. (2024). ChatGPT [Large language model]. https://chat.openai.com
 
 # References
-
-
-
