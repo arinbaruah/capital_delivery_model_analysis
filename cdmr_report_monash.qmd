@@ -79,6 +79,11 @@ By systematically examining past and present performance, the aim is to identify
 ```{r read-data}
 project_data <- read_csv("data/Capital_Deliver_Project_deidentified.csv")
 project_data <- clean_names(project_data)
+project_data <- project_data %>% mutate(delivery_program = case_match(delivery_program,"Major Works - Small Scale" ~ "Minor Framework A",
+                                                                      "Contestable" ~ "Minor Framework B" ,
+                                                                      "Major Works - Framework" ~ "Major Framework A",
+                                                                      "Major Works - Open Market" ~ "Major Framework B"
+                                                                      ))
 ```
 
 ```{r date-format}
@@ -384,8 +389,8 @@ In the current dataset, these projects are those which come under the delivery p
 #| tbl-cap: "Major Capital Delivery programs"
 #| tbl-pos: H
 tibble(
-  "Major Capital Delivery" = c("Major Works-Small scale", "Major Works-Framework",
-                                        "Contestable", "Major Works-Open Market")
+  "Capital Delivery Program" = c("Minor Framework A", "Major Framework A",
+                                        "Minor Framework B", "Major Framework B")
 ) %>%
   kable("latex") %>%
   kable_styling(latex_options = c("striped"), 
@@ -473,7 +478,7 @@ As the valuation of a project rises, it typically requires to go through multipl
 
 tibble(
   "FFC of project ($)" = c("> 125 mil","75-125 mil","40-75 mil","8-40 mil","5-8 mil","2.5-5 mil","0-2.5 mil"),
-  "Approval authority" = c("Department of Treasury and Finance"," Melbourne Water board","Finance, audit and compliance","Managing director","Executive leadership group","Senior leadership group","People leadership group")
+  "Approval authority" = c("Government approval"," Board of directors","Finance and audit","Managing director","Level 1 authority","Level 2 authority","Level 3 authority")
 ) %>%
   kable("latex") %>%
   kable_styling(latex_options = c("striped"), 
@@ -605,10 +610,10 @@ project_group_progam <- project_data %>%
   group_by(cdm) %>%
   mutate(Percentage = Total / sum(Total))
 
-cc <- c("Contestable" = "#FF6F61" , 
-        "Major Works - Framework" = "#40E0D0" ,
-        "Major Works - Open Market" = "#FFD700",
-        "Major Works - Small Scale" = "#87CEFA")
+cc <- c("Minor Framework B" = "#FF6F61" , 
+        "Major Framework A" = "#40E0D0" ,
+        "Major Framework B" = "#FFD700",
+        "Minor Framework A" = "#87CEFA")
 
 pl1 <- ggplot(project_group_progam %>% filter(cdm != "CDM-26"),aes(x = Percentage,
                                 y = cdm,
@@ -760,8 +765,13 @@ Some of the key observations and recommendations based on the breakdown of the p
 3. With an anticipated increase in the number of projects for the upcoming delivery program, which will require approval from the DTF, it is important to address potential delays. Historically, these projects face prolonged approval times due to associated costs, risks, and the need for coordination with external government agencies. To streamline the approval process, it is advisable to negotiate special considerations or exemptions with the ministry and DTF. This approach could help mitigate barriers and facilitate a more timely approval for these complex, large-scale, high-risk projects.
 
 ```{r}
-#| eval: false
+#| label: fig-approvaltime
+#| fig-cap: "Distribution of project approval duration for various approval bodies "
+#| fig-height: 4 
+#| fig-width: 8
 
+dim_order <- c("Government approval","Board of directors","Finance and Audit",
+               "Managing Director","Level 1 authority","Level 2 authority","Level 3 authority")
 project_approval_duration <- project_data %>% filter(cdm != "CDM-26") %>% 
   group_by(approval_body) %>% mutate(approval_duration = days(bca-pbc)) 
 
@@ -769,9 +779,9 @@ project_approval_duration <- project_approval_duration %>% mutate(approval_body_
                                                                    approval_body == "MW Board" ~ "Board of directors",
                                                                    approval_body == "Finance, Audit and Compliance" ~ "Finance and Audit",
                                                                    approval_body == "MD" ~ "Managing Director",
-                                                                   approval_body ==  "Executive Leadership Group" ~ "Level 1 authority",
+                                                                   approval_body ==  "Executive Leadership Group" ~ "Level 3 authority",
                                                                    approval_body == "Senior Leadership Group" ~ "Level 2 authority",
-                                                                   approval_body == "People Leadership Group" ~ "Level 3 authority"))
+                                                                   approval_body == "People Leadership Group" ~ "Level 1 authority"))
 
 
 dim_order <- c("Level 3 authority","Level 2 authority","Level 1 authority","Managing Director","Finance and Audit",
@@ -783,20 +793,21 @@ options(scipen = 1000)
 
 
 
-project_approval_duration %>%
+pl4 <- project_approval_duration %>%
   ggplot(aes(y = approval_body_dummy,x = day(approval_duration))) + geom_boxplot() +
   labs(x = "Approval duration (Days)",
        y = "Approval body",
        title = "Project approval duration for various authorities",
        caption = "Source: Melbourne Water Corporation") +
  facet_wrap(~cdm) + theme_minimal()
+
+pl4
+
+ggsave("images/approval_duration_distribution.jpeg",pl4,width = 8,height = 4)
 ```
 
 ```{r}
-#| label: fig-approvaltime
-#| fig-cap: "Distribution of project approval duration for various approval bodies "
-#| fig-height: 4 
-#| fig-width: 8
+#| eval: false
 app_order <- c("People Leadership Group","Senior Leadership Group","Executive Leadership Group",
                "MD","Finance, Audit and Compliance","MW Board","DTF")
 
@@ -813,12 +824,22 @@ pl4 <- project_approval_duration %>%
        title = "Project approval duration for various authorities",
        caption = "Source: Melbourne Water Corporation") +
  facet_wrap(~cdm) + theme_minimal()
-pl4
 
-ggsave("images/approval_duration_distribution.jpeg",pl4,width = 8,height = 4)
 ```
 ```{r}
-#| eval: false
+#| label: fig-approval
+#| fig-cap: "Distribution of projects across various approval bodies and CDMs"
+#| fig-height: 4 
+#| fig-width: 8
+
+
+project_group_approval <- project_data %>%
+  group_by(approval_body, cdm) %>%
+  summarise(Total = n()) %>%
+  ungroup() %>%
+  group_by(cdm) %>%
+  mutate(Percentage = Total / sum(Total))
+
 project_group_approval <- project_group_approval %>% mutate(approval_body_dummy = case_when( approval_body ==  "DTF" ~ "Government approval",
                                                                    approval_body == "MW Board" ~ "Board of directors",
                                                                    approval_body == "Finance, Audit and Compliance" ~ "Finance and Audit",
@@ -828,8 +849,9 @@ project_group_approval <- project_group_approval %>% mutate(approval_body_dummy 
                                                                    approval_body == "People Leadership Group" ~ "Level 3 authority"))
 
 
-dim_order <- c("Government approval","Board of directors","Finance and Audit",
-               "Managing Director","Level 1 authority","Level 2 authority","Level 3 authority")
+dim_order <- c("Government approval","Board of directors","Finance and Audit","Managing Director",
+               "Level 1 authority","Level 2 authority","Level 3 authority")
+               
 
 project_group_approval$approval_body_dummy <- factor(project_group_approval$approval_body_dummy, levels = dim_order)
 
@@ -845,21 +867,13 @@ pl5 <- ggplot(project_group_approval %>% filter(cdm != "CDM-26"),aes(x = Percent
   scale_x_continuous(expand = c(0, 0), labels = scales::percent) +
   scale_fill_tableau(palette = "Tableau 10") + theme_minimal() 
 
+pl5
+ggsave("images/approval_bodies_duration.jpeg",pl5,width = 8,height = 4)
 ```
 
 
 ```{r}
-#| label: fig-approval
-#| fig-cap: "Distribution of projects across various approval bodies and CDMs"
-#| fig-height: 4 
-#| fig-width: 8
-
-project_group_approval <- project_data %>%
-  group_by(approval_body, cdm) %>%
-  summarise(Total = n()) %>%
-  ungroup() %>%
-  group_by(cdm) %>%
-  mutate(Percentage = Total / sum(Total))
+#| eval: false
 
 
 pl5 <- ggplot(project_group_approval %>% filter(cdm != "CDM-26"),aes(x = Percentage,
@@ -874,8 +888,7 @@ pl5 <- ggplot(project_group_approval %>% filter(cdm != "CDM-26"),aes(x = Percent
   scale_x_continuous(expand = c(0, 0), labels = scales::percent) +
   scale_fill_tableau(palette = "Tableau 10") + theme_minimal() 
 
-pl5
-ggsave("images/approval_bodies_duration.jpeg",pl5,width = 8,height = 4)
+
 ```
 
 
@@ -887,22 +900,22 @@ ggsave("images/approval_bodies_duration.jpeg",pl5,width = 8,height = 4)
 ```{r}
 project_data <- project_data %>% mutate(conception_duration = days(pbc - bni))
 
-del_prg <- c("Major Works - Framework","Major Works - Open Market")
+del_prg <- c("Major Framework A","Major Framework B")
 
 framework_cdm16 <- project_data %>% filter(cdm == "CDM-16" & 
-                                             delivery_program == "Major Works - Framework") %>% 
+                                             delivery_program == "Major Framework A") %>% 
   select(conception_duration) %>% mutate_all(day) %>% drop_na()
 framework_cdm21 <- project_data %>% filter(cdm == "CDM-21" & 
-                                             delivery_program == "Major Works - Framework") %>% 
+                                             delivery_program == "Major Framework A") %>% 
   select(conception_duration) %>% mutate_all(day) %>% drop_na()
 
 #t.test(framework_cdm21,framework_cdm16)$p.value 
 
 open_cdm16 <- project_data %>% filter(cdm == "CDM-16" & 
-                                             delivery_program == "Major Works - Open Market") %>% 
+                                             delivery_program == "Major Framework B") %>% 
   select(conception_duration) %>% mutate_all(day) %>% drop_na()
 open_cdm21 <- project_data %>% filter(cdm == "CDM-21" & 
-                                             delivery_program == "Major Works - Open Market") %>% 
+                                             delivery_program == "Major Framework B") %>% 
   select(conception_duration) %>% mutate_all(day) %>% drop_na()
 
 ```
@@ -914,11 +927,11 @@ As explained previously through @fig-flowchart, a project typically undergoes se
 
 @fig-compduration compares the duration of time taken to submit a business case for further approval once a project has been conceptualised. This is quantified by calculating the duration between the BNI stage and the PBC stage of the project lifecycle. The comparison was done only for the delivery programs under Major Works-Framework and Major Works-Open Market as the other programs are generally fast-tracked by bypassing the PBC stage. Some of the key observations are as follows:
 
-1. In each of the CDMs, the duration of time for project conceptualisation is higher for Major Works-Open Market as compared to Major Works-Framework. This is typically the case due to the fact that a business case for Frameworks projects are contracted to a list of already approved service providers and will be engaged through a specific working contract which was agreed between the parties previously. On the other hand, Open Market projects are those that need to be tendered in the market and may require to form a working partnership with a new service provider. This leads to the requirement of further due-diligence, risk and cost analysis, contractual deliverables review and liaising with other government bodies to finalise a business case. As a result, the median duration for project concept submission is typically longer for these projects.
+1. In each of the CDMs, the duration of time for project conceptualisation is higher for Major Framework B as compared to Major Framework A. This is typically the case due to the fact that a business case for Frameworks projects are contracted to a list of already approved service providers and will be engaged through a specific working contract which was agreed between the parties previously. On the other hand, Open Market projects are those that need to be tendered in the market and may require to form a working partnership with a new service provider. This leads to the requirement of further due-diligence, risk and cost analysis, contractual deliverables review and liaising with other government bodies to finalise a business case. As a result, the median duration for project concept submission is typically longer for these projects.
 
 2. The median and mean time taken between the BNI and PBC stages, referred to as the project conceptualisation stage, has increased from CDM-16 to CDM-21. In CDM-21, the submission duration for each delivery program exceeded 2 years, which is longer than the durations observed in CDM-16. For future CDMs, it is advisable to consider these extended durations and explore strategies to reduce the time required for projects to progress from BNI to PBC, aiming to align with the shorter durations seen in CDM-16. 
 
-3. To analyse if the increase in duration from CDM-16 to CDM-21 was statistically significant for each of the delivery programs, a hypothesis test based on the student's T-test was performed by considering a 95 % confidence interval. The results of this test suggested that there was indeed a __significant rise in PBC duration for "Major-Works Framework" from CDM-16 to CDM-21__ (P-value: `r round(t.test(framework_cdm21,framework_cdm16)$p.value,3)`) while the same was not true for "Major-Works Open Market" (P-value: `r round(t.test(open_cdm21,open_cdm16)$p.value,3)`).
+3. To analyse if the increase in duration from CDM-16 to CDM-21 was statistically significant for each of the delivery programs, a hypothesis test based on the student's T-test was performed by considering a 95 % confidence interval. The results of this test suggested that there was indeed a __significant rise in PBC duration for "Major Framework A" from CDM-16 to CDM-21__ (P-value: `r round(t.test(framework_cdm21,framework_cdm16)$p.value,3)`) while the same was not true for "Major Framework B" (P-value: `r round(t.test(open_cdm21,open_cdm16)$p.value,3)`).
 
 4. Several outliers were observed in the business case submission duration for Major Works-Framework projects under CDM-16. These outliers were significantly higher than the median durations for both Framework projects and Open Market projects. Investigating the causes of these delays can provide valuable insights. Understanding these issues is expected to benefit the upcoming CDM by helping to streamline the business case submission process and minimize any inadvertent delays.
 
