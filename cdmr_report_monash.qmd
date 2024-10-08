@@ -623,7 +623,6 @@ pl1 <- ggplot(project_group_progam %>% filter(cdm != "CDM-26"),aes(x = Percentag
   scale_x_continuous(expand = c(0, 0), labels = scales::percent) +
   labs(title = "Distribution of delivery programs within each CDM",
        y = "Capital Delivery Model",
-       caption = "Source: Melbourne Water Corporation",
        fill = "Delivery program") +
   scale_fill_manual(values = cc) + theme_minimal()
 pl1
@@ -665,7 +664,6 @@ pl2 <- ggplot(project_group_progam %>% filter(cdm != "CDM-26"),aes(x = Percentag
                                 fill = ffc_band)) + geom_col(position = "fill") +
   labs(x = "Percentage of projects by number",y = "Capital Delivery Model",
        title = "Distribution of project forecast costs across Capital Delivery Models",
-       caption = "Source: Melbourne Water Corporation",
        fill = "Cost bands (in mil $)") +
   geom_label_repel(aes(label = scales::percent(Percentage, accuracy = 1)), 
             position = position_fill(vjust = 0.5), size = 3,color = "white",fontface = "bold") +
@@ -701,7 +699,6 @@ pl3 <- ggplot(project_group_progam %>% filter(cdm != "CDM-26"),aes(x = Percentag
                                 fill = ffc_band)) + geom_col(position = "fill") +
   labs(x = "Percentage of projects by total valuation",y = "Capital Delivery Model",
        title = "Distribution of total valuation of projects across delivery models and cost bands",
-       caption = "Source: Melbourne Water Corporation",
        fill = "Cost bands (in mil $)") +
   geom_label_repel(aes(label = scales::percent(Percentage, accuracy = 1)), 
             position = position_fill(vjust = 0.5), size = 3,color = "white",fontface = "bold") +
@@ -740,7 +737,6 @@ pl <- ggplot(project_group_progam %>% filter(cdm != "CDM-26"),aes(x = Percentage
                                 fill = program)) + geom_col(position = "fill") +
   labs(x = "Percentage of projects by total valuation",y = "Capital Delivery Model",
        title = "Distribution of total valuation of projects across delivery models and cost bands",
-       caption = "Source: Melbourne Water Corporation",
        fill = "Cost bands (in mil $)") +
     geom_label_repel(aes(label = scales::percent(Percentage, accuracy = 1)), 
             position = position_fill(vjust = 0.5), size = 3,color = "white",fontface = "bold") +
@@ -797,8 +793,7 @@ pl4 <- project_approval_duration %>%
   ggplot(aes(y = approval_body_dummy,x = day(approval_duration))) + geom_boxplot() +
   labs(x = "Approval duration (Days)",
        y = "Approval body",
-       title = "Project approval duration for various authorities",
-       caption = "Source: Melbourne Water Corporation") +
+       title = "Project approval duration for various authorities") +
  facet_wrap(~cdm) + theme_minimal()
 
 pl4
@@ -821,8 +816,7 @@ pl4 <- project_approval_duration %>%
   ggplot(aes(y = approval_body,x = day(approval_duration))) + geom_boxplot() +
   labs(x = "Approval duration (Days)",
        y = "Approval body",
-       title = "Project approval duration for various authorities",
-       caption = "Source: Melbourne Water Corporation") +
+       title = "Project approval duration for various authorities") +
  facet_wrap(~cdm) + theme_minimal()
 
 ```
@@ -860,7 +854,6 @@ pl5 <- ggplot(project_group_approval %>% filter(cdm != "CDM-26"),aes(x = Percent
                                 fill = approval_body_dummy)) + geom_col(position = "fill") +
   labs(x = "Percentage of projects",y = "Capital Delivery Model",
        title = "Distribution of projects based on approval body across delivery models",
-       caption = "Source: Melbourne Water Corporation",
        fill = "Approval body") +
   geom_label_repel(aes(label = scales::percent(Percentage, accuracy = 1)), 
             position = position_fill(vjust = 0.5), size = 3,color = "white",fontface = "bold") +
@@ -881,7 +874,6 @@ pl5 <- ggplot(project_group_approval %>% filter(cdm != "CDM-26"),aes(x = Percent
                                 fill = approval_body)) + geom_col(position = "fill") +
   labs(x = "Percentage of projects",y = "Capital Delivery Model",
        title = "Distribution of projects based on approval body across CDMs",
-       caption = "Source: Melbourne Water Corporation",
        fill = "Approval body") +
   geom_label_repel(aes(label = scales::percent(Percentage, accuracy = 1)), 
             position = position_fill(vjust = 0.5), size = 3,color = "white",fontface = "bold") +
@@ -918,6 +910,70 @@ open_cdm21 <- project_data %>% filter(cdm == "CDM-21" &
                                              delivery_program == "Major Framework B") %>% 
   select(conception_duration) %>% mutate_all(day) %>% drop_na()
 
+# Permutation test for framework
+
+obs_diff <- mean(framework_cdm21$conception_duration) - mean(framework_cdm16$conception_duration)
+R <- 5000
+
+combined_framework <- c(framework_cdm16$conception_duration,framework_cdm21$conception_duration)
+set.seed(32779267)
+perm_diff <- numeric(R)
+
+for (i in 1:R){
+  permuted <- sample(combined_framework)
+  
+  perm_16 <- permuted[1:length(framework_cdm16$conception_duration)]
+  perm_21 <- permuted[(length(framework_cdm16$conception_duration) + 1) : length(combined_framework)]
+  
+  perm_diff[i] <- mean(perm_21) - mean(perm_16)
+}
+
+p_value_framework <- mean(abs(perm_diff) >= abs(obs_diff)) # 2-sided permutation test
+
+pl_framework <- ggplot() +
+  geom_histogram(aes(x=perm_diff), bins=R, color="blue",alpha=0.7) +
+  geom_vline(aes(xintercept=obs_diff), color="red", linetype="dashed") +
+  labs(title="Permutation Test Sampling Distribution for Major Framework A",
+       x="Difference in mean duration",
+       y="Frequency") +
+  annotate("text", x = obs_diff + 190, y = 6, 
+           label = paste("Observed\nDifference =", 
+                         round(obs_diff, 0)," days"), color = "red") +
+  theme_minimal()
+# Permutation test for open
+
+obs_diff <- mean(open_cdm21$conception_duration) - mean(open_cdm16$conception_duration)
+R <- 5000
+
+combined_framework <- c(open_cdm16$conception_duration,open_cdm21$conception_duration)
+set.seed(32779267)
+perm_diff <- numeric(R)
+
+for (i in 1:R){
+  permuted <- sample(combined_framework)
+  
+  perm_16 <- permuted[1:length(open_cdm16$conception_duration)]
+  perm_21 <- permuted[(length(open_cdm16$conception_duration) + 1) : length(combined_framework)]
+  
+  perm_diff[i] <- mean(perm_21) - mean(perm_16)
+}
+
+p_value_open <- mean(abs(perm_diff) >= abs(obs_diff)) # 2-sided permutation test
+
+
+pl_open <- ggplot() +
+  geom_histogram(aes(x=perm_diff), bins=R, color="blue", alpha=0.7) +
+  geom_vline(aes(xintercept=obs_diff), color="red", linetype="dashed") +
+  labs(title="Permutation Test Sampling Distribution for Major Framework B",
+       x="Difference in mean duration",
+       y="Frequency") +
+  annotate("text", x = obs_diff + 220, y = 7, 
+           label = paste("Observed\nDifference =", 
+                         round(obs_diff, 0)," days"), color = "red") +
+    theme_minimal()
+
+ggsave("images/permutation_test_framework.jpeg",pl_framework,width = 8,height = 4)
+ggsave("images/permutation_test_open.jpeg",pl_open,width = 8,height = 4)
 ```
 
 
@@ -957,7 +1013,6 @@ pl6 <- ggplot(data = project_data %>% filter(delivery_program %in% del_prg  & cd
   labs(x = "Delivery program",
        y = "Duration (Days)",
        color = "Point estimate",
-       caption = "Source: Melbourne Water Corporation", 
        title = "Distribution of duration for preliminary business case submission",
        subtitle = "Number of days between BNI and PBC") + 
   theme(legend.position = "top") +
@@ -998,7 +1053,6 @@ facet_wrap(~delivery_program,ncol = 1) + theme(legend.position = "none",
                                                axis.text = element_text(size = 7)) +
   labs(x = "Project completion duration (Days)",
 y = "Density",
-caption = "Source: Melbourne Water Corporation",
 title = "Distribution of project completion duration",
 subtitle = "Number of days between BCA and Stage 1")
 
@@ -1010,11 +1064,6 @@ medduration <- project_data %>% filter(status == "Completed") %>%
   group_by(delivery_program) %>%
   summarise(Median_completion = median(day(completion_duration))) 
 
-# #medduration <- medduration %>% mutate(delivery_program_dummy = case_when(delivery_program == "Major Works - Small Scale" ~ "Small scale projects",
-#                                                                         delivery_program == "Major Works - Framework" ~ "Framework projects",
-#                                                                         delivery_program == "Major Works - Open Market" ~ "Large scale projects",
-#                                                                         delivery_program == "Contestable" ~ "Small scale contestable projects"))
-
 medduration <- medduration %>% 
   ggplot(aes(y = reorder(delivery_program,-Median_completion), x = Median_completion, fill = delivery_program)) + 
   geom_col() + scale_fill_tableau(palette = "Tableau 10") + 
@@ -1025,8 +1074,7 @@ medduration <- medduration %>%
   labs(x = "Project completion duration (Days)",
        y = "Delivery program",
        title = "Median duration for project completion",
-       subtitle = "Number of days between BCA and Stage 1",
-       caption = "Source: Melbourne Water Corporation")
+       subtitle = "Number of days between BCA and Stage 1")
 
 ```
 
@@ -1048,8 +1096,7 @@ medduration <- medduration %>%
   labs(x = "Project completion duration (Days)",
        y = "Delivery program",
        title = "Median duration for project completion",
-       subtitle = "Number of days between BCA and Stage 1",
-       caption = "Source: Melbourne Water Corporation")
+       subtitle = "Number of days between BCA and Stage 1")
 
 ```
 
@@ -1129,7 +1176,7 @@ pl8 <- model_fit %>% select(-c(ETS_ana,Naive,Croston)) %>% forecast(h = "2 years
   labs(title = "Benchmark forecast model performance in test dataset",
        subtitle = "Projects with FFC <= 5 mil $",
        y = "Total number of projects",
-       x = "Timeline",caption = "Source: Melbourne Water Corporation") + theme_minimal()
+       x = "Timeline") + theme_minimal()
 pl8
 ggsave("images/benchmark_forecasts.jpeg",pl8,width = 8,height = 4)
 ```
@@ -1171,7 +1218,7 @@ pl9<- model_fit %>% select(ETS_ana) %>% forecast(h = "2 years",bootstrap =TRUE) 
   labs(title = "ETS (A,N,A) forecast model performance on test dataset",
        subtitle = "Projects with FFC <= 5 mil $",
        y = "Total number of projects",
-       x = "Timeline",caption = "Source: Melbourne Water Corporation") + 
+       x = "Timeline") + 
   theme(legend.text = element_text(size = 7),
         legend.title = element_text(size = 9)) +
   theme_minimal()
@@ -1254,8 +1301,7 @@ pl10 <- model_fc |> autoplot() +
     x = "Timeline",
     y = "Number of projects",
     title = "Forecasted number of projects in CDM-26 using ETS (ANA) model",
-    subtitle = "Projects worth 5 mil $ or lower",
-    caption = "Source: Melbourne Water Corporation"
+    subtitle = "Projects worth 5 mil $ or lower"
   ) + theme_minimal()
 
 pl10
