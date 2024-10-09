@@ -931,16 +931,21 @@ for (i in 1:R){
 p_value_framework <- mean(abs(perm_diff) >= abs(obs_diff)) # 2-sided permutation test
 
 pl_framework <- ggplot() +
-  geom_histogram(aes(x=perm_diff), bins=R, color="blue",alpha=0.7) +
+  geom_histogram(aes(x=perm_diff), bins=R, color="#2980B9",alpha=0.7) +
   geom_vline(aes(xintercept=obs_diff), color="red", linetype="dashed") +
   labs(title="Permutation Test Sampling Distribution for Major Framework A",
-       x="Difference in mean duration",
+       x="Difference in mean duration (CDM 21 - CDM 16)",
        y="Frequency") +
-  annotate("text", x = obs_diff + 190, y = 6, 
+  annotate("text", x = obs_diff - 150, y = 6, 
            label = paste("Observed\nDifference =", 
                          round(obs_diff, 0)," days"), color = "red") +
   theme_minimal()
+
+ggsave("images/permutation_test_framework.jpeg",pl_framework,width = 8,height = 4)
+
 # Permutation test for open
+
+
 
 obs_diff <- mean(open_cdm21$conception_duration) - mean(open_cdm16$conception_duration)
 R <- 5000
@@ -962,17 +967,17 @@ p_value_open <- mean(abs(perm_diff) >= abs(obs_diff)) # 2-sided permutation test
 
 
 pl_open <- ggplot() +
-  geom_histogram(aes(x=perm_diff), bins=R, color="blue", alpha=0.7) +
+  geom_histogram(aes(x=perm_diff), bins=R, color="#F5B041", alpha=0.7) +
   geom_vline(aes(xintercept=obs_diff), color="red", linetype="dashed") +
   labs(title="Permutation Test Sampling Distribution for Major Framework B",
-       x="Difference in mean duration",
+       x="Difference in mean duration (CDM 21 - CDM 16)",
        y="Frequency") +
   annotate("text", x = obs_diff + 220, y = 7, 
            label = paste("Observed\nDifference =", 
                          round(obs_diff, 0)," days"), color = "red") +
     theme_minimal()
 
-ggsave("images/permutation_test_framework.jpeg",pl_framework,width = 8,height = 4)
+
 ggsave("images/permutation_test_open.jpeg",pl_open,width = 8,height = 4)
 ```
 
