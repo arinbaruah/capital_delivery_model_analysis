@@ -547,11 +547,14 @@ $y_t$ is the data of interest, $S_t$ is the seasonal component, $T_t$ is the tre
 #| fig-height: 4 
 #| fig-width: 8
 
-components(dcmp) %>% autoplot() + 
+pl_decomp <- components(dcmp) %>% autoplot() + 
   labs(title = "Time series decomposition plot",
        subtitle = "Projects with FFC <= 5 mil $",
        x = "Timeline",
        y = "Number of projects") + theme_minimal()
+pl_decomp
+
+ggsave("images/stl_decomposition.jpeg",pl_decomp,width = 8,height = 4)
 ```
 
 ```{r}
@@ -1219,9 +1222,9 @@ pl9<- model_fit %>% select(ETS_ana) %>% forecast(h = "2 years",bootstrap =TRUE) 
     aes(x = `yearmonth(bca)`, y = Total, linetype = "Approved projects")) + guides(
     color = guide_legend(title = "Forecast model"),
     fill = guide_legend(title = "Forecast model"),
-    linetype = guide_legend("Melbourne Water data")) + 
+    linetype = guide_legend("Actual data")) + 
   labs(title = "ETS (A,N,A) forecast model performance on test dataset",
-       subtitle = "Projects with FFC <= 5 mil $",
+       subtitle = "Projects worth 5 mil $ or lower",
        y = "Total number of projects",
        x = "Timeline") + 
   theme(legend.text = element_text(size = 7),

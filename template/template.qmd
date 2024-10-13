@@ -13,6 +13,12 @@ bibliography: references.bib
 format: html
 ---
 
+```{r}
+library(tidyverse)
+library(fpp3)
+```
+
+
 ::: {#fig-flowchart fig-cap="Project approval gate flowchart"}
 ```{mermaid}
 flowchart LR
@@ -28,7 +34,7 @@ flowchart TB
   A{KRA} --> B(Timeliness)
   A{KRA} --> C(Sustainability)
   A{KRA} --> D(Safety)
-  A{KRA} --> E(Social procurement)
+  A{KRA} --> E(Inclusivity)
   
   B --> F[KPIs]
   C --> G[KPIs]
@@ -39,13 +45,4 @@ flowchart TB
 
 
 
-```{r}
-project_numbers <- project_data %>% group_by(delivery_program,yearmonth(bca)) %>% summarise(Total = sum(ffc))
-
-project_tsibble <- project_numbers %>% # Tsibble created based on BCA year
-   as_tsibble(index = `yearmonth(bca)`,key = delivery_program) %>% fill_gaps(Total = 0L) # Fill NA with 0
-```
-```{r}
-gg_season(project_tsibble)
-```
 
