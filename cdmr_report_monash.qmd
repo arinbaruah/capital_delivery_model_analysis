@@ -269,7 +269,7 @@ ggplot(data = data, aes(x = reorder(Project, -Cost), y = Cost)) +
 
 ```{r}
 dcmp <- project_tsibble |> filter(ffc_band == "< = 5" & `yearmonth(bca)` < ymd(20240601)) |>
-  model(stl = STL(Total ~ season(window = 11))) 
+  model(stl = STL(Total ~ season(window = 13),robust = TRUE)) 
 #components(dcmp) %>% autoplot()
 ```
 
@@ -562,9 +562,11 @@ ggsave("images/stl_decomposition.jpeg",pl_decomp,width = 8,height = 4)
 #| fig-cap: "Residual diagnostic plots"
 #| fig-height: 4 
 #| fig-width: 8
-gg_tsresiduals(dcmp) + labs(x = "Timeline",
+resids <- gg_tsresiduals(dcmp) + labs(x = "Timeline",
                             title = "Residual diagnostics for timeseries data",
                             subtitle = "Projects with FFC <= 5 mil $") 
+resids
+ggsave("images/residuals.jpeg",resids,width = 8,height = 4)
 ```
 \begin{warningBox}
 The current forecast models face limitations due to the unavailability of project data beyond the current and past CDM. As a result, the forecasts exhibit high uncertainty, characterized by large residuals and broad prediction intervals.
@@ -931,7 +933,7 @@ for (i in 1:R){
   perm_diff[i] <- mean(perm_21) - mean(perm_16)
 }
 
-p_value_framework <- mean(abs(perm_diff) >= abs(obs_diff)) # 2-sided permutation test
+p_value_framework <- mean(perm_diff >= obs_diff) # 2-sided permutation test
 
 pl_framework <- ggplot() +
   geom_histogram(aes(x=perm_diff), bins=R, color="#2980B9",alpha=0.7) +
@@ -995,7 +997,7 @@ As explained previously through @fig-flowchart, a project typically undergoes se
 
 2. The median and mean time taken between the BNI and PBC stages, referred to as the project conceptualisation stage, has increased from CDM-16 to CDM-21. In CDM-21, the submission duration for each delivery program exceeded 2 years, which is longer than the durations observed in CDM-16. For future CDMs, it is advisable to consider these extended durations and explore strategies to reduce the time required for projects to progress from BNI to PBC, aiming to align with the shorter durations seen in CDM-16. 
 
-3. To analyse if the increase in duration from CDM-16 to CDM-21 was statistically significant for each of the delivery programs, a hypothesis test based on the student's T-test was performed by considering a 95 % confidence interval. The results of this test suggested that there was indeed a __significant rise in PBC duration for "Major Framework A" from CDM-16 to CDM-21__ (P-value: `r round(t.test(framework_cdm21,framework_cdm16)$p.value,3)`) while the same was not true for "Major Framework B" (P-value: `r round(t.test(open_cdm21,open_cdm16)$p.value,3)`).
+3. To analyse if the increase in duration from CDM-16 to CDM-21 was statistically significant for each of the delivery programs, a hypothesis test based on the student's T-test was performed by considering a 95 % confidence interval. The results of this test suggested that there was indeed a __significant rise in the mean PBC duration for "Major Framework A" from CDM-16 to CDM-21__ (P-value: `r round(t.test(framework_cdm21,framework_cdm16)$p.value,3)`) while the same was not true for "Major Framework B" (P-value: `r round(t.test(open_cdm21,open_cdm16)$p.value,3)`).
 
 4. Several outliers were observed in the business case submission duration for Major Works-Framework projects under CDM-16. These outliers were significantly higher than the median durations for both Framework projects and Open Market projects. Investigating the causes of these delays can provide valuable insights. Understanding these issues is expected to benefit the upcoming CDM by helping to streamline the business case submission process and minimize any inadvertent delays.
 
@@ -1308,7 +1310,7 @@ pl10 <- model_fc |> autoplot() +
   labs(
     x = "Timeline",
     y = "Number of projects",
-    title = "Forecasted number of projects in CDM-26 using ETS (ANA) model",
+    title = "Forecasted number of projects in CDM-26 using ETS (A,N,A) model",
     subtitle = "Projects worth 5 mil $ or lower"
   ) + theme_minimal()
 
