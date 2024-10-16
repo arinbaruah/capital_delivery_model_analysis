@@ -780,9 +780,9 @@ project_approval_duration <- project_approval_duration %>% mutate(approval_body_
                                                                    approval_body == "MW Board" ~ "Board of directors",
                                                                    approval_body == "Finance, Audit and Compliance" ~ "Finance and Audit",
                                                                    approval_body == "MD" ~ "Managing Director",
-                                                                   approval_body ==  "Executive Leadership Group" ~ "Level 3 authority",
+                                                                   approval_body ==  "Executive Leadership Group" ~ "Level 1 authority",
                                                                    approval_body == "Senior Leadership Group" ~ "Level 2 authority",
-                                                                   approval_body == "People Leadership Group" ~ "Level 1 authority"))
+                                                                   approval_body == "People Leadership Group" ~ "Level 3 authority"))
 
 
 dim_order <- c("Level 3 authority","Level 2 authority","Level 1 authority","Managing Director","Finance and Audit",
@@ -1139,13 +1139,8 @@ ggsave("images/completion_duration.jpeg",pl7,width = 8,height = 4)
 
 2. The Mean model, which forecasts future projects based on the average number of projects observed in the training data, exhibits the highest level of confidence among the benchmark models, as indicated by its narrow prediction intervals. This model assumes that small-scale projects valued at $5 million or less will remain relatively consistent each year due to their regular demand, making forecasting based on the historical mean a reasonable assumption. However, this model’s simplicity comes with limitations, as it does not account for seasonality or trends in the data, potentially making it less informative about the underlying patterns.
 
-3. The current models encounter a significant challenge when forecasting small discrete values, such as the number of expected monthly projects. As noted by @hyndman2018forecasting, these statistical models produce continuous value forecasts and can contain negative lower prediction intervals when the mean is close to 0. Such an outcome that is not meaningful for expected number of projects as forecasts. In this analysis, a specialised implementation of the ETS model, known as Croston’s method, is attempted and compared against other benchmark and ETS models. While Croston’s method is better suited for handling data with zeros or small counts, it has a key limitation as per @shenstone2005stochastic : it does not correspond to a formal statistical model, and thus, prediction intervals cannot be computed.
+3. The current models encounter a significant challenge when forecasting small discrete values, such as the number of expected monthly projects. As noted by @hyndman2018forecasting, these statistical models produce continuous value forecasts and can contain negative lower prediction intervals when the mean is close to 0. Such an outcome is not meaningful for expected number of projects as forecasts. In this analysis, a specialised implementation of the ETS model, known as Croston’s method, is attempted and compared against other benchmark and ETS models. While Croston’s method is better suited for handling data with zeros or small counts, it has a key limitation as per @shenstone2005stochastic : it does not correspond to a formal statistical model, and thus, prediction intervals cannot be computed. After weighing all the limitations of the models, it was decided that the best performing ETS model with an informative seasonality component will be used for final forecasts. In the current analysis, this model is ETS (A,N,A) and is further delineated in later sections.  
 
-
-\begin{noteBox}
-It is important to note that the lower prediction intervals for the Season Naïve models cover the negative Y-axis. This is however not possible in real practice when forecasting number of projects. In order to prevent this issue, all lower prediction intervals are truncated to values greater than or equal to 0.
-
-\end{noteBox}
 
 ```{r}
 #| message: false
@@ -1207,11 +1202,11 @@ Where $\alpha$ and $\gamma$ are hyperparameters and are __optimised by minimisin
 
 1. The ETS (A,N,A) model forecasts the number of projects with an additive seasonality. Since the trend of the data appeared to be cyclic in nature when performing its decomposition, hence, it was considered to be stationary and as a result, no trend was modelled in the forecasts.
 
-2. Current forecast model is limited by the relatively short duration of projects in the training dataset. As a result, the prediction intervals are moderately wide. While forecasting for future delivery models, as the size of the training dataset enlarges, the forecast models would be expected to be more confident and have narrower prediction intervals.
+2. Current forecast model is limited by the relatively short duration of projects in the training dataset. In addition to this, the weak seasonality pattern in the data may have further added uncertainties in the forecast. As a result, the prediction intervals are moderately wide. While forecasting for future delivery models, as the size of the training dataset enlarges, the forecast models would be expected to be more confident and have narrower prediction intervals.
 
 3. Within the initial period of the test dataset (in 2022), the point forecasts were higher than the actual approved projects. However, towards the later part of the dataset, specifically in the years of 2023 and 2024, the point forecasts were closer to the actual number of projects.
 
-4. The actual approved projects consistently fell within the 80% and 95% prediction intervals for nearly the entire duration of the test dataset. This suggests that the current ETS model has effectively captured the underlying pattern in the data.
+4. The actual approved projects consistently fell within the 80% and 95% prediction intervals for nearly the entire duration of the test dataset. This suggests that the current ETS model has effectively captured the information within the level of permissible uncertainties.
 
 ```{r}
 #| label: fig-forecompvizets
@@ -1226,7 +1221,7 @@ pl9<- model_fit %>% select(ETS_ana) %>% forecast(h = "2 years",bootstrap =TRUE) 
     fill = guide_legend(title = "Forecast model"),
     linetype = guide_legend("Actual data")) + 
   labs(title = "ETS (A,N,A) forecast model performance on test dataset",
-       subtitle = "Projects worth 5 mil $ or lower",
+       subtitle = "Projects with FFC <= 5 mil $",
        y = "Total number of projects",
        x = "Timeline") + 
   theme(legend.text = element_text(size = 7),
@@ -1311,7 +1306,7 @@ pl10 <- model_fc |> autoplot() +
     x = "Timeline",
     y = "Number of projects",
     title = "Forecasted number of projects in CDM-26 using ETS (A,N,A) model",
-    subtitle = "Projects worth 5 mil $ or lower"
+    subtitle = "Projects withh 5 mil $"
   ) + theme_minimal()
 
 pl10
