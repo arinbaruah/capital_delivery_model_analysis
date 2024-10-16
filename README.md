@@ -118,6 +118,6 @@ The systematic approach to studying the historical capital delivery models and p
 
 6. A scoring system mechanism was implemented through the KRA-KPI metric dashboards and templates, allowing Melbourne Water to __perform fair and transparent assessments of a service provider's project initiatives__, and at the same time, __financially incentivise them to improve over the course of the project__.
 
-![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/images/kra_dashboard1.png)
+![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/images/dashboard.png)
 ![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/images/payout.png)
 
