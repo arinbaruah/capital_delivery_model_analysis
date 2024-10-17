@@ -941,7 +941,7 @@ pl_framework <- ggplot() +
   labs(title="Permutation Test Sampling Distribution for Major Framework A",
        x="Difference in mean duration (CDM 21 - CDM 16)",
        y="Frequency") +
-  annotate("text", x = obs_diff - 150, y = 6, 
+  annotate("text", x = obs_diff - 20, y = 6, 
            label = paste("Observed\nDifference =", 
                          round(obs_diff, 0)," days"), color = "red") +
   theme_minimal()
@@ -977,14 +977,17 @@ pl_open <- ggplot() +
   labs(title="Permutation Test Sampling Distribution for Major Framework B",
        x="Difference in mean duration (CDM 21 - CDM 16)",
        y="Frequency") +
-  annotate("text", x = obs_diff + 220, y = 7, 
+  annotate("text", x = obs_diff + 260, y = 7, 
            label = paste("Observed\nDifference =", 
                          round(obs_diff, 0)," days"), color = "red") +
     theme_minimal()
 
 
 ggsave("images/permutation_test_open.jpeg",pl_open,width = 8,height = 4)
+
+
 ```
+
 
 
 ## Critical project stage duration analysis 
@@ -997,10 +1000,16 @@ As explained previously through @fig-flowchart, a project typically undergoes se
 
 2. The median and mean time taken between the BNI and PBC stages, referred to as the project conceptualisation stage, has increased from CDM-16 to CDM-21. In CDM-21, the submission duration for each delivery program exceeded 2 years, which is longer than the durations observed in CDM-16. For future CDMs, it is advisable to consider these extended durations and explore strategies to reduce the time required for projects to progress from BNI to PBC, aiming to align with the shorter durations seen in CDM-16. 
 
-3. To analyse if the increase in duration from CDM-16 to CDM-21 was statistically significant for each of the delivery programs, a hypothesis test based on the student's T-test was performed by considering a 95 % confidence interval. The results of this test suggested that there was indeed a __significant rise in the mean PBC duration for "Major Framework A" from CDM-16 to CDM-21__ (P-value: `r round(t.test(framework_cdm21,framework_cdm16)$p.value,3)`) while the same was not true for "Major Framework B" (P-value: `r round(t.test(open_cdm21,open_cdm16)$p.value,3)`).
+3. To analyse if the increase in duration from CDM-16 to CDM-21 was statistically significant for each of the delivery programs, a one-sided hypothesis test based on the non-parametric permutation test was performed by considering a 95 % confidence interval. These hypotheses are delineated through @eq-null and @eq-alternate. The results of this test as illustrated through @fig-permutation suggested that there was indeed a __significant rise in the mean PBC duration for "Major Framework A" from CDM-16 to CDM-21__ (P-value: `r round(t.test(framework_cdm21,framework_cdm16)$p.value,3)`) while the same was not true for "Major Framework B" (P-value: `r round(t.test(open_cdm21,open_cdm16)$p.value,3)`).
 
-4. Several outliers were observed in the business case submission duration for Major Works-Framework projects under CDM-16. These outliers were significantly higher than the median durations for both Framework projects and Open Market projects. Investigating the causes of these delays can provide valuable insights. Understanding these issues is expected to benefit the upcoming CDM by helping to streamline the business case submission process and minimize any inadvertent delays.
+4. Several outliers were observed in the business case submission duration for Major Works-Framework projects under CDM-16. These outliers were significantly higher than the median durations for both Framework A and Framework B. Investigating the causes of these delays can provide valuable insights. Understanding these issues is expected to benefit the upcoming CDM by helping to streamline the business case submission process and minimize any inadvertent delays.
 
+5. These outliers suggest that the assumption of a normal distribution is likely violated, making a parametric approach such as T-test unsuitable for this dataset. Hence, a non-parametric test which is robust to presence of outliers and does not make an assumption of the distribution of the data was implemented. 
+
+$$H_o : \mu_{\text{CDM-21}} <= \mu_{\text{CDM-16}}$$ {#eq-null}
+$$H_1: \mu_{\text{CDM-21}} > \mu_{\text{CDM-16}}$$ {#eq-alternate}
+
+Where $\mu$ is the average duration (in days) to submit a business case.
 
 ```{r}
 #| label: fig-compduration
@@ -1035,7 +1044,17 @@ ggsave("images/pbc_duration.jpeg",pl6,width = 8,height = 4)
 #t.test(open_cdm21,open_cdm16)$p.value 
 ```
 
+```{r}
+#| label: fig-permutation
+#| fig-cap: "Permutation test sampling results for Major Framework A and B"
+#| fig-height: 4 
+#| fig-width: 8
+#| fig-pos: "H"
+pl_permutations <- pl_framework / pl_open
+pl_permutations
 
+ggsave("images/permutation_test.jpeg",pl_permutations,width = 8,height = 4)
+```
 
 The other critical stage of the projects is to monitor the duration between the project approval (BCA) to project delivery (Stage 1). @fig-delduration illustrates how the duration of projects from approval to delivery stage differ across various delivery programs. Key insights from this visualisation are as follows:
 

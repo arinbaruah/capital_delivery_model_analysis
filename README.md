@@ -80,7 +80,7 @@ The Capital Delivery Model is crucial for optimizing project management within t
 
 # Objective 🎯
 
-This study aims to create a reproducible framework for analysing project data across various delivery models to establish a benchmark for designing a new model. By conducting focused exploratory and temporal data analysis on historical project data and standardising results, the study seeks to set preliminary expectations for the future of capital delivery. It will additionally implement benchmark and specialised time series forecasting techniques, including ETS and SARIMA, by decomposing the time series into trend, seasonality, and residuals. The model will continuously learn and improve with new data, extending its usefulness beyond the next pricing submission period.
+This study aims to create a reproducible framework for analysing project data across various delivery models to establish a benchmark for designing a new model. By conducting focused exploratory and temporal data analysis on historical project data and standardising results, the study seeks to set preliminary expectations for the future of capital delivery. It will additionally implement benchmark and specialised time series forecasting techniques, the ETS model, by decomposing the time series into trend, seasonality, and residuals. The model will continuously learn and improve with new data, extending its usefulness beyond the next pricing submission period.
  
 The major areas of study for the current analysis are delineated as follows:
 
@@ -106,7 +106,7 @@ The systematic approach to studying the historical capital delivery models and p
 
 3. In the upcoming delivery model, it is expected that __more than half of all the projects will need to be approved by the "People leadership group".__ Additionally, the percentage of projects approved by the “Senior Leadership Group,” “Finance, Audit, and Compliance,” and “Managing Director (MD)” has remained __consistent over the past two CDMs,suggesting a stable pattern in the composition of future approvals.__
 
-![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/images/approval_duration_distribution.jpeg)
+![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/images/approval_duration.jpeg
 
 4. An ETS forecast model was trained on historical data to predict the expected number of projects valued at ≤ $5 million. The forecasts indicate an average of approximately three projects per month, with a notable annual peak observed mid-year and another towards the year’s end.
 
