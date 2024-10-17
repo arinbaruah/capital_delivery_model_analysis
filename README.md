@@ -45,7 +45,7 @@ The ongoing project aimed at optimizing the infrastructure capital delivery mode
 # Quick links to project files
 
 1. [Final executive report](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/cdmr_report_monash.pdf) [Under progress] 🚧
-2. [Final presentation](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/CDMR_analysis.html) [Under progress] 🏗️
+2. [Final presentation](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/CDMR_analysis.html) [Finalised] 🎬
 3. [Data dictionary](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/data_dictionary.md)
 
 # License
@@ -106,7 +106,7 @@ The systematic approach to studying the historical capital delivery models and p
 
 3. In the upcoming delivery model, it is expected that __more than half of all the projects will need to be approved by the "People leadership group".__ Additionally, the percentage of projects approved by the “Senior Leadership Group,” “Finance, Audit, and Compliance,” and “Managing Director (MD)” has remained __consistent over the past two CDMs,suggesting a stable pattern in the composition of future approvals.__
 
-![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/images/approval_duration.jpeg
+![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/images/approval_bodies_duration.jpeg)
 
 4. An ETS forecast model was trained on historical data to predict the expected number of projects valued at ≤ $5 million. The forecasts indicate an average of approximately three projects per month, with a notable annual peak observed mid-year and another towards the year’s end.
 
