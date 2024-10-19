@@ -331,34 +331,33 @@ The limitations within the source of the data which may have affected the analys
 5. The dataset here is an observational data and in particular, a census data. Some of the limitations that are prevalent in such datasets are as follows :
 
    - Each row in the dataset is a project whose details are provided by an individual Project Manager. As a result, there may be non-uniformity in the data provided as each Project Manager may have their own interpretations of the data they may have provided.
-   - The current dataset obtained is a subset of an observational data. These types of data are often plagued with lack of randomisation during the selection of data. This may lead to biases in the dataset such as selection and systematic bias.
    - The data maybe mis-classified or filled in non-uniform units by the various sources, leading to lack of accuracy of the overall dataset.
 
 
 # Introduction
 
-The construction of large-scale infrastructure projects, commonly referred to as “CAPEX” projects, is highly resource-intensive and typically requires effective collaboration among multiple organisations for successful and timely completion. @no2013specification suggests that in a collaborative work environment, teams are required to generate information using standardized procedures and agreed-upon standards and methods. This ensures consistency in form and quality, allowing the information to be used and reused without the need for modification or interpretation. However, in practice, such high level collaboration is often challenging and needs well laid communication as well as contractual frameworks for effective 
+The construction of large-scale infrastructure projects, commonly referred to as “CAPEX” projects, is highly resource-intensive and typically requires effective collaboration among multiple organisations for successful and timely completion. @no2013specification suggests that in a collaborative work environment, teams are required to generate information using standardized procedures and agreed-upon standards and methods. This ensures consistency in form and quality, allowing the information to be used and reused without the need for modification or interpretation. However, in practice, such high level collaboration is often challenging and needs well laid communication as well as contractual frameworks for effective project delivery.
 
 To initiate, monitor, and deliver these projects, a comprehensive framework is usually developed. This framework assesses the project’s valuation and associated risks, and then engages the appropriate service providers to ensure timely project delivery. This framework which governs the delivery route of a project is termed as the Capital Delivery Model.
 
 Each Capital Delivery Model presides over a period of 5 years, after the completion of which, a new Capital Delivery Model initiates. Before the creation of such a model,the host organisation (in this case, Melbourne Water Corporation) is required to submit a proposal of projects to be delivered over the next 5 years to the Department of Treasury and Finance, Government of Australia. Once the list of projects are approved or amended, a Capital Delivery Model is then designed, analysed, iterated and improved over a course of a year, after which, it is finally released to the market, where service providers may decide to get into a partnership with Melbourne Water for delivering the next set of infrastructures.   
 
-@garcia2021measuring states that a key underlying challenge in today’s model-driven approach to engineering is how progress and level of effort are being measured and reported. The goal of the current project is to quantify the key results of the past delivery models and obtain important insights which would allow for to design an improved capital delivery model for the upcoming pricing submission period between 2026-2031. In particular, the analysis would attempt to estimate the future number of projects and their expected valuations based on the distribution of projects in the current and past deliver models.
+@garcia2021measuring states that a key underlying challenge in today’s model-driven approach to engineering is how progress and level of effort are being measured and reported. The goal of the current project is to quantify the key results of the past delivery models and obtain important insights which would allow for to design an improved capital delivery model for the upcoming pricing submission period between 2026-2031. The analysis aims to forecast the future number of projects, estimate their expected valuations based on project distribution patterns, and develop key performance metrics. These performance metrics will offer a comprehensive view of project progress while enabling Melbourne Water to effectively incentivise service providers to meet contractual goals, ensuring both efficiency and accountability in project delivery.
 
 # Motivation of the current study
 
-1. The process of estimating the mix of the type of projects expected in the new capital delivery model after the 2026 price submission is based on the analysis of the current delivery model (CDM 2021) and the previous delivery model (CDM 2016). The forthcoming 2026 price submission is projected to surpass recent submissions in value, presenting significant challenges in project management. This includes the engagement of service providers for construction, efficient management of key crew resources, and rigorous monitoring to ensure timely infrastructure delivery. The current data analysis review of the projects in CDM 2016 and CDM 2021 will provide an adequate baseline of the expected proportion of the major capital delivery projects based on valuation and duration expected in the future delivery model (CDM 2026), thereby providing insights and eventually aiding in the key decision making for creation of the frameworks.
+1. The process of estimating the mix of the type of projects expected in the new capital delivery model after the 2026 price submission is based on the analysis of the current delivery model (CDM-21) and the previous delivery model (CDM-16). The forthcoming 2026 price submission is projected to surpass recent submissions in value, presenting significant challenges in project management. This includes the engagement of service providers for construction, efficient management of key crew resources, and rigorous monitoring to ensure timely infrastructure delivery. The current data analysis review of the projects in CDM-16 and CDM-21 will provide an adequate baseline of the expected proportion of the major capital delivery projects based on valuation and duration expected in the future delivery model (CDM-26), thereby providing insights and eventually aiding in the key decision making for creation of the frameworks.
 
-2. The KRA-KPI tracking methodology will enable Melbourne Water to conduct fair and transparent assessments of service providers assigned to projects in an efficient and quick manner. The newly generated templates will highlight any calculation discrepancies and flag historical data changes, while the dashboard will provide a comprehensive overview of assessments. This approach adds a layer of verification, ensuring data integrity and facilitating quicker decision-making and turnarounds.
+2. The KRA-KPI tracking methodology will enable Melbourne Water to conduct fair and transparent assessments of service providers assigned to projects in an efficient and quick manner. The newly generated KRA-KPI tracking templates will further highlight any calculation discrepancies and flag historical data changes, while the dashboard will provide a comprehensive overview of assessments. This approach adds a layer of verification, ensuring data integrity and facilitating quicker decision-making and assessment turnarounds.
 
 # Objectives
 
 The objectives and the scope of the analysis of the CDMs were defined through Melbourne Water fortnightly workshops and feedback as received from the project director and the steering group. These are delineated as follows:
 
-  1. The analysis must clearly indicate the performance level of project deliveries for both the current CDM-21 and the previous CDM-16. This should primarily focus on the duration of the projects and highlight any notable changes in this aspect.
+  1. The analysis must clearly indicate the performance level of project deliveries for both the current CDM-21 and the previous CDM-16. This should primarily focus on the duration between critical project stages and highlight any notable changes in this aspect.
   2. Insights on the current and previous CDM must be able to provide a baseline for the estimated number of projects which can be expected in the future delivery model (CDM-26). These projections would allow for more informed decision making while building the contractual frameworks to engage service providers.
   3. A detailed analysis of the historical project data should indicate the proportion of projects requiring approval by each governing body. This will provide an estimation of the duration of projects from the BNI stage to the BCA stage for the new delivery model, enabling better resource management.
-  4. Adoption of templates and dashboards that allow Melbourne Water to track and verify the current project progress and further facilitates fair and transparent assessment of the service providers.
+  4. Adoption of templates and dashboards that allow Melbourne Water to track and verify the current project progress and further facilitates fair and transparent assessment of the service providers during the course of project execution or delivery.
   
 # Significance of the current study
 
@@ -380,7 +379,7 @@ This section is dedicated for the purpose of explaining the detailed methodology
 
 ## Selection of projects for analysis
 
-While the dataset contains the details for projects undertaken by the various divisions of Melbourne Water Corporation, for the purpose of the current analysis, only those projects which are delivered or expected to be delivered by the Major Capital Delivery division are considered. In particular, these are those projects which are delivered through a contractual framework, called as the "Water and Sewerage Program", engineering maintenance projects to keep current assets running, or in certain instances, large projects which are tendered in the open market for service providers to bid.
+While the dataset contains the details for projects undertaken by the various divisions of Melbourne Water Corporation, for the purpose of the current analysis, only those projects which are delivered or expected to be delivered by the Major Capital Delivery division are considered. In particular, these are those projects which are delivered through a contractual framework (called as the "Water and Sewerage Program"), engineering maintenance projects to keep current assets running, or in certain instances, large projects which are tendered in the open market for service providers to bid.
 
 In the current dataset, these projects are those which come under the delivery programs as tabulated in @tbl-programs.
 
@@ -401,7 +400,7 @@ tibble(
   row_spec(1:4, font_size = 8)
 ```
 
-As a result, while analysing the current data, projects with delivery programs matching the above list of programs are filtered.
+As a result, while analysing the current data, only those projects with delivery programs matching the above list of programs are considered.
 
 ## Assigning project to each capital delivery model
 
