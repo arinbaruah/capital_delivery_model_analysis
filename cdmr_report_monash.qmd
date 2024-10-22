@@ -750,11 +750,11 @@ Analysing the breakdown of the projects for the past and the current CDM could p
 
 Some of the key observations and recommendations based on the breakdown of the projects by approval body for CDM-16 and CDM-21 as illustrated by @fig-approval are as follows:
 
-1. More than half of the projects within a CDM are expected to be approved by the "People Leadership Group". Based on the past approval durations, these projects are those with smaller FFC valuations and may expect quicker approval. In the future delivery model, this trend is expected to continue. For projects which may exceed the approval limit and eventually take longer time to get approved, they can be further broken down into smaller projects of lower FFC valuations and bundled together to benefit from the quicker approval periods.
+1. More than half of the projects within a CDM are expected to be approved by the "Level 3 authority". Based on the past approval durations, these projects are those with smaller FFC valuations and may expect quicker approval. In the future delivery model, this trend is expected to continue. For projects which may exceed the approval limit and eventually take longer time to get approved, they can be further broken down into smaller projects of lower FFC valuations and bundled together to benefit from the quicker approval periods.
 
-2. The percentage of projects approved by the “Senior Leadership Group,” “Finance, Audit, and Compliance,” and “Managing Director (MD)” has remained consistent over the past two CDMs, suggesting a stable pattern in the composition of future approvals. Analyzing the approval durations, as shown in @fig-approvaltime, offers a benchmark for the time required in the approval process. This information can be used to plan effectively and address potential risks associated with approval delays in advance.
+2. The percentage of projects approved by the “Level 2 authority”, “Finance and Audit” and “Managing Director” has remained fairly consistent over the past two CDMs, suggesting a stable pattern in the composition of future approvals. Analyzing the approval durations, as shown in @fig-approvaltime, offers a benchmark for the time required in the approval process. This information can be used to plan effectively and address potential risks associated with approval delays in advance.
 
-3. With an anticipated increase in the number of projects for the upcoming delivery program, which will require approval from the DTF, it is important to address potential delays. Historically, these projects face prolonged approval times due to associated costs, risks, and the need for coordination with external government agencies. To streamline the approval process, it is advisable to negotiate special considerations or exemptions with the ministry and DTF. This approach could help mitigate barriers and facilitate a more timely approval for these complex, large-scale, high-risk projects.
+3. With an anticipated increase in the number of projects which will require approval from the Government (Department of Treasury and Finance) in the upcoming delivery program, it is important to address potential delays. Historically, these projects face prolonged approval times due to associated costs, risks, and the need for coordination with external government agencies. To streamline the approval process, it is advisable to negotiate special considerations or exemptions with the ministry and DTF. This approach could help mitigate barriers and facilitate a more timely approval for these complex, large-scale, high-risk projects.
 
 ```{r}
 #| label: fig-approvaltime
@@ -843,7 +843,7 @@ ggsave("images/approval_bodies_duration.jpeg",pl5,width = 8,height = 4)
 
 ## Labour utilisation analysis for each delivery program
 
-@fig-labour depicts the distribution of the labour hours across each of the four delivery programs within MCD. The plot indicates that the current model is capable of delivering multiple small-scale and low risk contestable projects. The labour hours associated with Major Works-Framework and Major Works-Small Scale appear to be fairly similar, despite the fact that the __Small Scale projects account for about only 10% of the FFC in a delivery period__. The future CDM for PS-26 should consider __streamlining or bundling multiple small-scale projects together to generate higher efficiency in Project Management labour resource allocation.__ 
+@fig-labour depicts the distribution of the labour hours across each of the four delivery programs within MCD. The plot indicates that the current model is capable of delivering multiple small-scale and low risk contestable projects. The labour hours associated with Major Framework A and Minor Framework A appear to be fairly similar, despite the fact that the __Small Scale projects account for about only 10% of the FFC in a delivery period__. The future CDM for PS-26 should consider __streamlining or bundling multiple small-scale projects together to generate higher efficiency in Project Management labour resource allocation.__ 
 
 ![Distribution of labour hours of each delivery program](images/labour_hours.png){#fig-labour}
 ```{r}
@@ -949,9 +949,9 @@ ggsave("images/permutation_test_open.jpeg",pl_open,width = 8,height = 4)
 
 As explained previously through @fig-flowchart, a project typically undergoes several key critical stages from conceptualisation to completion. It is critical to study the duration in between these stages and also compare across CDMs to observe any changes and what it may mean for the future CDM.
 
-@fig-compduration compares the duration of time taken to submit a business case for further approval once a project has been conceptualised. This is quantified by calculating the duration between the BNI stage and the PBC stage of the project lifecycle. The comparison was done only for the delivery programs under Major Works-Framework and Major Works-Open Market as the other programs are generally fast-tracked by bypassing the PBC stage. Some of the key observations are as follows:
+@fig-compduration compares the duration of time taken to submit a business case for further approval once a project has been conceptualised. This is quantified by calculating the duration between the BNI stage and the PBC stage of the project lifecycle. The comparison was done only for the delivery programs under Major Framework A and Major Framework B as the other programs are generally fast-tracked by bypassing the PBC stage. Some of the key observations are as follows:
 
-1. In each of the CDMs, the duration of time for project conceptualisation is higher for Major Framework B as compared to Major Framework A. This is typically the case due to the fact that a business case for Frameworks projects are contracted to a list of already approved service providers and will be engaged through a specific working contract which was agreed between the parties previously. On the other hand, Open Market projects are those that need to be tendered in the market and may require to form a working partnership with a new service provider. This leads to the requirement of further due-diligence, risk and cost analysis, contractual deliverables review and liaising with other government bodies to finalise a business case. As a result, the median duration for project concept submission is typically longer for these projects.
+1. In each of the CDMs, the duration of time for project conceptualisation is higher for Major Framework B as compared to Major Framework A. This is typically the case due to the fact that a business case for Major Framework A projects are contracted to a list of already approved service providers and will be engaged through a specific working contract which was agreed between the parties previously. On the other hand, Major Framework B projects are those that need to be tendered in the market and may require to form a working partnership with a new service provider. This leads to the requirement of further due-diligence, risk and cost analysis, contractual deliverables review and liaising with other government bodies to finalise a business case. As a result, the median duration for project concept submission is typically longer for these projects.
 
 2. The median and mean time taken between the BNI and PBC stages, referred to as the project conceptualisation stage, has increased from CDM-16 to CDM-21. In CDM-21, the submission duration for each delivery program exceeded 2 years, which is longer than the durations observed in CDM-16. For future CDMs, it is advisable to consider these extended durations and explore strategies to reduce the time required for projects to progress from BNI to PBC, aiming to align with the shorter durations seen in CDM-16. 
 
@@ -1015,13 +1015,13 @@ The other critical stage of the projects is to monitor the duration between the 
 
 1. The current sample of all completed projects indicate a right skewed distribution. This suggests that there are some projects which require unusually longer to complete across all delivery programs, possibly due to project cost variations, scope changes or other hurdles.
 
-2. The number of "Open Market" and "Contestable" projects are typically very low in number within any CDM. As a result, its distribution of completion duration is not expected to provide a representative figure for the future delivery model due to the resultant spread of the data.
+2. The number of Major Framework B and Minor Framework B projects are typically very low in number within any CDM. As a result, its distribution of completion duration is not expected to provide a representative figure for the future delivery model due to the resultant spread of the data.
 
-3. On the other hand, both the "Small scale" and "Framework" projects together constitute more than 2/3rd of the total proportion of projects. As a result, the distribution of the project completion duration may provide a good prior information for the upcoming delivery model under vastly similar circumstances.
+3. On the other hand, both the Minor Framework A and Major Framework A projects together constitute more than 2/3rd of the total proportion of projects. As a result, the distribution of the project completion duration may provide a good prior information for the upcoming delivery model under vastly similar circumstances.
 
-4. The distribution of completion durations for “Framework” and “Small-scale” projects indicates that the majority of these projects are completed in __approximately one year.__ This insight is crucial for estimating the expected duration for a significant portion of projects in the upcoming CDM. It can help optimise resource and crew allocation, ensuring more efficient project management and planning.
+4. The distribution of completion durations for Major Framework A and Minor Framework A projects indicates that the majority of these projects are completed in __approximately one year.__ This insight is crucial for estimating the expected duration for a significant portion of projects in the upcoming CDM. It can help optimise resource and crew allocation, ensuring more efficient project management and planning.
 
-5. The completion duration for projects under "Contestable" and "Open-Market" projects are comparable to one another and spans for __nearly a year and three months.__ 
+5. The completion duration for projects under Minor Framework B and Major Framework B projects are comparable to one another and spans for __nearly a year and three months.__ 
 
 ```{r}
 project_data <- project_data %>% mutate(completion_duration = days(stage1 - bca)) 
@@ -1109,7 +1109,7 @@ ggsave("images/completion_duration.jpeg",pl7,width = 8,height = 4)
 @fig-forecompvizbm illustrates the performance of the benchmark forecast models on the test dataset. The visualisation further overlays the actual approved projects in the test dataset duration between 2022 June to 2024 May. Some of the key observations are as follows:
 
 
-1. The Seasonal Naïve model, which forecasts future expected projects by replicating the annual seasonality and trend from the current year, demonstrated greater confidence compared to the standard Naïve model, as evidenced by its narrower prediction intervals. However, this model assumes that the seasonal patterns and trends observed in the current period will persist unchanged into future years. This assumption may be overly stringent, particularly for capital delivery models that are influenced by business cycles. Additionally, the seasonal patterns in the training data may not be strong enough to support this assumption reliably.
+1. The Seasonal Naïve model, which forecasts future expected projects by replicating the annual seasonality and trend from the current year, demonstrated forecasts higher than the actual number of approved projects. Additionally, this model assumes that the seasonal patterns and trends observed in the current period will persist unchanged into future years. This assumption may be overly stringent, particularly for capital delivery models that are influenced by business cycles. Additionally, the seasonal patterns in the training data may not be strong enough to support this assumption reliably.
 
 2. The Mean model, which forecasts future projects based on the average number of projects observed in the training data, exhibits the highest level of confidence among the benchmark models, as indicated by its narrow prediction intervals. This model assumes that small-scale projects valued at $5 million or less will remain relatively consistent each year due to their regular demand, making forecasting based on the historical mean a reasonable assumption. However, this model’s simplicity comes with limitations, as it does not account for seasonality or trends in the data, potentially making it less informative about the underlying patterns.
 
@@ -1127,7 +1127,6 @@ project_tsibble_test <- project_tsibble %>% filter(ffc_band == "< = 5" &
 model_fit <- project_tsibble_train |> 
   model(
      Mean = MEAN(Total),
-    Naive = NAIVE(Total),
     Season_Naive = SNAIVE(Total),
     ETS_ana = ETS(Total ~ error("A") + season("A")),
     Croston = CROSTON(Total))
@@ -1145,7 +1144,7 @@ model_fit <- project_tsibble_train |>
 #| fig-height: 3
 #| fig-width: 8
 #| fig-pos: "H"
-pl8 <- model_fit %>% select(-c(ETS_ana,Naive,Croston)) %>% forecast(h = "2 years",bootstrap =TRUE) %>% mutate(Total = distributional::dist_truncated(Total, 0)) %>%
+pl8 <- model_fit %>% select(-c(ETS_ana,Croston)) %>% forecast(h = "2 years",bootstrap =TRUE) %>% mutate(Total = distributional::dist_truncated(Total, 0)) %>%
  autoplot() + geom_line(
     data = project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` < ymd(20240601)),
     aes(x = `yearmonth(bca)`, y = Total, linetype = "Approved projects")) + guides(
@@ -1160,12 +1159,16 @@ pl8
 ggsave("images/benchmark_forecasts.jpeg",pl8,width = 8,height = 4)
 ```
 
-@sec-etsmethod delineated the process of selecting the ETS method which will be used for forecasting the number of projects. Based on the decomposition of the timeseries data, the type of ETS model which will be used for forecasting is the __ETS (A,N,A) model.__ 
+@sec-etsmethod delineated the process of selecting the ETS method which will be used for forecasting the number of projects. Based on the decomposition of the timeseries data, the type of ETS model which will be used for forecasting is the __ETS (A,N,A) model__ and is further explained through @eq-forecast. 
 
-Based on this particular configuration of the ETS model, the forecasts are provided by @eq-forecast.
 
 $$\boxed{y_t = l_{t-1} + s_{t-m} + \epsilon_t}$$ {#eq-forecast}
-Where, $l_{t-1}$ is the level of the timeseries in one previous time step, $s_{t-m}$ is the seasonality in one seasonal time step behind, and $\epsilon_t$ is the residual error of the forecasts. The level and seasonality of the timeseries are further calculated using @eq-level and @eq-season.
+Where, \
+$y_t$ is the field of interest. \
+$l_{t-1}$ is the level of the timeseries in one previous time step. \
+$s_{t-m}$ is the seasonality in one seasonal time step behind. \
+and $\epsilon_t$ is the residual error of the forecasts. \
+The level and seasonality of the timeseries are further calculated using @eq-level and @eq-season.
 
 $$l_t = l_{t-1} + \alpha \epsilon_t $$ {#eq-level}
 $$s_t = s_{t-m} + \gamma\epsilon_t $$ {#eq-season}
@@ -1310,13 +1313,13 @@ In addition to the KRA tracker dashboard, a structured Microsoft Excel template,
 
 The current CDM data analysis and forecasting project yielded the following results :
 
-1. Based on the analysis of sample data from CDM-21 and CDM-16, the new delivery model is projected to successfully deliver __at least 70% of the projects with a forecasted final cost (FFC) of $5 million or less.__
+1. Based on the analysis of sample data from CDM-21 and CDM-16, the new delivery model is projected to successfully deliver __approximately 70% of the projects with a forecasted final cost (FFC) of $5 million or less.__
 
 2. Projects with higher valuations and associated risks require approval from higher authorities, often external to the department or organization. This can lead to significantly longer approval times, with some projects taking well over a year to reach the “approved” stage. The current study recommends segmenting high-valuation projects into smaller, “bundled” projects to expedite the approval process, __potentially reducing the approval duration to approximately 8 months (250 days) and follow an approval process which is within the department or the organisation.__
 
-3. In the upcoming delivery model, it is expected that __more than half of all the projects will need to be approved by the "People leadership group".__ Additionally, the percentage of projects approved by the “Senior Leadership Group,” “Finance, Audit, and Compliance,” and “Managing Director (MD)” has remained __consistent over the past two CDMs,suggesting a stable pattern in the composition of future approvals.__
+3. In the upcoming delivery model, it is expected that __more than half of all the projects will need to be approved by the "Level 3 authority".__ Additionally, the percentage of projects approved by the “Level 2 authority,” “Finance and Audit” and “Managing Director” has remained __consistent over the past two CDMs,suggesting a stable pattern in the composition of future approvals.__
 
-4. Although __Small-Scale delivery program projects account for approximately 10 % of the total valuation of projects__ within a CDM, the labour utilisation is however the same as that of Frameworks delivery program projects which delivers a significantly larger proportion of the total valuation. The future Capital Delivery Model for PS-26 should explore __streamlining or bundling multiple Small-Scale projects to enhance efficiency in project management and optimize labor resource allocation.__
+4. Although __Minor Framework A delivery program projects account for approximately 10 % of the total valuation of projects__ within a CDM, the labour utilisation is however the same as that of Major Framework A delivery program projects which delivers a significantly larger proportion of the total valuation. The future Capital Delivery Model (CDM-26) should explore __streamlining or bundling multiple Small-Scale projects to enhance efficiency in project management and optimize labor resource allocation.__
 
 5. A scoring system mechanism was implemented through the KRA-KPI metric dashboards and templates, allowing Melbourne Water to __perform fair and transparent assessments of a service provider's project initiatives__, and at the same time, __financially incentivise them to improve over the course of the project__.
 
@@ -1327,7 +1330,7 @@ The current data analysis and forecasting project was created with the goal of f
 
 1. __Incorporating Spatial Analysis:__ The current study primarily focuses on temporal analysis, and spatial analysis has not been implemented due to data constraints. However, incorporating spatial analysis is expected to uncover valuable patterns and insights, especially regarding resource allocation and demand based on the location of the asset. Future analyses should integrate geographical data to provide a deeper understanding of projects across various asset locations of the organization.
 
-2. __Incorporating Inflation Factors in forecasts:__ While current forecasting methods are capable of predicting the total valuation of projects, they do not account for inflationary factors such as increases in raw material and manpower costs. Future developments in forecasting methods should incorporate the Consumer Price Index (CPI) to better estimate the total expected valuation of projects, reflecting the impact of inflation on project costs. Such forecasts would allow the project teams to get an informed idea regarding the various cost allocations.
+2. __Incorporating Inflation Factors in project valuation forecasts:__ While current forecasting methods are capable of predicting the total valuation of projects, they do not account for inflationary factors such as increases in raw material and manpower costs. Although forecasting the project valuations for CDM-26 was not under the scope of the current project, future developments in forecasting methods should incorporate the Consumer Price Index (CPI) to better estimate the total expected valuation of projects, reflecting the impact of inflation on project costs. Such forecasts would allow the project teams to get an informed idea regarding the various cost allocations.
 
 3. __Visualisation and Accessibility:__ To make the current study available to a broader audience, the insights and visualisations can be replicated on a PowerBI organisational dashboard. This would have the added benefit of leveraging Microsoft Fabric’s datalake where the live data can be extracted, transformed and loaded onto the dashboard, providing insights based on live project data.
 
