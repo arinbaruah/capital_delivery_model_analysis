@@ -45,7 +45,7 @@ The ongoing project aimed at optimizing the infrastructure capital delivery mode
 # Quick links to project files
 
 1. [Final executive report](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/cdmr_report_monash.pdf) [Under progress] 🚧
-2. [Final presentation](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/CDMR_analysis.html) [Finalised] 🎬
+2. [Final presentation](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/Final_presentation.pptx) [Finalised] 🎬
 3. [Data dictionary](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/data_dictionary.md)
 
 # License
