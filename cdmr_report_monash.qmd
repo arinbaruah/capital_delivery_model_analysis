@@ -55,7 +55,7 @@ The analysis report will use numerous abbreviations and terminologies at various
 12. __CDM (Capital Delivery Model)__: The Capital Delivery Model is a set of frameworks that allows Melbourne Water to efficiently delegate the design or construction activities to the third party service provider by accounting for the type of project, cost of project and the risks associated with the project.
 13. __Owner Team__ : The subdivision within Melbourne Water Corporation responsible for completing the project 
 14. __KRA (Key results area)__: A set of collective metrics which provide the current progress or performance in a broad area of interest.
-15. __KPI (Key performance indicator)__: A single specific metric which provides the current progress or performance in a focussed area of interest.
+15. __KPI (Key performance indicator)__: A single specific metric which provides the current progress or performance in a focused area of interest.
 
 
 \newpage
@@ -300,10 +300,6 @@ project_data <- project_data %>% mutate(status = if_else(stage1 <= today(),"Comp
 ```
 
 
-
-
-
-
 # Data Source
 
 The data for the current analysis has been sourced from the “Estimating & Scheduling” PowerBI dashboard in the Major Program Delivery workspace at Melbourne Water Corporation. This dashboard draws this data from the Microsoft Project Online software which logs individual project data based on the inputs of the assigned project managers. The data was exported as a CSV file on 19th July, 2024 and as such, contains the latest updated project valuations up to that date. Due to the sensitive nature of the data, there is no public access to this data. 
@@ -328,7 +324,7 @@ The limitations within the source of the data which may have affected the analys
 
 4. The KRA-KPI tracking dataset is currently in a Microsoft Excel format where the information is not presented in a tidy, structured manner, making it unsuitable for analysis in R or PowerBI. Manually cleaning and reformatting the data into a tidy format could introduce potential inaccuracies, which would require additional filtering at a later stage.
 
-5. The dataset here is an observational data and in particular, a census data. Some of the limitations that are prevalent in such datasets are as follows :
+5. The dataset here is an observational data. Some of the limitations that are prevalent in such datasets are as follows :
 
    - Each row in the dataset is a project whose details are provided by an individual Project Manager. As a result, there may be non-uniformity in the data provided as each Project Manager may have their own interpretations of the data they may have provided.
    - The data maybe mis-classified or filled in non-uniform units by the various sources, leading to lack of accuracy of the overall dataset.
@@ -336,7 +332,7 @@ The limitations within the source of the data which may have affected the analys
 
 # Introduction
 
-The construction of large-scale infrastructure projects, commonly referred to as “CAPEX” projects, is highly resource-intensive and typically requires effective collaboration among multiple organisations for successful and timely completion. @no2013specification suggests that in a collaborative work environment, teams are required to generate information using standardized procedures and agreed-upon standards and methods. This ensures consistency in form and quality, allowing the information to be used and reused without the need for modification or interpretation. However, in practice, such high level collaboration is often challenging and needs well laid communication as well as contractual frameworks for effective project delivery.
+The construction of large-scale infrastructure projects, commonly referred to as “CAPEX” projects, is highly resource-intensive and typically requires effective collaboration among multiple organisations for successful and timely completion. @no2013specification suggests that in a collaborative work environment, teams are required to generate information using standardised procedures and agreed-upon standards and methods. This ensures consistency in form and quality, allowing the information to be used and reused without the need for modification or interpretation. However, in practice, such high level collaboration is often challenging and needs well laid communication as well as contractual frameworks for effective project delivery.
 
 To initiate, monitor, and deliver these projects, a comprehensive framework is usually developed. This framework assesses the project’s valuation and associated risks, and then engages the appropriate service providers to ensure timely project delivery. This framework which governs the delivery route of a project is termed as the Capital Delivery Model.
 
@@ -348,13 +344,13 @@ Each Capital Delivery Model presides over a period of 5 years, after the complet
 
 1. The process of estimating the mix of the type of projects expected in the new capital delivery model after the 2026 price submission is based on the analysis of the current delivery model (CDM-21) and the previous delivery model (CDM-16). The forthcoming 2026 price submission is projected to surpass recent submissions in value, presenting significant challenges in project management. This includes the engagement of service providers for construction, efficient management of key crew resources, and rigorous monitoring to ensure timely infrastructure delivery. The current data analysis review of the projects in CDM-16 and CDM-21 will provide an adequate baseline of the expected proportion of the major capital delivery projects based on valuation and duration expected in the future delivery model (CDM-26), thereby providing insights and eventually aiding in the key decision making for creation of the frameworks.
 
-2. The KRA-KPI tracking methodology will enable Melbourne Water to conduct fair and transparent assessments of service providers assigned to projects in an efficient and quick manner. The newly generated KRA-KPI tracking templates will further highlight any calculation discrepancies and flag historical data changes, while the dashboard will provide a comprehensive overview of assessments. This approach adds a layer of verification, ensuring data integrity and facilitating quicker decision-making and assessment turnarounds.
+2. The KRA-KPI tracker templates and dashboards will enable Melbourne Water to conduct fair and transparent assessments of service providers assigned to projects in an efficient and quick manner. They will further highlight any calculation discrepancies and flag historical data changes, while the dashboard will provide a comprehensive overview of assessments. This approach adds a layer of verification, ensuring data integrity and facilitating quicker decision-making and assessment turnarounds.
 
 # Objectives
 
 The objectives and the scope of the analysis of the CDMs were defined through Melbourne Water fortnightly workshops and feedback as received from the project director and the steering group. These are delineated as follows:
 
-  1. The analysis must clearly indicate the performance level of project deliveries for both the current CDM-21 and the previous CDM-16. This should primarily focus on the duration between critical project stages and highlight any notable changes in this aspect.
+  1. The analysis must clearly indicate the performance level of project deliveries for both the current CDM-21 and the previous CDM-16. This should primarily focus on the duration between critical project stages and resource allocation, highlighting any notable changes in this aspect.
   2. Insights on the current and previous CDM must be able to provide a baseline for the estimated number of projects which can be expected in the future delivery model (CDM-26). These projections would allow for more informed decision making while building the contractual frameworks to engage service providers.
   3. A detailed analysis of the historical project data should indicate the proportion of projects requiring approval by each governing body. This will provide an estimation of the duration of projects from the BNI stage to the BCA stage for the new delivery model, enabling better resource management.
   4. Adoption of templates and dashboards that allow Melbourne Water to track and verify the current project progress and further facilitates fair and transparent assessment of the service providers during the course of project execution or delivery.
@@ -379,13 +375,13 @@ This section is dedicated for the purpose of explaining the detailed methodology
 
 ## Selection of projects for analysis
 
-While the dataset contains the details for projects undertaken by the various divisions of Melbourne Water Corporation, for the purpose of the current analysis, only those projects which are delivered or expected to be delivered by the Major Capital Delivery division are considered. In particular, these are those projects which are delivered through a contractual framework (called as the "Water and Sewerage Program"), engineering maintenance projects to keep current assets running, or in certain instances, large projects which are tendered in the open market for service providers to bid.
+While the dataset contains the details for projects undertaken by the various divisions of Melbourne Water Corporation, for the purpose of the current analysis, only those projects which are delivered or expected to be delivered by the "Major Capital Delivery" division are considered. In particular, these are those projects which are delivered through a contractual framework (Major Framework A,Minor Framework B), engineering maintenance projects to keep current assets running (Minor Framework A), or in certain instances, large projects which are tendered in the open market (Major Framework B).
 
-In the current dataset, these projects are those which come under the delivery programs as tabulated in @tbl-programs.
+In the current dataset, these projects are those which come under the delivery programs as tabulated in @tbl-programs. All other delivery programs have been filtered out of the dataset.
 
 ```{r}
 #| label: tbl-programs
-#| tbl-cap: "Major Capital Delivery programs"
+#| tbl-cap: "Delivery programs under Major Capital Delivery division"
 #| tbl-pos: H
 tibble(
   "Capital Delivery Program" = c("Minor Framework A", "Major Framework A",
@@ -400,8 +396,6 @@ tibble(
   row_spec(1:4, font_size = 8)
 ```
 
-As a result, while analysing the current data, only those projects with delivery programs matching the above list of programs are considered.
-
 ## Assigning project to each capital delivery model
 
 While the data contains key dates such as the BNI, PBC, BCA and stages 1-3, however, it is essential to assign each project into its respective capital delivery model. Although this data is not readily captured at the source, however, through a deeper understanding of the critical project dates, a logic can be devised that assigns each project to a categorical variable indicating the version of CDM this model was a part of.
@@ -412,7 +406,7 @@ While selected projects may bypass some of the approval gates, however, this flo
 
 ![Project approval gate flowchart](images/project_stage.png){#fig-flowchart}
 
-For the purpose of assigning the delivery model to each of the projects, the BCA date is utilised as this is effectively the date when the project went live. On the other hand, the completion status of the project is determined based on whether the Stage 1 date is before or after the data export date. (19th July, 2024). @tbl-cdm tabulates the criteria utilised for assigning each project to a relevant CDM.
+For the purpose of assigning the delivery model to each of the projects, the BCA date is utilised as this is effectively the date when the project went live. For example, if a project was approved in the year 2017, it will be assigned to CDM-16. @tbl-cdm tabulates the criteria utilised for assigning each project to a relevant CDM.
 
 ```{r}
 #| label: tbl-cdm
@@ -466,7 +460,7 @@ Due to the sensitive nature of the data related to service provider submissions,
 
 ## Classifying projects based on approval authority
 
-Each capital project which is to be delivered within a CDM will require appropriate approvals from the relevant authority. The exact level of authorisation is generally based on the contract value of the project as well as the risk associated with each project. For the purpose of the current analysis, this decision is instead based on the FFC of the project. As a result, the total percentage of projects attributed to each authority is a conservative estimate of the actual expected projects. The FFC valuations that govern the authorisation level for a project is delineated in @tbl-approval.
+Each capital project which is to be delivered within a CDM will require appropriate approvals from the relevant authority. The exact level of authorisation is generally based on the contract value of the project as well as the risk associated with each project. As the contract value is not readily available, the FFC value is used instead to simplify the analysis. As a result, the total percentage of projects attributed to each authority is a conservative estimate of the actual expected projects since the FFC valuations are higher than contract values. The FFC valuations that govern the authorisation level for a project is delineated in @tbl-approval.
 
 As the valuation of a project rises, it typically requires to go through multiple approval gates. This may extend the duration to obtain the BCA significantly, thereby causing delays in resource allocation, selection of the service provider for the project, and subsequent crew mobilisation. Through the analysis of the percentage of projects which fall under each approval authority, an informed decision can be made on the expected duration of approvals for a project. 
 
@@ -491,9 +485,9 @@ tibble(
 
 ## Forecasting number of projects in the future CDM
 
-The current analysis attempts to forecast the number of projects that are expected in CDM-26. For this purpose, the project data corresponding to the delivery models C-16 and C-21 are utilised to forecast the numbers in the future delivery model. As explained in @sec-limit, due to data migration and data integrity issues for the projects in the C-11 delivery model, this is not utilised as part of the current analysis.
+The current analysis attempts to forecast the number of projects that are expected in CDM-26. For this purpose, the project data corresponding to the delivery models CDM-16 and CDM-21 are utilised to forecast the numbers in the future delivery model. As explained in @sec-limit, due to data migration and data integrity issues for the projects in the CDM-11 delivery model, this is not utilised as part of the current analysis.
 
-Additionally, the forecasts were calculated for the projects with FFC valuations of 5 mil $ or lower. As explained in @sec-prodist, these subset of projects tend to form the majority of the projects for any delivery model and also requires about as much labour hours as all other projects combined. Hence, a forecasted number of projects in each month and year of the new delivery program can allow for better crew resource management and will additionally aid in proactive procurement of raw materials rather than reactive procurement, allowing for more efficient delivery process.
+Additionally, the forecasts were calculated for the projects with FFC valuations of 5 mil $ or lower. As explained in @sec-prodist, these subset of projects tend to form the majority of the projects for any delivery model and also requires about as much labour hours as all other projects combined. Hence, a forecasted number of projects in each month and year of the new delivery model can allow for better crew resource management and will additionally aid in proactive procurement of raw materials rather than reactive procurement, allowing for more efficient delivery process.
 
 The forecasts will be performed using both benchmark techniques as well as specialised techniques. These are listed in @tbl-forecast and delineated further in @sec-forecast.
 
@@ -504,7 +498,7 @@ The forecasts will be performed using both benchmark techniques as well as speci
 #| tbl-pos: H
 
 tibble(
-  "Forecast method" = c("Mean", "Naïve","Seasonal Naïve","ETS","ARIMA")) %>%
+  "Forecast method" = c("Mean", "Croston","Seasonal Naïve","ETS")) %>%
   kable("latex") %>%
   kable_styling(latex_options = c("striped"), 
                 full_width = FALSE, 
@@ -517,7 +511,7 @@ tibble(
 
 The selection of the ETS model would require us to study the timeseries data of the projects worth 5 mil $ or lower in detail and outline any important timeseries characteristics that might be beneficial to obtain the appropriate ETS model for forecasting the projects in the upcoming delivery model. To train and evaluate the forecast models, a test dataset spanning from May 2022 to May 2024 is utilized. Projects completed before May 2022 serve as the training dataset.
 
-Analyzing the decomposed data enables us to select the most appropriate type of ETS model for forecasting the number of projects in the upcoming delivery period. An additive decomposition of a timeseries data is obtained based on @eq-decomp. 
+Analysing the decomposed data enables us to select the most appropriate type of ETS model for forecasting the number of projects in the upcoming delivery period. An additive decomposition of a timeseries data is obtained based on @eq-decomp. 
 
 $$ \boxed{y_t = S_t + T_t + R_t}$$ {#eq-decomp}
 
@@ -527,11 +521,11 @@ $y_t$ is the data of interest, $S_t$ is the seasonal component, $T_t$ is the tre
 
 @fig-decomp illustrates the additive decomposition of the time series data into its trend, seasonal, and remainder components. The key characteristics of this time series are outlined below.
 
-1. There appears to be a cyclic trend in the data which repeats itself in approximately 3 years as observed through the sinusoidal trend line. This indicates that there is no clear additive or multiplicative trend in the data which can be replicated through the ETS model. The ETS model is however well suited to work with cyclic data.
+1. There appears to be a stationary trend in the data other than the recent months. This indicates that there is no clear additive or multiplicative trend in the data which can be modeled through the ETS model.
 
-2. The seasonality of the current timeseries data indicates around 3 peaks when projects get approved in each year. Additionally, the seasonality appears to be fairly consistent throughout the years, indicating additive seasonality of the data.
+2. The seasonality of the current timeseries data indicates a peak close to the middle of the year for approved projects. Additionally, the seasonality appears to be fairly consistent throughout the years, indicating additive seasonality of the data.
 
-3. The scale of the remainder appears to be large, meaning that the model is unable to capture some important characteristics in the timeseries, possibly due to the limited availability of the current data.
+3. The scale of the remainder appears to be large, meaning that the model is unable to capture some important characteristics in the timeseries, possibly due to the limited availability of the current data and a few large outliers.
 
 4. The remainder appears to have no distinct patterns in it and is centered around zero. This is an ideal outcome as it shows that information left over after accounting for the trend and seasonality in the data is unbiased and has a mean of zero over the entire timeseries. 
 
@@ -568,7 +562,7 @@ resids
 ggsave("images/residuals.jpeg",resids,width = 8,height = 4)
 ```
 \begin{warningBox}
-The current forecast models face limitations due to the unavailability of project data beyond the current and past CDM. As a result, the forecasts exhibit high uncertainty, characterized by large residuals and broad prediction intervals.
+The current forecast models face limitations due to the unavailability of project data beyond the current and past CDM. This resulted in forecasts exhibiting high uncertainty, characterized by large residuals and broad prediction intervals.
 
 Nevertheless, with the accumulation of additional data in the future, the model is anticipated to produce more accurate point forecasts and narrower, more informative prediction intervals. The primary objective of this study is to establish a reproducible pipeline for generating these forecasts.
 \end{warningBox}
@@ -578,13 +572,11 @@ Nevertheless, with the accumulation of additional data in the future, the model 
 
 The critical phase of a project initiates from the BCA to stage 3. As this is the period when the resources get allocated to projects, each day is expected to cost Melbourne Water. Hence, it is paramount to keep a track on the project completion and at the same time, ensure that the delivery of the project meets the quality requirements.
 
-@kunkcu2022using have studied various construction management projects utilizing key performance indicators (KPIs) and found them to be highly effective tools for evaluating project performance. In the context of Melbourne Water's projects, the focus is to engage a service provider who is able to deliver the project within the constrained time period, communicates progress regularly, minimises cost and time variations,reports and mitigates unsafe work conditions, engages a diverse group of employees, and undertakes sustainable initiatives. These are called the key result areas (KRAs) and are drawn into a legal agreement while employing a service provider. A high KRA score often attracts a monetary incentive for the service provider, thereby making this an area of interest for both the key parties.
+@kunkcu2022using have studied various construction management projects utilizing key performance indicators (KPIs) and found them to be highly effective tools for evaluating project performance. In the context of Melbourne Water's projects, the focus is to engage a service provider who is able to deliver the project within the constrained time period, communicates progress regularly, minimises cost and time variations,reports and mitigates unsafe work conditions, engages a diverse group of employees, and undertakes sustainable initiatives. These are called the key result areas (KRAs) and are drawn into a legal agreement while employing a service provider. A high KRA score often attracts a monetary incentive for the service provider, thereby making this an area of interest for them and an area for close monitoring for Melbourne Water.
 
 While the KRAs are subjective in nature and difficult to track, each of them are further quantified through the usage of KPIs. Based on the data provided by the service providers and through careful feature engineering, a framework to track and analyse project progress is delineated in @sec-results. The role of the KPIs and KRAs are two-fold. First, these indicators allow the team at Melbourne Water to gauge the progress of the project, secondly, it allows Melbourne Water to engineer the right behaviour on the part of the service provider who is responsible for the construction of the project. @fig-flowchartkpi illustrates the scope of the KRAs and KPIs within a project.
 
-![KRA-KPI flowchart](images/kra_kpi.png){#fig-flowchartkpi}
-
-
+![KRA-KPI flowchart](images/kra_kpi.png){#fig-flowchartkpi fig-height=3}
 
 # Results and Discussion {#sec-results}
 
@@ -594,11 +586,11 @@ Each CDM contains specific delivery programs under which a project is managed ri
 
 @fig-comp illustrates the compositions of the current delivery model (CDM-21) and the past model (CDM-16). Some of the observations are delineated below:
 
-1. In each of the CDMs, the Open Market projects constitute the smallest proportion. This is usually the case because such projects tend to incur a large sum of FFC and some of these projects could also be "green-field" projects that take a long time period for delivery.
+1. In each of the CDMs, the "Major Framework B" projects constitute the smallest proportion. This is usually the case because such projects tend to incur a large sum of FFC and some of these projects could also be "green-field" projects that take a long time period for delivery.
 
-2. While the percentage of "Framework" projects reduced from CDM-16 to CDM-21, a subsequent rise in "Small-scale" and "Contestable" projects were observed within the same period. It is especially interesting to note that the current model delivers nearly half of all the projects through the "Small-Scale" program.
+2. While the percentage of "Major Framework A" projects reduced from CDM-16 to CDM-21, a subsequent rise in "Minor Framework A" and "Minor Framework B" projects were observed within the same period. It is especially interesting to note that the current model delivers nearly half of all the projects through the "Minor Framework A" program.
 
-3. Allocating more projects through the delivery programs of "Small-scale" and "Contestable" route in the current model was expected to expedite the delivery period of projects as these programs typically require fewer approvals and consequently, lesser time to reach the BCA stage.
+3. Allocating more projects through the delivery programs of "Minor Framework A" and "Minor Framework B" route in the current model was expected to expedite the delivery period of projects as these programs typically require fewer approvals and consequently, lesser time to reach the BCA stage.
 
 4. In the future CDM, a similar strategy may be utilised to expedite projects by requiring fewer approval gates and delivering projects quicker.
 
@@ -642,7 +634,7 @@ ggsave("images/distribution_delivery_programs.jpeg",pl1,width = 8,height = 4)
 
 3. Analysis of the current and the previous CDMs suggest that the new delivery model (CDM-26) would be expected to constitute majority of the projects with FFCs below 5 mil $.
 
-4. Such projects are associated with works such as laying new pipelines, pipeline renewals, mechanical or electrical machinery maintainence and other works of similar nature. As a result, the demand for these projects in each year are expected to remain fairly consistent, and hence provides valuable insights what the new delivery model could shape up as.  
+4. Such projects are associated with works such as laying new pipelines, pipeline renewals, mechanical or electrical machinery maintainence and other works of similar nature. As a result, the demand for these projects in each year are expected to remain fairly consistent, and hence provides valuable insights on the future CDM.
 
 
 ```{r}
@@ -684,7 +676,7 @@ ggsave("images/distribution_cost_bands.jpeg",pl2,width = 8,height = 4)
 ```{r}
 #| label: fig-ffcprop
 #| fig-cap: "Cumulative project valuations across different CDMs and FFC bands"
-#| fig-height: 4 
+#| fig-height: 3
 #| fig-width: 8
 
 project_group_progam <- project_data %>%
@@ -715,7 +707,7 @@ ggsave("images/small_scale_cost_distribution.jpeg",pl3,width = 8,height = 4)
 ```{r}
 #| eval: false
 #| fig-cap: "Cumulative project valuations across different CDMs and FFC bands"
-#| fig-height: 4 
+#| fig-height: 3 
 #| fig-width: 8
 
 project_group_progam <- project_data %>% 
@@ -767,7 +759,7 @@ Some of the key observations and recommendations based on the breakdown of the p
 ```{r}
 #| label: fig-approvaltime
 #| fig-cap: "Distribution of project approval duration for various approval bodies "
-#| fig-height: 4 
+#| fig-height: 3 
 #| fig-width: 8
 
 dim_order <- c("Government approval","Board of directors","Finance and Audit",
@@ -808,7 +800,7 @@ ggsave("images/approval_duration_distribution.jpeg",pl4,width = 8,height = 4)
 ```{r}
 #| label: fig-approval
 #| fig-cap: "Distribution of projects across various approval bodies and CDMs"
-#| fig-height: 4 
+#| fig-height: 3 
 #| fig-width: 8
 
 
@@ -976,7 +968,7 @@ Where $\mu$ is the average duration (in days) to submit a business case.
 ```{r}
 #| label: fig-compduration
 #| fig-cap: "Comparison of PBC duration across CDMs"
-#| fig-height: 4 
+#| fig-height: 3 
 #| fig-width: 8
 
 
