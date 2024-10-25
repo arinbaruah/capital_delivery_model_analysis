@@ -57,6 +57,9 @@ The analysis report will use numerous abbreviations and terminologies at various
 14. __KRA (Key results area)__: A set of collective metrics which provide the current progress or performance in a broad area of interest.
 15. __KPI (Key performance indicator)__: A single specific metric which provides the current progress or performance in a focused area of interest.
 
+# GitHub link
+
+All the files required to reproduce this analysis can be referred to on this [GitHub repository](https://github.com/arinbaruah/capital_delivery_model_analysis).
 
 \newpage
 
@@ -1189,7 +1192,7 @@ pl10 <- model_fc |> autoplot() +
     x = "Timeline",
     y = "Number of projects",
     title = "Forecasted number of projects in CDM-26 using ETS (A,N,A) model",
-    subtitle = "Projects withh 5 mil $"
+    subtitle = "Projects with FFC <= 5 mil $"
   ) + theme_minimal()
 
 pl10

@@ -116,7 +116,7 @@ The systematic approach to studying the historical capital delivery models and p
 
 ![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/images/ets_ana_model_forecast_results.jpeg)
 
-6. Although __Minor Framework A delivery program projects account for approximately 10 % of the total valuation of projects__ within a CDM, the labour utilisation is however the same as that of Frameworks delivery program projects which delivers a significantly larger proportion of the total valuation. The future Capital Delivery Model for PS-26 should explore __streamlining or bundling multiple Small-Scale projects to enhance efficiency in project management and optimize labor resource allocation.__
+6. Although __Minor Framework A delivery program projects account for approximately 10 % of the total valuation of projects__ within a CDM, the labour utilisation is however the same as that of Frameworks delivery program projects which delivers a significantly larger proportion of the total valuation. The future Capital Delivery Model for PS-26 should explore __streamlining or bundling multiple Minor Framework A projects to enhance efficiency in project management and optimize labor resource allocation.__
 
 ![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/images/labour_hours.png)
 
