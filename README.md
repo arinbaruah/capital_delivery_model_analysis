@@ -9,14 +9,14 @@
 # Repository Navigation
 ```
 .
-├── cdmr_report_monash.qmd  # Reproducible analysis file in .qmd format
-├── cdmr_report_monash.pdf  # Rendered project report in PDF format
-├── Short_talk.pptx         # Interim 3-minute presentation
+├── Final_report.qmd  # Reproducible analysis file in .qmd format
+├── Final_report.pdf  # Rendered project report in PDF format
+├── Interim_presentation.pptx         # Interim 3-minute presentation
 ├── Final_presentation.pptx # Final 10-minute presentation
 ├── images                  # Important images for report
 ├── literature              # Folder containing references to literature
 ├─── data                   # Datasets
-│   └── Capital_Deliver_Project_deidentified.csv  # De-identified project data
+│   └── Capital_Delivery_Project_deidentified.csv  # De-identified project data
 │                                
 │                                    
 └── ...
@@ -33,7 +33,7 @@ Steps to reproduce the analysis are as follows:
 5. Once all the packages are updated/restored, run the following command in __R terminal__ to render the PDF file
 
 ```
-quarto render cdmr_report_monash.qmd
+quarto render Final_report.qmd
 ```
 
 # Acknowledgement
@@ -70,8 +70,8 @@ This repository is licensed under Creative Commons Legal Code CC0 1.0 Universal 
 | `Stage1`                 | Datetime            | A date on which the first stage of practical completion of project is reached |
 | `Stage2`                 | Datetime            | A date on which the second stage of practical completion of project is reached |
 | `Stage3`                 | Datetime            | A date on which the defect detection period of project is reached |
-| `EPT`                    | Character           |An indicator for the number of gates (approvals) a project must go through |
-| `Owner Team`             | Character           |The subdivision within Melbourne Water Corporation responsible for completing the project |
+| `EPT`                    | Character           | An indicator for the number of gates (approvals) a project must go through |
+| `Owner Team`             | Character           | The subdivision within Melbourne Water Corporation responsible for completing the project |
 
 # Background 🕵🏻‍♀️
 

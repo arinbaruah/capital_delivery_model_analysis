@@ -77,7 +77,9 @@ By systematically examining past and present performance, the aim is to identify
 
 
 ```{r read-data}
-project_data <- read_csv("data/Capital_Deliver_Project_deidentified.csv")
+# Reading data and using de-identified delivery program names
+
+project_data <- read_csv("data/Capital_Delivery_Project_deidentified.csv")
 project_data <- clean_names(project_data)
 project_data <- project_data %>% mutate(delivery_program = case_match(delivery_program,"Major Works - Small Scale" ~ "Minor Framework A",
                                                                       "Contestable" ~ "Minor Framework B" ,
@@ -87,6 +89,7 @@ project_data <- project_data %>% mutate(delivery_program = case_match(delivery_p
 ```
 
 ```{r date-format}
+
 
 project_data<- project_data %>%
   mutate(bni = sapply(strsplit(as.character(bni), " "), `[`, 1)) # Cleaning BNI dates
@@ -179,95 +182,10 @@ project_tsibble <- project_numbers %>% # Tsibble created based on BCA year
 
 
 
-
 ```{r}
-#| eval: false
 
-gg_subseries(project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` < ymd(20240601)))
+# Additive timeseries decomposition plots
 
-gg_season(project_tsibble %>% filter(ffc_band == "< = 5" & (`yearmonth(bca)` < ymd(20240601))))
-
-ACF(project_tsibble %>% filter(ffc_band == "< = 5")) %>% autoplot()
-```
-
-
-```{r}
-#| eval: false
-# Example data
-
-library(RColorBrewer)
-data <- data.frame(
-  Source = c("A", "A", "B", "B", "C", "C"),
-  Target = c("X", "Y", "X", "Y", "Y", "Z"),
-  Freq = c(10, 20, 15, 25, 5, 10)
-)
-
-
-project_group_progam <- project_data %>%
-  group_by(ffc_band, cdm) %>%
-  summarise(Total = sum(ffc)) %>%
-  ungroup() %>%
-  group_by(cdm) %>%
-  mutate(Percentage = Total / sum(Total))
-
-
-colors <- brewer.pal(n = length(unique(data$Source)), name = "Set2")
-
-ggplot(data = data, aes(axis1 = Source, axis2 = Target, y = Freq)) +
-  geom_alluvium(aes(fill = Source), color = "black") +
-  geom_stratum() +
-  geom_label(stat = "stratum", aes(label = after_stat(stratum)), size = 5, fill = "white", color = "black") +
-  scale_fill_manual(values = colors) +
-  theme_void() +
-  theme(
-    plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
-    legend.position = "none" # Hide the legend for a cleaner look
-  ) +
-  ggtitle("Enhanced Sankey Diagram Example")
-
-
-ggplot(data = project_group_progam, aes(axis1 = ffc_band, axis2 = cdm, y = Total)) +
-  geom_alluvium(aes(fill = cdm, color = "black")) +
-  geom_stratum() +
-  geom_label(stat = "stratum", aes(label = after_stat(stratum)), size = 5, fill = "white", color = "black") +
-  #scale_fill_manual(values = colors) +
-  theme_void() +
-  theme(
-    plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
-    legend.position = "none" # Hide the legend for a cleaner look
-  ) +
-  ggtitle("Enhanced Sankey Diagram Example")
-
-
-library(dplyr)
-
-# Sample data
-data <- data.frame(
-  Project = c('Project A', 'Project B', 'Project C', 'Project D', 'Project E'),
-  Percentage = c(20, 15, 15, 10, 30),
-  Cost = c(10, 5, 5, 2, 8)
-)
-
-# Sort data by Cost in descending order
-data <- data %>%
-  arrange(desc(Cost))
-
-# Calculate cumulative percentage for cost
-data <- data %>%
-  mutate(CumulativeCost = cumsum(Cost) / sum(Cost) * 100)
-
-library(ggplot2)
-
-ggplot(data = data, aes(x = reorder(Project, -Cost), y = Cost)) +
-  geom_bar(stat = "identity") +
-  geom_line(aes(y = CumulativeCost * max(Cost) / 100, group = 1), color = "blue", size = 1) +
-  scale_y_continuous(sec.axis = sec_axis(~ . * 100 / max(Cost), name = "Cumulative Percentage")) +
-  labs(x = "Projects", y = "Costs", title = "Pareto Chart") +
-  theme_minimal()
-```
-
-
-```{r}
 dcmp <- project_tsibble |> filter(ffc_band == "< = 5" & `yearmonth(bca)` < ymd(20240601)) |>
   model(stl = STL(Total ~ season(window = 13),robust = TRUE)) 
 #components(dcmp) %>% autoplot()
@@ -540,6 +458,8 @@ $y_t$ is the data of interest, $S_t$ is the seasonal component, $T_t$ is the tre
 #| fig-height: 4 
 #| fig-width: 8
 
+# Plotting the additive decomposition of timeseries data
+
 pl_decomp <- components(dcmp) %>% autoplot() + 
   labs(title = "Time series decomposition plot",
        subtitle = "Projects with FFC <= 5 mil $",
@@ -555,6 +475,8 @@ ggsave("images/stl_decomposition.jpeg",pl_decomp,width = 8,height = 4)
 #| fig-cap: "Residual diagnostic plots"
 #| fig-height: 4 
 #| fig-width: 8
+
+# Residual diagnostic plots
 resids <- gg_tsresiduals(dcmp) + labs(x = "Timeline",
                             title = "Residual diagnostics for timeseries data",
                             subtitle = "Projects with FFC <= 5 mil $") 
@@ -767,6 +689,8 @@ dim_order <- c("Government approval","Board of directors","Finance and Audit",
 project_approval_duration <- project_data %>% filter(cdm != "CDM-26") %>% 
   group_by(approval_body) %>% mutate(approval_duration = days(bca-pbc)) 
 
+# Using de-identified approval group names
+
 project_approval_duration <- project_approval_duration %>% mutate(approval_body_dummy = case_when( approval_body ==  "DTF" ~ "Government approval",
                                                                    approval_body == "MW Board" ~ "Board of directors",
                                                                    approval_body == "Finance, Audit and Compliance" ~ "Finance and Audit",
@@ -775,7 +699,7 @@ project_approval_duration <- project_approval_duration %>% mutate(approval_body_
                                                                    approval_body == "Senior Leadership Group" ~ "Level 2 authority",
                                                                    approval_body == "People Leadership Group" ~ "Level 3 authority"))
 
-
+# Using ascending order of authorities 
 dim_order <- c("Level 3 authority","Level 2 authority","Level 1 authority","Managing Director","Finance and Audit",
                "Board of directors","Government approval")
 
@@ -858,8 +782,6 @@ framework_cdm21 <- project_data %>% filter(cdm == "CDM-21" &
                                              delivery_program == "Major Framework A") %>% 
   select(conception_duration) %>% mutate_all(day) %>% drop_na()
 
-#t.test(framework_cdm21,framework_cdm16)$p.value 
-
 open_cdm16 <- project_data %>% filter(cdm == "CDM-16" & 
                                              delivery_program == "Major Framework B") %>% 
   select(conception_duration) %>% mutate_all(day) %>% drop_na()
@@ -867,7 +789,7 @@ open_cdm21 <- project_data %>% filter(cdm == "CDM-21" &
                                              delivery_program == "Major Framework B") %>% 
   select(conception_duration) %>% mutate_all(day) %>% drop_na()
 
-# Permutation test for framework
+# Permutation test for Major Framework A projects
 
 obs_diff_framework <- mean(framework_cdm21$conception_duration) - mean(framework_cdm16$conception_duration)
 R <- 5000
@@ -903,9 +825,7 @@ ggsave("images/permutation_test_framework.jpeg",pl_framework,width = 8,height = 
 ```
 
 ```{r}
-# Permutation test for open
-
-
+# Permutation test for Major Framework B projects
 
 obs_diff <- mean(open_cdm21$conception_duration) - mean(open_cdm16$conception_duration)
 R <- 5000
@@ -1025,10 +945,6 @@ The other critical stage of the projects is to monitor the duration between the 
 
 ```{r}
 project_data <- project_data %>% mutate(completion_duration = days(stage1 - bca)) 
-# %>% mutate(delivery_program_dummy = case_when(delivery_program == "Major Works - Small Scale" ~ "Small scale projects",
-#                                                                         delivery_program == "Major Works - Framework" ~ "Framework projects",
-#                                                                         delivery_program == "Major Works - Open Market" ~ "Large scale projects",
-#                                                                         delivery_program == "Contestable" ~ "Small scale contestable projects"))
 
 delduration <- ggplot(data = project_data %>% filter(status == "Completed"),aes(x = day(completion_duration),fill = delivery_program)) + geom_density()  + scale_fill_tableau(palette = "Tableau 10") + theme_minimal() + 
 facet_wrap(~delivery_program,ncol = 1) + theme(legend.position = "none",
@@ -1042,25 +958,6 @@ subtitle = "Number of days between BCA and Stage 1")
 
 ```
 
-```{r}
-#| eval: false
-medduration <- project_data %>% filter(status == "Completed") %>% 
-  group_by(delivery_program) %>%
-  summarise(Median_completion = median(day(completion_duration))) 
-
-medduration <- medduration %>% 
-  ggplot(aes(y = reorder(delivery_program,-Median_completion), x = Median_completion, fill = delivery_program)) + 
-  geom_col() + scale_fill_tableau(palette = "Tableau 10") + 
-  geom_label(aes(label = round(Median_completion,0),hjust = 1)) +  theme_minimal() + theme(legend.position = "none",
-                                                                        plot.title = element_text(size = 10),
-                                                                        plot.subtitle = element_text(size = 8),
-                                                                        axis.text = element_text(size = 7)) + 
-  labs(x = "Project completion duration (Days)",
-       y = "Delivery program",
-       title = "Median duration for project completion",
-       subtitle = "Number of days between BCA and Stage 1")
-
-```
 
 
 ```{r}
@@ -1119,6 +1016,9 @@ ggsave("images/completion_duration.jpeg",pl7,width = 8,height = 4)
 ```{r}
 #| message: false
 #| warning: false
+
+# Fit forecast models on training data
+
 project_tsibble_train <- project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` <= ymd(20220501))
 project_tsibble_test <- project_tsibble %>% filter(ffc_band == "< = 5" & 
                                                      `yearmonth(bca)` > ymd(20220501) & 
@@ -1190,6 +1090,9 @@ Where $\alpha$ and $\gamma$ are hyperparameters and are __optimised by minimisin
 #| fig-cap: "Forecasts of ETS model overlayed on the approved projects"
 #| fig-height: 4
 #| fig-width: 8
+
+# Run forecast computation on test dataset and overlay the actual data
+
 pl9<- model_fit %>% select(ETS_ana) %>% forecast(h = "2 years",bootstrap =TRUE) %>%  mutate(Total = distributional::dist_truncated(Total, 0)) %>% 
  autoplot() +  geom_line(
     data = project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` < ymd(20240601)),
@@ -1267,6 +1170,9 @@ model_fit <- project_tsibble %>% filter(ffc_band == "< = 5" & `yearmonth(bca)` <
 #| fig-cap: "Forecasted number of projects in CDM-26 using ETS (A,N,A) model"
 #| fig-height: 4
 #| fig-width: 8
+
+# Forecasts for the upcoming delivery period
+
 model_fc <- model_fit %>% select(ETS_ana) |> forecast(h = 72,bootstrap =TRUE) %>%  mutate(Total = distributional::dist_truncated(Total, 0)) 
 
 pl10 <- model_fc |> autoplot() +
