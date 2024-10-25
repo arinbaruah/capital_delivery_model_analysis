@@ -98,25 +98,29 @@ The systematic approach to studying the historical capital delivery models and p
 1. Based on the analysis of sample data from CDM-21 and CDM-16, the new delivery model is projected to successfully deliver __at least 70% of the projects with a forecasted final cost (FFC) of $5 million or less.__
 
 ![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/images/distribution_cost_bands.jpeg)
+
+2. Comparison of the duration of business case submission between CDM-16 and CDM-21 for Major Framework A indicated an increase in average submission duration. To check if the increase was statistically significant, a non-parametric 1 sided permutation test was performed. Based on the results, with 95 % confidence, it can be said that the average duration in CDM-21 is significantly higher than average duration in CDM-16. This means it is taking significantly longer in the current model to submit business cases when compared to the previous model.
+
+![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/images/permutation_test_framework.jpeg)
    
 
-2. Projects with higher valuations and associated risks require approval from higher authorities, often external to the department or organization. This can lead to significantly longer approval times, with some projects taking well over a year to reach the “approved” stage. The current study recommends segmenting high-valuation projects into smaller, “bundled” projects to expedite the approval process, __potentially reducing the approval duration to approximately 8 months (250 days) and follow an approval process which is within the department or the organisation.__
+3. Projects with higher valuations and associated risks require approval from higher authorities, often external to the department or organization. This can lead to significantly longer approval times, with some projects taking well over a year to reach the “approved” stage. The current study recommends segmenting high-valuation projects into smaller, “bundled” projects to expedite the approval process, __potentially reducing the approval duration to approximately 8 months (250 days) and follow an approval process which is within the department or the organisation.__
 
 ![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/images/approval_duration_distribution.jpeg)   
 
-3. In the upcoming delivery model, it is expected that __more than half of all the projects will need to be approved by the "People leadership group".__ Additionally, the percentage of projects approved by the “Senior Leadership Group,” “Finance, Audit, and Compliance,” and “Managing Director (MD)” has remained __consistent over the past two CDMs,suggesting a stable pattern in the composition of future approvals.__
+4. In the upcoming delivery model, it is expected that __more than half of all the projects will need to be approved by the "Level 3 authority".__ Additionally, the percentage of projects approved by the “Level 2 authority”, “Finance and Audit” and “Managing Director (MD)” has remained __consistent over the past two CDMs,suggesting a stable pattern in the composition of future approvals.__
 
 ![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/images/approval_bodies_duration.jpeg)
 
-4. An ETS forecast model was trained on historical data to predict the expected number of projects valued at ≤ $5 million. The forecasts indicate an average of approximately three projects per month, with a notable annual peak observed mid-year and another towards the year’s end.
+5. An ETS forecast model was trained on historical data to predict the expected number of projects valued at ≤ $5 million. The forecasts indicate an average of approximately three projects per month, with a notable annual peak observed mid-year and another towards the year’s end.
 
 ![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/images/ets_ana_model_forecast_results.jpeg)
 
-5. Although __Small-Scale delivery program projects account for approximately 10 % of the total valuation of projects__ within a CDM, the labour utilisation is however the same as that of Frameworks delivery program projects which delivers a significantly larger proportion of the total valuation. The future Capital Delivery Model for PS-26 should explore __streamlining or bundling multiple Small-Scale projects to enhance efficiency in project management and optimize labor resource allocation.__
+6. Although __Minor Framework A delivery program projects account for approximately 10 % of the total valuation of projects__ within a CDM, the labour utilisation is however the same as that of Frameworks delivery program projects which delivers a significantly larger proportion of the total valuation. The future Capital Delivery Model for PS-26 should explore __streamlining or bundling multiple Small-Scale projects to enhance efficiency in project management and optimize labor resource allocation.__
 
 ![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/images/labour_hours.png)
 
-6. A scoring system mechanism was implemented through the KRA-KPI metric dashboards and templates, allowing Melbourne Water to __perform fair and transparent assessments of a service provider's project initiatives__, and at the same time, __financially incentivise them to improve over the course of the project__.
+7. A scoring system mechanism was implemented through the KRA-KPI metric dashboards and templates, allowing Melbourne Water to __perform fair and transparent assessments of a service provider's project initiatives__, and at the same time, __financially incentivise them to improve over the course of the project__.
 
 ![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/images/dashboard.png)
 ![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/images/payout.png)
