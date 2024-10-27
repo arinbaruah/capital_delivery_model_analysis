@@ -40,7 +40,7 @@ quarto render Final_report.qmd
 
 # Acknowledgement
 
-![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/org_logo.png)
+![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/images/org_logo.png)
 
 The ongoing project aimed at optimizing the infrastructure capital delivery model through exploratory data analysis and implementing forecasting techniques draws guidance from the department of Business and Econometrics, Monash University and Major Capital Delivery, Melbourne Water Corporation. This partnership leverages Monash University’s expertise in data analysis and forecasting with Melbourne Water Corporation’s extensive infrastructure and inknowledge to enhance project delivery efficiency and accuracy.
 
