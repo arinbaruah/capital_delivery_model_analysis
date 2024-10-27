@@ -11,13 +11,13 @@
 .
 ├──  Final_report.qmd                  # Reproducible analysis file in .qmd format
 ├──  Final_report.pdf                  # Rendered project report in PDF format
-├──  Interim_presentation.pptx         # Interim 3-minute presentation
-├─── presentation                     # Presentation files
+├──  data_dictionary.md                # Markdown version of the data dictionary
+├─── presentation                      # Presentation files
 │    └──  Final_presentation.pptx      # Final presentation PPT
 │    └──  Interim_presentation.pptx    # Interim presentation PPT
 ├──  images                            # Important images for report
 ├──  literature                        # Folder containing references to literature
-├─── data                             # Datasets
+├─── data                              # Datasets
 │    └── Capital_Delivery_Project_deidentified.csv  # De-identified project data
 │                                
 │                                    
