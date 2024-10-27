@@ -9,14 +9,16 @@
 # Repository Navigation
 ```
 .
-├── Final_report.qmd  # Reproducible analysis file in .qmd format
-├── Final_report.pdf  # Rendered project report in PDF format
-├── Interim_presentation.pptx         # Interim 3-minute presentation
-├── Final_presentation.pptx # Final 10-minute presentation
-├── images                  # Important images for report
-├── literature              # Folder containing references to literature
-├─── data                   # Datasets
-│   └── Capital_Delivery_Project_deidentified.csv  # De-identified project data
+├──  Final_report.qmd                  # Reproducible analysis file in .qmd format
+├──  Final_report.pdf                  # Rendered project report in PDF format
+├──  Interim_presentation.pptx         # Interim 3-minute presentation
+├─── presentation                     # Presentation files
+│    └──  Final_presentation.pptx      # Final presentation PPT
+│    └──  Interim_presentation.pptx    # Interim presentation PPT
+├──  images                            # Important images for report
+├──  literature                        # Folder containing references to literature
+├─── data                             # Datasets
+│    └── Capital_Delivery_Project_deidentified.csv  # De-identified project data
 │                                
 │                                    
 └── ...
