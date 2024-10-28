@@ -1,5 +1,5 @@
 ---
-title: "Enhancing Future Capital Delivery: A Comparative analysis of Melbourne Water Corporation's Project Models"
+title: "Enhancing Future Capital Delivery: A Comparative Analysis of Melbourne Water Corporation's Project Models"
 author:
 - name: Arindom Baruah
   degrees: Master of Business Analytics, Monash University
@@ -239,7 +239,7 @@ The limitations within the source of the data which may have affected the analys
 
 1. As the source file was exported from the Microsoft PowerBI organisational dashboard, certain fields such as the dates were not in their desirable format for the current analysis and were required to be converted into a machine-readable format.This was a critical step to perform the required exploratory data analysis and form the time-series data for forecasting purposes.
 
-2. While the original dataset contains project data from 2008 to 2024, a recent software migration to the Microsoft Project Online platform has rendered the data for the period between 2008 and 2016 potentially unrepresentative. As a result, the current analysis utilizes data from 2016 to 2024. This period encompasses the two recent delivery model periods.
+2. While the original dataset contains project data from 2008 to 2024, a recent software migration to the Microsoft Project Online platform has rendered the data for the period between 2008 and 2016 potentially unrepresentative. As a result, the current analysis utilises data from 2016 to 2024. This period encompasses the two recent delivery model periods.
 
 3. Multiple projects were observed to have empty PBC fields. This is likely due to the case where small scale projects tend to bypass one gate of approval to reduce approval duration. While this does not apply to all projects of similar nature, there is however no indicator in the data which allows for detection of such an event other than a missing date.
 
@@ -278,7 +278,7 @@ The objectives and the scope of the analysis of the CDMs were defined through Me
   
 # Significance of the current study
 
-Based on the numerous inputs from the project director and the steering group at Major Capital Delivery division in Melbourne Water, the the scope and significance for the current CDM data analysis project was finalised. These have been delineated as follows:  
+Based on the numerous inputs from the project director and the steering group at Major Capital Delivery division in Melbourne Water, the scope and significance for the current CDM data analysis project was finalised. These have been delineated as follows:  
 
   1.	The analysis must provide an estimate of the project breakdown for CDM-26 after the latest price submission in 2026 by taking the current delivery model (CDM-21) and the previous delivery model (CDM-16) as the reference point. The results of this study can be used as a basis for obtaining an informed prior information to design the new capital delivery model (CDM-26).
   2.	The analysis would supplement the decision making on effective selection of service providers for projects in the future delivery model based on the current distribution of the delivery programs across various FFCs and past CDMs.
@@ -487,7 +487,7 @@ resids
 ggsave("../images/residuals.jpeg",resids,width = 8,height = 4)
 ```
 \begin{warningBox}
-The current forecast models face limitations due to the unavailability of project data beyond the current and past CDM. This resulted in forecasts exhibiting high uncertainty, characterized by large residuals and broad prediction intervals.
+The current forecast models face limitations due to the unavailability of project data beyond the current and past CDM. This resulted in forecasts exhibiting high uncertainty, characterised by large residuals and broad prediction intervals.
 
 Nevertheless, with the accumulation of additional data in the future, the model is anticipated to produce more accurate point forecasts and narrower, more informative prediction intervals. The primary objective of this study is to establish a reproducible pipeline for generating these forecasts.
 \end{warningBox}
@@ -497,7 +497,7 @@ Nevertheless, with the accumulation of additional data in the future, the model 
 
 The critical phase of a project initiates from the BCA to stage 3. As this is the period when the resources get allocated to projects, each day is expected to cost Melbourne Water. Hence, it is paramount to keep a track on the project completion and at the same time, ensure that the delivery of the project meets the quality requirements.
 
-@kunkcu2022using have studied various construction management projects utilizing key performance indicators (KPIs) and found them to be highly effective tools for evaluating project performance. In the context of Melbourne Water's projects, the focus is to engage a service provider who is able to deliver the project within the constrained time period, communicates progress regularly, minimises cost and time variations,reports and mitigates unsafe work conditions, engages a diverse group of employees, and undertakes sustainable initiatives. These are called the key result areas (KRAs) and are drawn into a legal agreement while employing a service provider. A high KRA score often attracts a monetary incentive for the service provider, thereby making this an area of interest for them and an area for close monitoring for Melbourne Water.
+@kunkcu2022using have studied various construction management projects utilising key performance indicators (KPIs) and found them to be highly effective tools for evaluating project performance. In the context of Melbourne Water's projects, the focus is to engage a service provider who is able to deliver the project within the constrained time period, communicates progress regularly, minimises cost and time variations,reports and mitigates unsafe work conditions, engages a diverse group of employees, and undertakes sustainable initiatives. These are called the key result areas (KRAs) and are drawn into a legal agreement while employing a service provider. A high KRA score often attracts a monetary incentive for the service provider, thereby making this an area of interest for them and an area for close monitoring for Melbourne Water.
 
 While the KRAs are subjective in nature and difficult to track, each of them are further quantified through the usage of KPIs. Based on the data provided by the service providers and through careful feature engineering, a framework to track and analyse project progress is delineated in @sec-results. The role of the KPIs and KRAs are two-fold. First, these indicators allow the team at Melbourne Water to gauge the progress of the project, secondly, it allows Melbourne Water to engineer the right behaviour on the part of the service provider who is responsible for the construction of the project. @fig-flowchartkpi illustrates the scope of the KRAs and KPIs within a project.
 
@@ -551,15 +551,17 @@ ggsave("../images/distribution_delivery_programs.jpeg",pl1,width = 8,height = 4)
 ```
 ## Distribution of projects by FFC bands for each delivery model {#sec-prodist}
 
-@fig-ffcband illustrates the distribution of the project FFCs associated with each CDM. Key observations are delineated below:
+@fig-ffcband and @fig-ffcprop illustrate the distribution of the project FFCs associated with each CDM. Key observations are delineated below:
 
 1. In each of the CDMs, projects that are worth 5 mil $ or lower tend to constitute more than 2/3rd of all the approved projects.
 
-2. On the other hand, projects which are worth 50 mil $ or higher remain to be the smallest category of projects in each of the CDMs.
+2. Though most projects are individually valued at $5 million or less, these lower-valued projects make up only 8% of the total spend in CDM-21.
 
-3. Analysis of the current and the previous CDMs suggest that the new delivery model (CDM-26) would be expected to constitute majority of the projects with FFCs below 5 mil $.
+3. On the other hand, projects which are worth 50 mil $ or higher remain to be the smallest category of projects in each of the CDMs.
 
-4. Such projects are associated with works such as laying new pipelines, pipeline renewals, mechanical or electrical machinery maintainence and other works of similar nature. As a result, the demand for these projects in each year are expected to remain fairly consistent, and hence provides valuable insights on the future CDM.
+4. Analysis of the current and the previous CDMs suggest that the new delivery model (CDM-26) would be expected to constitute majority of the projects with FFCs below 5 mil $.
+
+5. Such projects are associated with works such as laying new pipelines, pipeline renewals, mechanical or electrical machinery maintainence and other works of similar nature. As a result, the demand for these projects in each year are expected to remain fairly consistent, and hence provides valuable insights on the future CDM.
 
 
 ```{r}
