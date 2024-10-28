@@ -9,8 +9,9 @@
 # Repository Navigation
 ```
 .
-├──  Final_report.qmd                  # Reproducible analysis file in .qmd format
-├──  Final_report.pdf                  # Rendered project report in PDF format
+├─── final_report                      # Presentation files
+│    └──  Final_report.qmd             # Markdown version of final report
+│    └──  Final_report.pdf             # PDF version of final report
 ├──  data_dictionary.md                # Markdown version of the data dictionary
 ├─── presentation                      # Presentation files
 │    └──  Final_presentation.pptx      # Final presentation PPT
@@ -35,7 +36,7 @@ Steps to reproduce the analysis are as follows:
 5. Once all the packages are updated/restored, run the following command in __R terminal__ to render the PDF file
 
 ```
-quarto render Final_report.qmd
+quarto render final_report/Final_report.qmd
 ```
 
 # Acknowledgement
@@ -46,9 +47,9 @@ The ongoing project aimed at optimizing the infrastructure capital delivery mode
 
 # Quick links to project files
 
-1. [Final executive report](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/Final_report.pdf) [Finalised] 🎬
-2. [Final presentation](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/Final_presentation.pptx) [Finalised] 🎬
-3. [Data dictionary](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/data_dictionary.md)
+1. [Final executive report](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/final_report/Final_report.pdf) [Finalised] 🎬
+2. [Final presentation](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/presentation/Final_presentation.pptx) [Finalised] 🎬
+3. [Data dictionary](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/data_dictionary/data_dictionary.html) 📕🧑‍🏫
 
 # License
 
