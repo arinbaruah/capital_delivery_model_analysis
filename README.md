@@ -3,7 +3,7 @@
 
 # Enhancing Future Capital Delivery: A Comparative analysis of Melbourne Water Corporation’s Project Models
 
-> [!INFO]
+> [!NOTE]
 > The final deliverables for this project have been successfully completed and are outlined below.
 
 # Repository Navigation
