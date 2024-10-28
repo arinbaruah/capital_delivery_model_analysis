@@ -3,8 +3,8 @@
 
 # Enhancing Future Capital Delivery: A Comparative analysis of Melbourne Water Corporation’s Project Models
 
-> [!WARNING]
-> The project is currently under progress and will be notified on this space once project deliverables are ready
+> [!INFO]
+> The final deliverables for this project have been successfully completed and are outlined below.
 
 # Repository Navigation
 ```
@@ -46,7 +46,7 @@ The ongoing project aimed at optimizing the infrastructure capital delivery mode
 
 # Quick links to project files
 
-1. [Final executive report](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/Final_report.pdf) [Under progress] 🚧
+1. [Final executive report](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/Final_report.pdf) [Finalised] 🎬
 2. [Final presentation](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/Final_presentation.pptx) [Finalised] 🎬
 3. [Data dictionary](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/data_dictionary.md)
 
