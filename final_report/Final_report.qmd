@@ -816,7 +816,7 @@ pl_framework <- ggplot() +
   geom_histogram(aes(x=perm_diff_framework), bins=R, color="#2980B9",alpha=0.7) +
   geom_vline(aes(xintercept=obs_diff_framework), color="red", linetype="dashed") +
   labs(title="Permutation Test Sampling Distribution for Major Framework A",
-       x="Difference in mean duration (CDM 21 - CDM 16)",
+       x="Difference in mean PBC duration (CDM 21 - CDM 16)",
        y="Frequency") +
   annotate("text", x = obs_diff_framework - 140, y = 6, 
            label = paste("Observed\nDifference =", 
@@ -853,7 +853,7 @@ pl_open <- ggplot() +
   geom_histogram(aes(x=perm_diff), bins=R, color="#F5B041", alpha=0.7) +
   geom_vline(aes(xintercept=obs_diff), color="red", linetype="dashed") +
   labs(title="Permutation Test Sampling Distribution for Major Framework B",
-       x="Difference in mean duration (CDM 21 - CDM 16)",
+       x="Difference in mean PBC duration (CDM 21 - CDM 16)",
        y="Frequency") +
   annotate("text", x = obs_diff + 260, y = 7, 
            label = paste("Observed\nDifference =", 
@@ -949,6 +949,9 @@ The other critical stage of the projects is to monitor the duration between the 
 ```{r}
 project_data <- project_data %>% mutate(completion_duration = days(stage1 - bca)) 
 
+project_data <- project_data %>%
+  mutate(delivery_program = factor(delivery_program, levels = c("Minor Framework A", "Minor Framework B", "Major Framework A", "Major Framework B")))
+
 delduration <- ggplot(data = project_data %>% filter(status == "Completed"),aes(x = day(completion_duration),fill = delivery_program)) + geom_density()  + scale_fill_tableau(palette = "Tableau 10") + theme_minimal() + 
 facet_wrap(~delivery_program,ncol = 1) + theme(legend.position = "none",
                                                plot.title = element_text(size = 10),
@@ -971,7 +974,7 @@ medduration <- project_data %>% filter(status == "Completed") %>%
 
 
 medduration <- medduration %>% 
-  ggplot(aes(y = reorder(delivery_program,-Median_completion), x = Median_completion, fill = delivery_program)) + 
+  ggplot(aes(y = fct_reorder(delivery_program,-Median_completion), x = Median_completion, fill = delivery_program)) + 
   geom_col() + scale_fill_tableau(palette = "Tableau 10") + 
   geom_label(aes(label = round(Median_completion,0),hjust = 1)) +  theme_minimal() + theme(legend.position = "none",
                                                                         plot.title = element_text(size = 10),

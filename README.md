@@ -21,7 +21,6 @@
 ├─── data                              # Datasets
 │    └── Capital_Delivery_Project_deidentified.csv  # De-identified project data
 │                                
-│                                    
 └── ...
 ```
 # Reproduce this analysis
@@ -49,7 +48,7 @@ The ongoing project aimed at optimizing the infrastructure capital delivery mode
 
 1. [Final executive report](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/final_report/Final_report.pdf) [Finalised] 🎬
 2. [Final presentation](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/presentation/Final_presentation.pptx) [Finalised] 🎬
-3. [Data dictionary](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/data_dictionary/data_dictionary.html) 📕🧑‍🏫
+3. [Data dictionary](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/data_dictionary/data_dictionary.md) 📕🧑‍🏫
 
 # License
 
