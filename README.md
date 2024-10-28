@@ -44,7 +44,7 @@ quarto render final_report/Final_report.qmd
 
 ![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/images/org_logo.png)
 
-The ongoing project aimed at optimizing the infrastructure capital delivery model through exploratory data analysis and implementing forecasting techniques draws guidance from the department of Business and Econometrics, Monash University and Major Capital Delivery, Melbourne Water Corporation. This partnership leverages Monash University’s expertise in data analysis and forecasting with Melbourne Water Corporation’s extensive infrastructure and inknowledge to enhance project delivery efficiency and accuracy.
+The ongoing project aimed at optimizing the infrastructure capital delivery model through exploratory data analysis and implementing forecasting techniques draws guidance from the Department of Econometrics and Business Statistics, Monash University and Major Capital Delivery, Melbourne Water Corporation. This partnership leverages Monash University’s expertise in data analysis and forecasting with Melbourne Water Corporation’s extensive infrastructure knowledge to enhance project delivery efficiency and accuracy.
 
 # Quick links to project files
 
@@ -69,7 +69,7 @@ This repository is licensed under Creative Commons Legal Code CC0 1.0 Universal 
 | `Tender Closed`          | Datetime            | A date on which the tender process (if applicable) for the project was closed |
 | `Owner Group`            | Character           | The division within Melbourne Water Corporation responsible for completing the particular project |
 | `BNI`                    | Datetime            | Business Need Identifier is a date on which a project concept is first conceived  |
-|`PBC`                     | Datetime            | A date on which the first business case is submitted
+| `PBC`                    | Datetime            | A date on which the first business case is submitted
 | `BCA`                    | Datetime            | A date on which the business case is approved and the project |
 | `Stage1`                 | Datetime            | A date on which the first stage of practical completion of project is reached |
 | `Stage2`                 | Datetime            | A date on which the second stage of practical completion of project is reached |
@@ -79,7 +79,7 @@ This repository is licensed under Creative Commons Legal Code CC0 1.0 Universal 
 
 # Background 🕵🏻‍♀️
 
-The Capital Delivery Model is crucial for optimizing project management within the water industry. It provides a structured approach to engaging project personnel and service providers, ensuring efficient project execution and successful timely outcomes. However, designing and reviewing such a model presents significant challenges, including managing external partnerships along with their risks, rising project costs, and securing approvals from higher authorities for timely approvals.
+The Capital Delivery Model is crucial for optimising project management within the water industry. It provides a structured approach to engaging project personnel and service providers, ensuring efficient project execution and successful timely outcomes. However, designing and reviewing such a model presents significant challenges, including managing external partnerships along with their risks, rising project costs, and securing approvals from higher authorities for timely approvals.
 
 
 # Objective 🎯
