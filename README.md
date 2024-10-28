@@ -31,13 +31,15 @@ Steps to reproduce the analysis are as follows:
 2. Open a new project in R Studio and select
     - "Version Control" -> "Git"
     - Enter repository URL as https://github.com/arinbaruah/capital_delivery_model_analysis.git
-4. After opening the R project, run the command `renv::restore` in the __R console__.
-5. Once all the packages are updated/restored, run the following command in __R terminal__ to render the PDF file
+4. After opening the R project, run the command `renv::activate` in the __R console__.
+5. After the R project has been activated, run the command `renv::restore` in the __R console__ to obtain the appropriate package versions for reproducing the analysis.
+6. Once all the packages are updated/restored, run the following command in __R terminal__ to render the PDF file
 
 ```
 quarto render final_report/Final_report.qmd
 ```
-
+7. The output PDF file can now be found in the `final_report` folder as a file named `Final_report.pdf`
+   
 # Acknowledgement
 
 ![](https://github.com/arinbaruah/capital_delivery_model_analysis/blob/main/images/org_logo.png)
